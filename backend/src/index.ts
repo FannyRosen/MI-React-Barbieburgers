@@ -1,16 +1,24 @@
-import express, { Request, Response } from "express";
-
 require("dotenv").config();
+require("./db");
+
+import cors from "cors";
+import express from "express";
+import helmet from "helmet";
+import bookingRoute from "./routes/booking.routes";
+import customerRoute from "./routes/customer.routes";
 
 const app = express();
 
-app.get("/", (_: Request, res: Response) => {
-  res.status(200).send("hi");
-});
+app.use(helmet());
+app.use(cors({ origin: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.disable("x-powered-by");
 
-const message: string = "Hi, the server is running on ";
+app.use("/bookings", bookingRoute);
+app.use("/customers", customerRoute);
 
-let PORT: string | number = process.env.PORT_NR || 8000;
+let PORT: string | number = process.env.PORT || 8000;
 app.listen(PORT, () =>
-  console.log(message + "\x1b[33m%s\x1b[0m", `http://localhost:${PORT}/`)
+  console.log("\x1b[33m%s\x1b[0m", `http://localhost:${PORT}/`)
 );
