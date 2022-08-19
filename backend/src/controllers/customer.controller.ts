@@ -1,16 +1,22 @@
 import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 
+const statusSuccess = "Success";
+const statusFailed = "Failed";
+
 export const get_customerController = async (req: Request, res: Response) => {
   const customer = await CustomerModel.find();
 
   try {
     res.status(200).json({
-      status: "Sucess",
+      status: statusSuccess,
       data: customer,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      status: statusFailed,
+      message: error,
+    });
   }
 };
 
@@ -27,16 +33,16 @@ export const post_newCustomerController = async (
     });
 
     const saveCustomerToDB = await postNewCustomer.save();
-
-    res.status(200).json({
-      status: "statusSuccess",
+    await postNewCustomer.save();
+    /* res.status(200).json({
+      status: statusSuccess,
       message: "working",
       data: saveCustomerToDB,
-    });
+    }); */
   } catch (error: any) {
-    res.status(500).json({
-      status: "Failed",
+    /*   res.status(500).json({
+      status: statusFailed,
       message: error,
-    });
+    }); */
   }
 };
