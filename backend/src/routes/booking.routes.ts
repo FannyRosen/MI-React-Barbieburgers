@@ -8,4 +8,5 @@ const router: Router = express.Router();
 
 router.get("/", get_bookingsController);
 router.post("/new", post_newBookingsController);
+
 export default router;
