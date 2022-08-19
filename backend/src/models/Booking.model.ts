@@ -7,7 +7,7 @@ const BookingSchema = new mongoose.Schema<IBooking>({
   clientId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Customers",
-    required: true,
+    // required: true,
   },
 });
 
