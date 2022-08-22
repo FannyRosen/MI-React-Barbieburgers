@@ -169,13 +169,13 @@ export const put_bookingByIdController = async (
     await editBooking.save();
 
     res.status(200).json({
-      status: "Successful",
+      status: statusSuccess,
       message: "Edit booking works",
       data: editBooking,
     });
   } catch (error: any) {
     res.status(500).json({
-      status: "Edit booking failed",
+      status: statusFailed,
       message: error,
     });
   }
