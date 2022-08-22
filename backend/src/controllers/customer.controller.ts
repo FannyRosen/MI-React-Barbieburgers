@@ -33,20 +33,19 @@ export const post_newCustomerController = async (
       phone: phone,
     });
 
-    // const saveCustomerToDB = await postNewCustomer.save();
+    const saveCustomerToDB = await postNewCustomer.save();
     await postNewCustomer.save();
-    //hämta ID
-    post_newBookingsController(name, email, phone);
-    /* res.status(200).json({
+
+    res.status(200).json({
       status: statusSuccess,
       message: "working",
       data: saveCustomerToDB,
-    }); */
+    });
   } catch (error: any) {
-    /*   res.status(500).json({
+    res.status(500).json({
       status: statusFailed,
       message: error,
-    }); */
+    });
   }
 };
 

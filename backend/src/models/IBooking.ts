@@ -5,6 +5,5 @@ export interface IBooking {
   date: Date;
   numberOfPeople: number;
   sittingTime: string;
-  numberOfPeople: number;
   clientId: ObjectId;
 }
