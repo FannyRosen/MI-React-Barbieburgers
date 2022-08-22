@@ -12,4 +12,5 @@ export interface IStylingProps {
   padding?: string;
   gap?: string;
   image?: string;
+  fontsize?: string;
 }

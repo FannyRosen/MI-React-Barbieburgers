@@ -7,11 +7,9 @@ export const Layout = () => {
   return (
     <>
       <GlobalStyle />
-      <div className='layout-container'>
-        <Header />
-        <Outlet></Outlet>
-        <Footer />
-      </div>
+      <Header />
+      <Outlet></Outlet>
+      <Footer />
     </>
   );
 };
