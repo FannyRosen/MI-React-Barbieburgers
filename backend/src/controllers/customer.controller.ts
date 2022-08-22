@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
+import { post_newBookingsController } from "./booking.controller";
 
 const statusSuccess = "Success";
 const statusFailed = "Failed";
@@ -32,8 +33,10 @@ export const post_newCustomerController = async (
       phone: phone,
     });
 
-    const saveCustomerToDB = await postNewCustomer.save();
+    // const saveCustomerToDB = await postNewCustomer.save();
     await postNewCustomer.save();
+    //hämta ID
+    post_newBookingsController(name, email, phone);
     /* res.status(200).json({
       status: statusSuccess,
       message: "working",

@@ -27,6 +27,7 @@ export const get_bookingsController = async (req: Request, res: Response) => {
 };
 
 export const post_newBookingsController = async (
+  CustomerID: ObjectId,
   req: Request,
   res: Response
 ) => {
@@ -49,7 +50,7 @@ export const post_newBookingsController = async (
       post_newCustomerController;
     };
 
-    let { date, sittingTime, numberOfPeople } = req.body;
+    let { date, sittingTime, numberOfPeople, _id } = req.body;
 
     const postNewBooking = new BookingModel({
       date: date,
@@ -57,7 +58,7 @@ export const post_newBookingsController = async (
       numberOfPeople: numberOfPeople,
       // clientId: saveCustomerToDB._id,
 
-      clientId: await postCustomer(req.body.clientId), //Vill att denna gör
+      clientId: await postCustomer(_id), //Vill att denna gör
       // samma som det utkommenterade ovan
       // men via customer.controller.ts
     });
