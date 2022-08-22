@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { post_newBookingsController } from "./booking.controller";
-
-const statusSuccess = "Success";
-const statusFailed = "Failed";
+import { statusFailed, statusSuccess } from "./statusMessages";
 
 export const get_customerController = async (req: Request, res: Response) => {
   const customer = await CustomerModel.find();
@@ -38,7 +36,7 @@ export const post_newCustomerController = async (
 
     res.status(200).json({
       status: statusSuccess,
-      message: "working",
+      message: "post new customer working",
       data: saveCustomerToDB,
     });
   } catch (error: any) {
@@ -57,13 +55,13 @@ export const get_customerByIdController = async (
     const customerById = await CustomerModel.findById(req.params.id);
 
     res.status(200).json({
-      status: "Successful",
+      status: statusSuccess,
       message: "Get customer id works",
       data: customerById,
     });
   } catch (error: any) {
     res.status(500).json({
-      status: "Get customer id failed",
+      status: statusFailed,
       message: error,
     });
   }
@@ -77,13 +75,13 @@ export const delete_customerByIdController = async (
     const deleteById = await CustomerModel.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
-      status: "Successful",
+      status: statusSuccess,
       message: "Delete id works",
       data: deleteById,
     });
   } catch (error: any) {
     res.status(500).json({
-      status: "Delete id failed",
+      status: statusFailed,
       message: error,
     });
   }
@@ -101,13 +99,13 @@ export const put_customerByIdController = async (
     editById.phone = req.body.phone;
 
     res.status(200).json({
-      status: "Successful",
+      status: statusSuccess,
       message: "Edit id works",
       data: editById,
     });
   } catch (error: any) {
     res.status(500).json({
-      status: "Edit id failed",
+      status: statusFailed,
       message: error,
     });
   }

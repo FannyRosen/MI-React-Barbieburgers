@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { post_newCustomerController } from "./customer.controller";
-import { ObjectId } from "mongoose";
-import { runInNewContext } from "vm";
+
 import { statusFailed, statusSuccess } from "./statusMessages";
 
 export const get_bookingsController = async (req: Request, res: Response) => {
@@ -30,10 +29,13 @@ export const post_newBookingsController = async (
   res: Response
 ) => {
   try {
-    ///////////////
-    // Kolla om kunden med samma email finns i databasen
-    const customer = await CustomerModel.findOne({ email: req.body.email });
-    ///////////////
+    // Om mindre än <= 6 personer POST en gång,
+    // om >= 6 och max 12 personer POST två gånger
+    let numberOfPeopleBooked = (
+      await CustomerModel.find({
+        numberOfPeople: req.body.numberOfPeople,
+      }).lean()
+    ).length;
 
     ///////////////
     // Hitta datum för bokning för att sedan kontrollera hur många bokningar det finns på det datumet.
@@ -44,23 +46,35 @@ export const post_newBookingsController = async (
       }).lean()
     ).length;
 
+    let maximumNumberOfBookings = 2;
     let addone = checkBookings++;
 
-    if (checkBookings > 2) {
+    if (checkBookings > maximumNumberOfBookings) {
       addone;
       return res.status(200).json({
         status: statusFailed,
-        message: "Fullbokat, so sorry! :P",
+        message: "Fullbokat, so sorry!",
       });
     }
-    ///////////////
+    ///////////
+    // Om fler än 6 och mindre än 12, boka 2 bord, HUR?
 
     ///////////////
-    // Kolla om kunden finns i collection
-    //HÄR VILL JAG ANVÄNDA POST_CONTROLLERN!
+    // Kolla om kunden med samma email finns i databasen
+    const returningCustomer = await CustomerModel.findOne({
+      email: req.body.email,
+      numberOfPeople: req.body.numberOfPeople,
+    });
     ///////////////
-    if (customer) {
-      const saveCustomerId = await customer.save();
+
+    if (returningCustomer) {
+      ///////////////
+
+      ///////////////
+      // Kolla om kunden finns i collection
+      //HÄR VILL JAG ANVÄNDA POST_CONTROLLERN!
+      ///////////////
+      const saveCustomerId = await returningCustomer.save();
 
       let { date, sittingTime, numberOfPeople } = req.body;
 
@@ -74,7 +88,7 @@ export const post_newBookingsController = async (
       await postNewBooking.save();
     } else {
       let { name, email } = req.body;
-
+      // POSTA FRÅN CUSTOMER CONTROLLER
       const postCustomer = new CustomerModel({
         name: name,
         email: email,
