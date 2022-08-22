@@ -49,3 +49,67 @@ export const post_newCustomerController = async (
     }); */
   }
 };
+
+export const get_customerByIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const customerById = await CustomerModel.findById(req.params.id);
+
+    res.status(200).json({
+      status: "Successful",
+      message: "Get customer id works",
+      data: customerById,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "Get customer id failed",
+      message: error,
+    });
+  }
+};
+
+export const delete_customerByIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const deleteById = await CustomerModel.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      status: "Successful",
+      message: "Delete id works",
+      data: deleteById,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "Delete id failed",
+      message: error,
+    });
+  }
+};
+
+export const put_customerByIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const editById = await CustomerModel.findByIdAndUpdate(req.params.id);
+
+    editById.name = req.body.name;
+    editById.email = req.body.email;
+    editById.phone = req.body.phone;
+
+    res.status(200).json({
+      status: "Successful",
+      message: "Edit id works",
+      data: editById,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "Edit id failed",
+      message: error,
+    });
+  }
+};

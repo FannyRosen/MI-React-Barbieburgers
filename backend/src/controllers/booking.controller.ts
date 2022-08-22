@@ -77,3 +77,69 @@ export const post_newBookingsController = async (
     });
   }
 };
+
+export const get_bookingByIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const bookingById = await BookingModel.findById(req.params.id);
+
+    res.status(200).json({
+      status: "Successful",
+      message: "Get id works",
+      data: bookingById,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "Get id failed",
+      message: error,
+    });
+  }
+};
+
+export const delete_bookingByIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const deleteBooking = await BookingModel.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      status: "Successful",
+      message: "Delete booking works",
+      data: deleteBooking,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "Delete booking failed",
+      message: error,
+    });
+  }
+};
+
+export const put_bookingByIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const editBooking = await BookingModel.findByIdAndUpdate(req.params.id);
+
+    editBooking.sittingTime = req.body.sittingTime;
+    editBooking.date = req.body.date;
+    editBooking.numberOfPeople = req.body.numberOfPeople;
+
+    await editBooking.save();
+
+    res.status(200).json({
+      status: "Successful",
+      message: "Edit booking works",
+      data: editBooking,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "Edit booking failed",
+      message: error,
+    });
+  }
+};
