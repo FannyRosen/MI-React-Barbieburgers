@@ -3,6 +3,7 @@ import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { post_newCustomerController } from "./customer.controller";
 import { ObjectId } from "mongoose";
+import { runInNewContext } from "vm";
 
 const statusSuccess = "Success";
 const statusFailed = "Failed";
@@ -31,8 +32,12 @@ export const post_newBookingsController = async (
   res: Response
 ) => {
   try {
+    ///////////////
+    // Kolla om kunden med samma email finns i databasen
     const customer = await CustomerModel.findOne({ email: req.body.email });
 
+    ///////////////
+    // Kolla om kunden finns i collection
     if (customer) {
       const saveCustomerId = await customer.save();
 
@@ -71,6 +76,18 @@ export const post_newBookingsController = async (
 
       await postNewBooking.save();
     }
+    ///////////////
+
+    ///////////////
+    // Hitta datum för bokning för att sedan kontrollera hur många bokningar det finns på det datumet.
+    let checkBookings: number = (
+      await BookingModel.find({ date: req.body.date }).lean()
+    ).length;
+
+    if (checkBookings > 2) {
+      return res.send("Fullt");
+    }
+    ///////////////
 
     /* 
     const postCustomer = async (_id: ObjectId) => {
