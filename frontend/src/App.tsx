@@ -18,20 +18,6 @@ import { ICustomerResponse } from "./models/ICustomer";
 import { fetchCustomers } from "./services/handleCustomersFetch.service";
 
 function App() {
-  const [bookings, setBookings] = useState<IBookingResponse>();
-  const [customers, setCustomers] = useState<ICustomerResponse>();
-
-  useEffect(() => {
-    fetchCustomers()
-      .then((response) => {
-        setCustomers(response);
-        // console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
   return (
     <>
       <BrowserRouter>

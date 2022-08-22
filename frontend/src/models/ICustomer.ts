@@ -6,5 +6,5 @@ export interface ICustomer {
 }
 
 export interface ICustomerResponse {
-  data: ICustomer;
+  data: ICustomer[];
 }
