@@ -2,7 +2,19 @@ import { ICustomer } from "./ICustomer";
 
 export interface IBooking {
   _id: string;
-  date: Date;
+  date: number;
   sittingTime: string;
-  clientId: ICustomer;
+  // clientId: ICustomer;
 }
+
+export interface IBookingResponse {
+  data: IBooking[];
+}
+
+//Hur bör denna se ut?
+
+export const bookingsDefaultValue: IBooking = {
+  _id: "",
+  date: 0,
+  sittingTime: "",
+};

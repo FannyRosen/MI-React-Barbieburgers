@@ -1,0 +1,323 @@
+{
+  "burgers": [
+    {
+      "id": 0,
+      "name": "Tribute Burger",
+      "description": "A mouth-watering honest beef burger",
+      "ingredients": [
+        "beef",
+        "american cheese",
+        "burger sauce",
+        "french mustard",
+        "pickes",
+        "onion",
+        "lettuce"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Pulled Mooshie",
+      "description": "Spicy vegan burger with jackfruit",
+      "ingredients": ["jackfruit", "coleslaw", "gluten free bun"]
+    },
+    {
+      "id": 2,
+      "name": "Krabby Patty",
+      "description": "The only people who don't like a Krabby Patty have never tasted one.",
+      "ingredients": [
+        "bun",
+        "patty",
+        "ketchup",
+        "mustard",
+        "pickles",
+        "onions",
+        "lettuce",
+        "cheese",
+        "tomato",
+        "bun"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "The Good Burger",
+
+      "description": "Welcome to Good Burger, home of the Good Burger, can I take your order?",
+      "ingredients": [
+        "bun",
+        "tomato",
+        "Ed's secret sauce",
+        "lettuce",
+        "onions",
+        "cheese"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Crunchy Nacho Burger",
+
+      "description": "The best combination of crunchiness and softness, all in one single burger",
+      "ingredients": [
+        "sesame bun",
+        "salsa",
+        "cheddar",
+        "nachos",
+        "beef",
+        "tomato",
+        "pickled onion",
+        "lettuce",
+        "jalapeño mayonnaise"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Barbie Burger",
+      "description": "From a pink explosion was born Barbie Burger, a special edition in partnership with Mattel",
+      "ingredients": [
+        "pink bun",
+        "lentil and beetroot burger",
+        "tomatoes",
+        "gentilina salad",
+        "barbie hummus",
+        "barbie mayo"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Curry On My Wayward Bun",
+
+      "description": "N/A",
+      "ingredients": ["beef", "curry", "bun"]
+    },
+    {
+      "id": 7,
+      "name": "MEISTER ALLER KLASSEN",
+
+      "description": "Fast food joint located in a public toilet? Why on earth?!",
+      "ingredients": [
+        "2 x meat",
+        "2 x cheese",
+        "bacon",
+        "barbequesauce",
+        "jalapenos"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Vegetarian Burger (Indian Style)",
+
+      "description": "With summer around the corner, I had to share a vegetarian burger recipe with you guys. Actually I plan to share more in the next month but I thought I will start with this Indian style Vegetarian Burger aka Masala Burger!",
+      "ingredients": [
+        "american cheese",
+        "burger sauce",
+        "french mustard",
+        "pickes",
+        "onion",
+        "Veggies"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Fat Santa",
+
+      "description": "A Christmas themed burger",
+      "ingredients": [
+        "chicken thigh",
+        "champagne ham",
+        "sage and onion stuffing",
+        "gravy mash",
+        "lettuce",
+        "tomato",
+        "cranberry sauce"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Cheatday Burger",
+      "description": "Perfect when you need a day off from your workout routine",
+      "ingredients": [
+        "double beef",
+        "chilli-cheese sauce",
+        "2 slices cheddar cheese",
+        "crispy bacon stripes",
+        "nachos",
+        "mayonnaise",
+        "mustard"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "The Truffler (vegan)",
+
+      "description": "Beyond Meat patty, crispy onions, mushrooms, pickled red onions, lettuce American mustard, truffle ‘cheese’ fondue, truffle ‘mayo’",
+      "ingredients": [
+        "1/4 Beyond Meat patty",
+        "crispy onions",
+        "sauteed mushrooms",
+        "pickled red onions",
+        "lettuce",
+        "American mustard",
+        "truffle vegan cheese fondue",
+        "truffle vegan mayo"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Aloette Buger",
+
+      "description": "Haute cuisine meets cravings for cheeseburgers.",
+      "ingredients": [
+        "6oz beef patty, served medium",
+        "griddled beaufort cheese",
+        "cheddar mayo",
+        "shredded lettuce",
+        "potato roll"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "BBQ Burger",
+      "description": "Vegan burger made from whole, natural ingredients.",
+      "ingredients": [
+        "house-made grain burger",
+        "bbq sauce",
+        "quinoa onion rings",
+        "vegan garlic mayo",
+        "napa cabbage",
+        "banana chillies",
+        "tomato",
+        "lettuce"
+      ]
+    },
+
+    {
+      "id": 17,
+      "name": "Carroll's Cheese Burger",
+
+      "description": "Tasty black angus beef burger.",
+      "ingredients": [
+        "Irish black angus beef",
+        "tomato",
+        "lettuce",
+        "caramelized onions",
+        "pickles",
+        "cheddar cheese",
+        "tomato relish"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Du Brown",
+      "description": "Home of the no bullshit burger",
+      "ingredients": [
+        "beef",
+        "bacon",
+        "caramelized onions",
+        "cheddar cheese",
+        "barbecue sauce",
+        "onion rings",
+        "jalepeños",
+        "tomato",
+        "lettuce",
+        "chipote mayonaise"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Melting Potes",
+
+      "description": "Home of the no bullshit burger",
+      "ingredients": [
+        "beef",
+        "poutine",
+        "raclette cheese",
+        "honey mustard sauce",
+        "goats cheese",
+        "crispy onions"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Big Fernand",
+      "description": "L'atelier du Hamburgé - The burger workshop",
+      "ingredients": [
+        "beef",
+        "sundried tomates",
+        "tatar sauce",
+        "confit onions",
+        "blue cheese",
+        "smokey bacon"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "PNY Burger",
+
+      "description": "Home of the no bullshit burger",
+      "ingredients": [
+        "beef",
+        "poutine",
+        "raclette cheese",
+        "honey mustard sauce",
+        "goats cheese",
+        "crispy onions"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "231 East",
+      "description": "True New York style burger in France",
+      "ingredients": [
+        "beef",
+        "smoked bacon",
+        "chicken",
+        "veggie burgers",
+        "brioche bun",
+        "honey mustard sauce",
+        "onion chutney",
+        "pepper sauce",
+        "avacado"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Cajun Black Bean Burger",
+      "description": "a hearty veggie burger with a kick that goes great with sweet potato fries",
+      "ingredients": [
+        "spicy black bean veggie patty",
+        "sautéed onions",
+        "mushrooms",
+        "spinach",
+        "tomato",
+        "fried jalapeño",
+        "cheddar sauce",
+        "creole mustard"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Hatch Green Chile Bacon Burger",
+      "description": "burger with hatch green chiles, bacon and cheese",
+      "ingredients": [
+        "beef",
+        "cheese",
+        "bacon",
+        "hatch green chiles",
+        "mayonnaise"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "The Street Burgers and Coctail Bar Prague 1",
+      "description": "American, Bar, International, European, Vegetarian Friendly",
+      "ingredients": [
+        "beef",
+        "cheddar cheese",
+        "blue cheese",
+        "onion",
+        "mozzarella",
+        "bacon",
+        "lettuce"
+      ]
+    }
+  ]
+}

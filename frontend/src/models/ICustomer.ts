@@ -4,3 +4,7 @@ export interface ICustomer {
   email: string;
   phone: string;
 }
+
+export interface ICustomerResponse {
+  data: ICustomer;
+}
