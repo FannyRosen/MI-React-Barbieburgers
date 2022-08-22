@@ -4,9 +4,7 @@ import { BookingModel } from "../models/Booking.model";
 import { post_newCustomerController } from "./customer.controller";
 import { ObjectId } from "mongoose";
 import { runInNewContext } from "vm";
-
-const statusSuccess = "Success";
-const statusFailed = "Failed";
+import { statusFailed, statusSuccess } from "./statusMessages";
 
 export const get_bookingsController = async (req: Request, res: Response) => {
   const bookings = await BookingModel.find();
@@ -50,12 +48,17 @@ export const post_newBookingsController = async (
 
     if (checkBookings > 2) {
       addone;
-      return res.send("Fullt");
+      return res.status(200).json({
+        status: statusFailed,
+        message: "Fullbokat, so sorry! :P",
+      });
     }
     ///////////////
 
     ///////////////
     // Kolla om kunden finns i collection
+    //HÄR VILL JAG ANVÄNDA POST_CONTROLLERN!
+    ///////////////
     if (customer) {
       const saveCustomerId = await customer.save();
 
@@ -120,13 +123,13 @@ export const get_bookingByIdController = async (
     const bookingById = await BookingModel.findById(req.params.id);
 
     res.status(200).json({
-      status: "Successful",
+      status: statusSuccess,
       message: "Get id works",
       data: bookingById,
     });
   } catch (error: any) {
     res.status(500).json({
-      status: "Get id failed",
+      status: statusFailed,
       message: error,
     });
   }
@@ -140,13 +143,13 @@ export const delete_bookingByIdController = async (
     const deleteBooking = await BookingModel.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
-      status: "Successful",
+      status: statusSuccess,
       message: "Delete booking works",
       data: deleteBooking,
     });
   } catch (error: any) {
     res.status(500).json({
-      status: "Delete booking failed",
+      status: statusFailed,
       message: error,
     });
   }
