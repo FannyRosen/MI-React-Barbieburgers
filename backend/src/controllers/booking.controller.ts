@@ -35,6 +35,24 @@ export const post_newBookingsController = async (
     ///////////////
     // Kolla om kunden med samma email finns i databasen
     const customer = await CustomerModel.findOne({ email: req.body.email });
+    ///////////////
+
+    ///////////////
+    // Hitta datum för bokning för att sedan kontrollera hur många bokningar det finns på det datumet.
+    let checkBookings: number = (
+      await BookingModel.find({
+        date: req.body.date,
+        sittingTime: req.body.sittingTime,
+      }).lean()
+    ).length;
+
+    let addone = checkBookings++;
+
+    if (checkBookings > 2) {
+      addone;
+      return res.send("Fullt");
+    }
+    ///////////////
 
     ///////////////
     // Kolla om kunden finns i collection
@@ -76,18 +94,6 @@ export const post_newBookingsController = async (
 
       await postNewBooking.save();
     }
-    ///////////////
-
-    ///////////////
-    // Hitta datum för bokning för att sedan kontrollera hur många bokningar det finns på det datumet.
-    let checkBookings: number = (
-      await BookingModel.find({ date: req.body.date }).lean()
-    ).length;
-
-    if (checkBookings > 2) {
-      return res.send("Fullt");
-    }
-    ///////////////
 
     /* 
     const postCustomer = async (_id: ObjectId) => {
