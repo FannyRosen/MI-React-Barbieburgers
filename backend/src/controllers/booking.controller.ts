@@ -34,9 +34,9 @@ export const post_newBookingsController = async (
     const customer = await CustomerModel.findOne({ email: req.body.email });
 
     if (customer) {
-      let { date, sittingTime, numberOfPeople } = req.body;
-
       const saveCustomerId = await customer.save();
+
+      let { date, sittingTime, numberOfPeople } = req.body;
 
       const postNewBooking = new BookingModel({
         date: date,
@@ -56,7 +56,7 @@ export const post_newBookingsController = async (
 
       const saveCustomerToDB = await postCustomer.save();
 
-      let { date, sittingTime, numberOfPeople, _id } = req.body;
+      let { date, sittingTime, numberOfPeople } = req.body;
 
       const postNewBooking = new BookingModel({
         date: date,
