@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  ICustomer,
-  ICustomerResponse,
-  ICustomersResponse,
-} from "../models/ICustomer";
+import { ICustomer } from "../models/ICustomer";
 import { fetchCustomers } from "../services/handleCustomersFetch.service";
 
 export const Customers = () => {

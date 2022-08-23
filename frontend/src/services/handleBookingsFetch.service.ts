@@ -1,5 +1,4 @@
 import { IBookingResponse } from "../models/IBooking";
-import { ICustomer } from "../models/ICustomer";
 import { get, post } from "./handleAxiosRequests.service";
 
 export async function fetchBookings(): Promise<IBookingResponse> {

@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  bookingsDefaultValue,
-  IBooking,
-  IBookingResponse,
-} from "../models/IBooking";
+import { IBooking } from "../models/IBooking";
 import { ICustomer } from "../models/ICustomer";
 import { fetchBookings } from "../services/handleBookingsFetch.service";
 import { fetchCustomers } from "../services/handleCustomersFetch.service";
-import { Customers } from "./Customers";
 
 export const AdminBookings = () => {
   const [bookings, setBookings] = useState<IBooking[]>([]);

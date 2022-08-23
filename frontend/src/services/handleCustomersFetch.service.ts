@@ -1,8 +1,4 @@
-import {
-  ICustomer,
-  ICustomerResponse,
-  ICustomersResponse,
-} from "../models/ICustomer";
+import { ICustomerResponse, ICustomersResponse } from "../models/ICustomer";
 import { get, post } from "./handleAxiosRequests.service";
 
 export async function fetchCustomers(): Promise<ICustomersResponse> {

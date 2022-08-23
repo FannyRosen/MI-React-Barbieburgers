@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
-import {
-  customersDefaultValue,
-  ICustomer,
-  ICustomerResponse,
-} from "./../models/ICustomer";
+import { customersDefaultValue, ICustomer } from "./../models/ICustomer";
 
 export const Customer = () => {
   const [customerById, setCustomerById] = useState<ICustomer>(
