@@ -6,7 +6,12 @@ import GrainHeader from "../../assets/grain-header.png";
 
 export const Header = () => {
   return (
-    <FlexDiv background="#B992E8" height="160px" dir="column">
+    <FlexDiv
+      background="#B992E8"
+      height="120px"
+      dir="column"
+      tabletheight="180px"
+    >
       <ImageDiv image={GrainHeader}>
         <LogoImage
           src={Logo}
