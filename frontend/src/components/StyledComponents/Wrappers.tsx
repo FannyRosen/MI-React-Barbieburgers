@@ -15,6 +15,7 @@ export const FlexDiv = styled.div`
   gap: ${(props: IStylingProps) => props.gap || "0"};
   margin: ${(props: IStylingProps) => props.margin || "0"};
   padding: ${(props: IStylingProps) => props.padding || "0"};
+  color: ${(props: IStylingProps) => props.color || "none"};
   border-radius: ${(props: IStylingProps) => props.borderRadius || "0"};
   @media ${device.tablet} {
     flex-direction: ${(props: IStylingProps) => props.tabletdir || props.dir};
@@ -28,6 +29,7 @@ export const FlexDiv = styled.div`
   @media ${device.laptop} {
     flex-direction: ${(props: IStylingProps) =>
       props.laptopdir || props.tabletdir};
+
     align-items: ${(props: IStylingProps) =>
       props.laptopalign || props.tabletalign};
     justify-content: ${(props: IStylingProps) =>
