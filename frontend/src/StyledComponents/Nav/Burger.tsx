@@ -58,7 +58,7 @@ export const Burger = () => {
         <div></div>
         <div></div>
       </StyledBurger>
-      <RightNav propsopen={open} />
+      <RightNav open={open} />
     </>
   );
 };

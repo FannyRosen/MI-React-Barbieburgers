@@ -7,3 +7,7 @@ export const StyledP = styled.p`
   padding: ${(props: IStylingProps) => props.padding || "0"};
   font-size: ${(props: IStylingProps) => props.fontsize || "12px"};
 `;
+
+export const StyledA = styled.a`
+  color: ${(props: IStylingProps) => props.color || "black"};
+`;

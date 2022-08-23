@@ -6,8 +6,11 @@ export const Footer = () => {
   return (
     <>
       <GlobalStyle />
-      <FlexDiv>
-        <StyledP fontsize="20px">Copyright</StyledP>
+      <FlexDiv background="#006D5D" height="100px">
+        <StyledP fontsize="20px" color="white">
+          Barbie Burgers <br />
+          AB Copyright 2022
+        </StyledP>
       </FlexDiv>
     </>
   );

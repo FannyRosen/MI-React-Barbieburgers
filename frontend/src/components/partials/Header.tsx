@@ -1,21 +1,12 @@
-import { Link } from "react-router-dom";
+import { Navbar } from "../../StyledComponents/Nav/Navbar";
+import { FlexDiv } from "../StyledComponents/Wrappers";
+import Logo from "../../assets/bb-logo.png";
 
 export const Header = () => {
   return (
-    <header>
-      <nav>
-        <ul>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/menu'>Menu</Link>
-          </li>
-          <li>
-            <Link to='/contact'>Contact</Link>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <FlexDiv background="#5B93E2" height="130px">
+      <img src={Logo} alt="Logo" width={"400px"} />
+      <Navbar></Navbar>
+    </FlexDiv>
   );
 };

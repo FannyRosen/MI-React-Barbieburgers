@@ -13,4 +13,10 @@ export interface IStylingProps {
   gap?: string;
   image?: string;
   fontsize?: string;
+  //open?: boolean;
+  transform1stchild?: string;
+  transform2ndchild?: string;
+  transform3rdchild?: string;
+  opacity2ndchild?: string;
+  ultransform?: string;
 }

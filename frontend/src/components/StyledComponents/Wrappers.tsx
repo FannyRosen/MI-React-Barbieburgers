@@ -14,6 +14,7 @@ export const FlexDiv = styled.div`
   gap: ${(props: IStylingProps) => props.gap || "0"};
   margin: ${(props: IStylingProps) => props.margin || "0"};
   padding: ${(props: IStylingProps) => props.padding || "0"};
+  color: ${(props: IStylingProps) => props.color || "none"};
 `;
 
 export const ImageDiv = styled(FlexDiv)`
