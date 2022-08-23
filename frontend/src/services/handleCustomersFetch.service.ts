@@ -1,9 +1,13 @@
-import { ICustomerResponse } from "../models/ICustomer";
+import {
+  ICustomer,
+  ICustomerResponse,
+  ICustomersResponse,
+} from "../models/ICustomer";
 import { get, post } from "./handleAxiosRequests.service";
 
-export async function fetchCustomers(): Promise<ICustomerResponse> {
+export async function fetchCustomers(): Promise<ICustomersResponse> {
   const response: string = `${process.env.REACT_APP_CUSTOMERS_URI}`;
-  return (await get<ICustomerResponse>(response)).data;
+  return (await get<ICustomersResponse>(response)).data;
 }
 
 export async function postCustomer(): Promise<ICustomerResponse> {
@@ -14,6 +18,7 @@ export async function postCustomer(): Promise<ICustomerResponse> {
 export async function fetchCustomerByID(
   id: string
 ): Promise<ICustomerResponse> {
-  const response: string = `${process.env.REACT_APP_CUSTOMERS_URI}` + id;
+  const response: string = `${process.env.REACT_APP_CUSTOMERS_URI}/` + id;
+
   return (await get<ICustomerResponse>(response)).data;
 }

@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { ICustomer, ICustomerResponse } from "../models/ICustomer";
+import { Link } from "react-router-dom";
+import {
+  ICustomer,
+  ICustomerResponse,
+  ICustomersResponse,
+} from "../models/ICustomer";
 import { fetchCustomers } from "../services/handleCustomersFetch.service";
 
 export const Customers = () => {
@@ -20,13 +25,16 @@ export const Customers = () => {
     <>
       Customers works!
       <div>
-        {customers.map((allCustomers, i) => {
+        {customers.map((customers, _id) => {
           return (
             <>
-              <div key={i}>
-                <p>{allCustomers.name}</p>
-                <p>{allCustomers.email}</p>
-                <p>{allCustomers.phone}</p>
+              <div key={_id}>
+                <p>{customers.name}</p>
+                <p>{customers.email}</p>
+                <p>{customers.phone}</p>
+                <Link to={"/admin/customers/" + customers._id}>
+                  <button>GO TO CUSTOMER</button>
+                </Link>
               </div>
             </>
           );

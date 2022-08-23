@@ -25,7 +25,7 @@ window.env = {
   "npm_config_userconfig": "/Users/NESTOR/.npmrc",
   "npm_config_init_module": "/Users/NESTOR/.npm-init.js",
   "__CFBundleIdentifier": "com.microsoft.VSCode",
-  "npm_command": "start",
+  "npm_command": "run-script",
   "PWD": "/Users/NESTOR/Desktop/FED2021/kurs_javascript-fordjupning/MI-React-Barbieburgers/frontend",
   "npm_lifecycle_event": "start",
   "EDITOR": "vi",

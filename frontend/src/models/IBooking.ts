@@ -1,10 +1,10 @@
-import { ICustomer } from "./ICustomer";
+import { customersDefaultValue, ICustomer } from "./ICustomer";
 
 export interface IBooking {
   _id: string;
   date: number;
   sittingTime: string;
-  // clientId: ICustomer;
+  clientId: ICustomer;
 }
 
 export interface IBookingResponse {
@@ -17,4 +17,5 @@ export const bookingsDefaultValue: IBooking = {
   _id: "",
   date: 0,
   sittingTime: "",
+  clientId: customersDefaultValue,
 };

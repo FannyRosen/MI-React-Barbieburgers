@@ -5,6 +5,17 @@ export interface ICustomer {
   phone: string;
 }
 
-export interface ICustomerResponse {
+export interface ICustomersResponse {
   data: ICustomer[];
 }
+
+export interface ICustomerResponse {
+  data: ICustomer;
+}
+
+export const customersDefaultValue: ICustomer = {
+  _id: "",
+  name: "",
+  email: "",
+  phone: "",
+};
