@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { IStylingProps } from "../../components/StyledComponents/StyledInterface";
+import { colors } from "../../components/StyledComponents/mixins";
 
 const Ul = styled.ul`
   list-style: none;
@@ -8,12 +9,12 @@ const Ul = styled.ul`
   flex-flow: row nowrap;
 
   li {
-    padding: 18px 10px;
+    padding: 0 10px 0 10px;
   }
 
   @media (max-width: 768px) {
     flex-flow: column nowrap;
-    background-color: #b84bc0;
+    background-color: ${colors.Blue};
     position: fixed;
     transform: ${(props: IStylingProps) => props.ultransform};
     top: 0;
@@ -25,6 +26,7 @@ const Ul = styled.ul`
 
     li {
       color: white;
+      margin-bottom: 40px;
     }
   }
 `;

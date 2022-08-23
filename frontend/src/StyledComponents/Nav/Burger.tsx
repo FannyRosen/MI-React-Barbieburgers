@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { IStylingProps } from "../../components/StyledComponents/StyledInterface";
 import RightNav from "./RightNav";
+import { colors } from "../../components/StyledComponents/mixins";
 
 const StyledBurger = styled.div`
   width: 2rem;
@@ -11,6 +12,9 @@ const StyledBurger = styled.div`
   right: 20px;
   z-index: 20;
   display: none;
+  padding: 10px;
+  background-color: ${(props: IStylingProps) => props.backgroundColor};
+  border-radius: 50%;
 
   @media (max-width: 768px) {
     display: flex;
@@ -47,7 +51,8 @@ export const Burger = () => {
   return (
     <>
       <StyledBurger
-        background={open ? "black" : "blue"}
+        backgroundColor={open ? "#5B93E2" : "#B992E8"}
+        background={open ? "#4771ac" : "#F9F871"}
         transform1stchild={open ? "rotate(45deg)" : "rotate(0)"}
         transform2ndchild={open ? "translateX(100%)" : "translateX(0)"}
         opacity2ndchild={open ? "0" : "1"}

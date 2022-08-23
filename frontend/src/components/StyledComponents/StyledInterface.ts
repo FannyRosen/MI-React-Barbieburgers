@@ -13,6 +13,7 @@ export interface IStylingProps {
   laptopwrap?: string;
   position?: string;
   background?: string;
+  backgroundColor?: string;
   color?: string;
   height?: string;
   tabletheight?: string;
@@ -25,7 +26,6 @@ export interface IStylingProps {
   gap?: string;
   image?: string;
   fontsize?: string;
-  //open?: boolean;
   transform1stchild?: string;
   transform2ndchild?: string;
   transform3rdchild?: string;
@@ -33,4 +33,5 @@ export interface IStylingProps {
   ultransform?: string;
   borderRadius?: string;
   textAlign?: string;
+  transition?: string;
 }

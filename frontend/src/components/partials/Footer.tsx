@@ -7,7 +7,7 @@ export const Footer = () => {
     <>
       <GlobalStyle />
       <FlexDiv background="#006D5D" height="100px">
-        <StyledP fontsize="20px" color="white">
+        <StyledP textAlign="center" fontsize="20px" color="white">
           Barbie Burgers <br />
           AB Copyright 2022
         </StyledP>
