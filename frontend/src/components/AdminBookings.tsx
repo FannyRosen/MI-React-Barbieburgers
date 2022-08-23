@@ -27,9 +27,9 @@ export const AdminBookings = () => {
         {bookings.map((allBookings, i) => {
           return (
             <>
-              <div key={i}>
-                <p>{allBookings.date}</p>
-                <p>{allBookings.sittingTime}</p>
+              <div key={allBookings._id}>
+                <p>Date: {allBookings.date}</p>
+                <p>Sitting: {allBookings.sittingTime}</p>
               </div>
             </>
           );
