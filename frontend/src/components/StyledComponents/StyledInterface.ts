@@ -1,13 +1,25 @@
 export interface IStylingProps {
   dir?: string;
+  tabletdir?: string;
+  laptopdir?: string;
   align?: string;
+  laptopalign?: string;
+  tabletalign?: string;
   justify?: string;
+  laptopjustify?: string;
+  tabletjustify?: string;
   wrap?: string;
+  tabletwrap?: string;
+  laptopwrap?: string;
   position?: string;
   background?: string;
   color?: string;
   height?: string;
+  tabletheight?: string;
+  laptopheight?: string;
   width?: string;
+  tabletwidth?: string;
+  laptopwidth?: string;
   margin?: string;
   padding?: string;
   gap?: string;
@@ -19,4 +31,6 @@ export interface IStylingProps {
   transform3rdchild?: string;
   opacity2ndchild?: string;
   ultransform?: string;
+  borderRadius?: string;
+  textAlign?: string;
 }
