@@ -28,7 +28,6 @@ export const FlexDiv = styled.div`
   @media ${device.laptop} {
     flex-direction: ${(props: IStylingProps) =>
       props.laptopdir || props.tabletdir};
-    border-radius: ;
     align-items: ${(props: IStylingProps) =>
       props.laptopalign || props.tabletalign};
     justify-content: ${(props: IStylingProps) =>
