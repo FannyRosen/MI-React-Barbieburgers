@@ -3,6 +3,23 @@ import { CustomerModel } from "../models/Customer.model";
 import { post_newBookingsController } from "./booking.controller";
 import { statusFailed, statusSuccess } from "./statusMessages";
 
+export function postCust(req: Request, res: Response) {
+  let { name, email, phone } = req.body;
+  const postNewCustomer = new CustomerModel({
+    name: name,
+    email: email,
+    phone: phone,
+  });
+
+  const saveCustomerToDB = postNewCustomer.save();
+
+  res.status(200).json({
+    status: statusSuccess,
+    message: "post new customer working",
+    data: saveCustomerToDB,
+  });
+}
+
 export const get_customerController = async (req: Request, res: Response) => {
   const customer = await CustomerModel.find();
 
@@ -24,21 +41,7 @@ export const post_newCustomerController = async (
   res: Response
 ) => {
   try {
-    let { name, email, phone } = req.body;
-    const postNewCustomer = new CustomerModel({
-      name: name,
-      email: email,
-      phone: phone,
-    });
-
-    const saveCustomerToDB = await postNewCustomer.save();
-    await postNewCustomer.save();
-
-    res.status(200).json({
-      status: statusSuccess,
-      message: "post new customer working",
-      data: saveCustomerToDB,
-    });
+    postCust(req, res); // Post från funktionen postCust högre upp i koden
   } catch (error: any) {
     res.status(500).json({
       status: statusFailed,

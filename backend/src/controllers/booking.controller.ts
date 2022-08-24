@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
-import { post_newCustomerController } from "./customer.controller";
 
 import { statusFailed, statusSuccess } from "./statusMessages";
 
@@ -51,6 +50,7 @@ export const post_newBookingsController = async (
 
     if (checkBookings > maximumNumberOfBookings) {
       addone;
+
       return res.status(200).json({
         status: statusFailed,
         message: "Fullbokat, so sorry!",
@@ -64,6 +64,7 @@ export const post_newBookingsController = async (
     const returningCustomer = await CustomerModel.findOne({
       email: req.body.email,
       numberOfPeople: req.body.numberOfPeople,
+      phone: req.body.phone,
     });
     ///////////////
 
@@ -87,11 +88,12 @@ export const post_newBookingsController = async (
 
       await postNewBooking.save();
     } else {
-      let { name, email } = req.body;
+      let { name, email, phone } = req.body;
       // POSTA FRÅN CUSTOMER CONTROLLER
       const postCustomer = new CustomerModel({
         name: name,
         email: email,
+        phone: phone,
       });
 
       const saveCustomerToDB = await postCustomer.save();

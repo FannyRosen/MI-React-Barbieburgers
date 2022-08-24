@@ -15,6 +15,7 @@ const StyledBurger = styled.div`
   padding: 10px;
   background-color: ${(props: IStylingProps) => props.backgroundColor};
   border-radius: 50%;
+  cursor: pointer;
 
   @media (max-width: 768px) {
     display: flex;

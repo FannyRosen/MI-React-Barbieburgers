@@ -4,3 +4,18 @@ export interface ICustomer {
   email: string;
   phone: string;
 }
+
+export interface ICustomersResponse {
+  data: ICustomer[];
+}
+
+export interface ICustomerResponse {
+  data: ICustomer;
+}
+
+export const customersDefaultValue: ICustomer = {
+  _id: "",
+  name: "",
+  email: "",
+  phone: "",
+};
