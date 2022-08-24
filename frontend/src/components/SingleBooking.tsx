@@ -6,10 +6,7 @@ import {
   deleteBooking,
   fetchBookingByID,
 } from "../services/handleBookingsFetch.service";
-import {
-  deleteCustomer,
-  fetchCustomerByID,
-} from "../services/handleCustomersFetch.service";
+import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
 
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
@@ -39,7 +36,7 @@ export const SingleBooking = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [params]);
+  }, [bookingById.clientId, customerById._id, params]); // håll kanske tom []
 
   return (
     <>
@@ -49,9 +46,8 @@ export const SingleBooking = () => {
       <Link to={"/admin/customers/"}>
         <button>GO TO CUSTOMER</button>
       </Link>
-      <p>DATE OF SITTING {bookingById.date}</p>
+      <p>DATE OF SITTING {bookingById.date.toLocaleString()}</p>
       <p>WHICH SITTING {bookingById.sittingTime}</p>
-      <p>DATE OF RESERVATION {bookingById.date}</p>
       <p>PEOPLE ON RESERVATION {bookingById.numberOfPeople}</p>
       <button>Edit</button>
       <button onClick={() => deleteBooking(bookingById._id)}>

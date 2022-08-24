@@ -1,8 +1,7 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   deleteCustomer,
-  editCustomer,
   fetchCustomerByID,
 } from "../services/handleCustomersFetch.service";
 import { customersDefaultValue, ICustomer } from "./../models/ICustomer";
@@ -17,6 +16,7 @@ export const Customer = () => {
   useEffect(() => {
     fetchCustomerByID(params.id!).then((response) => {
       setCustomerById(response.data);
+      // Fetch i fetch = hitta bokningar med clientID === customerId
       console.log(response);
     });
   }, [params]);

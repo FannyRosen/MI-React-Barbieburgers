@@ -1,9 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
-
 import { statusFailed, statusSuccess } from "./statusMessages";
 
+export async function deleteOneBooking(req: Request, res: Response) {
+  await BookingModel.findByIdAndDelete(req.params.id);
+}
 export const get_bookingsController = async (req: Request, res: Response) => {
   const bookings = await BookingModel.find();
 
@@ -13,7 +15,7 @@ export const get_bookingsController = async (req: Request, res: Response) => {
       message: "Hämta alla bokningar fungerar",
       data: bookings,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     res.status(500).json({
       status: statusFailed,
@@ -35,8 +37,6 @@ export const post_newBookingsController = async (
       }).lean()
     ).length;
 
-    ///////////////
-    // Hitta datum för bokning för att sedan kontrollera hur många bokningar det finns på det datumet.
     let checkBookings: number = (
       await BookingModel.find({
         date: req.body.date,
@@ -55,25 +55,14 @@ export const post_newBookingsController = async (
         message: "Fullbokat, so sorry!",
       });
     }
-    ///////////
-    // Om fler än 6 och mindre än 12, boka 2 bord, HUR?
 
-    ///////////////
-    // Kolla om kunden med samma email finns i databasen
     const returningCustomer = await CustomerModel.findOne({
       email: req.body.email,
       numberOfPeople: req.body.numberOfPeople,
       phone: req.body.phone,
     });
-    ///////////////
 
     if (returningCustomer) {
-      ///////////////
-
-      ///////////////
-      // Kolla om kunden finns i collection
-      //HÄR VILL JAG ANVÄNDA POST_CONTROLLERN!
-      ///////////////
       const saveCustomerId = await returningCustomer.save();
 
       let { date, sittingTime, numberOfPeople } = req.body;
@@ -88,7 +77,7 @@ export const post_newBookingsController = async (
       await postNewBooking.save();
     } else {
       let { name, email, phone } = req.body;
-      // POSTA FRÅN CUSTOMER CONTROLLER
+
       const postCustomer = new CustomerModel({
         name: name,
         email: email,
@@ -104,25 +93,16 @@ export const post_newBookingsController = async (
         sittingTime: sittingTime,
         numberOfPeople: numberOfPeople,
         clientId: saveCustomerToDB._id,
-
-        //clientId: await postCustomer(_id), //Vill att denna gör
-        // samma som det utkommenterade ovan
-        // men via customer.controller.ts
       });
 
       await postNewBooking.save();
     }
 
-    /* 
-    const postCustomer = async (_id: ObjectId) => {
-      post_newCustomerController;
-    };
- */
     res.status(200).json({
       status: statusSuccess,
       message: "New booking added to DB",
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       status: statusFailed,
       message: error,
@@ -152,16 +132,15 @@ export const get_bookingByIdController = async (
 
 export const delete_bookingByIdController = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   try {
-    const deleteBooking = await BookingModel.findByIdAndDelete(req.params.id);
+    // const deleteBooking = await BookingModel.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       status: statusSuccess,
       message: "Delete booking works",
-      data: deleteBooking,
+      data: deleteOneBooking(req, res),
     });
   } catch (error: any) {
     res.status(500).json({
