@@ -32,6 +32,7 @@ export interface IStylingProps {
   opacity2ndchild?: string;
   ultransform?: string;
   borderRadius?: string;
+  border?: string;
   textAlign?: string;
   transition?: string;
 }

@@ -1,8 +1,9 @@
 import { ICustomer } from "./ICustomer";
 
 export interface IBooking {
-  _id: string;
+  _id?: string;
   date: Date;
-  sittingTime: string;
-  clientId: ICustomer;
+  numberOfPeople: number;
+  sittingTime?: string;
+  clientId?: ICustomer;
 }
