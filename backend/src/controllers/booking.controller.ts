@@ -20,7 +20,6 @@ export const get_bookingsController = async (req: Request, res: Response) => {
       message: error,
     });
   }
-  console.log(bookings);
 };
 
 export const post_newBookingsController = async (

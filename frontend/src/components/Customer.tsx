@@ -15,12 +15,16 @@ export const Customer = () => {
       setCustomerById(response.data);
       console.log(response);
     });
-  }, []);
+  }, [params]);
 
   return (
     <>
       Customer works!
+      <p>{customerById.name}</p>
       <p>{customerById.email}</p>
+      <p>{customerById.phone}</p>
+      <button>EDIT</button>
+      <button>DELETE</button>
     </>
   );
 };
