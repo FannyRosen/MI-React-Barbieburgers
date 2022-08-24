@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
+import { FormEvent, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import {
+  deleteCustomer,
+  editCustomer,
+  fetchCustomerByID,
+} from "../services/handleCustomersFetch.service";
 import { customersDefaultValue, ICustomer } from "./../models/ICustomer";
 
 export const Customer = () => {
@@ -23,8 +27,13 @@ export const Customer = () => {
       <p>{customerById.name}</p>
       <p>{customerById.email}</p>
       <p>{customerById.phone}</p>
-      <button>EDIT</button>
-      <button>DELETE</button>
+      <button
+        onClick={() => {
+          deleteCustomer(customerById._id);
+        }}
+      >
+        <Link to={"/admin"}>DELETE</Link>
+      </button>
     </>
   );
 };

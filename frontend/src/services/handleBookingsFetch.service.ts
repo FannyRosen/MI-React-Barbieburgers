@@ -1,5 +1,5 @@
 import { IBookingResponse, IBookingsResponse } from "../models/IBooking";
-import { get, post } from "./handleAxiosRequests.service";
+import { get, post, put } from "./handleAxiosRequests.service";
 
 export async function fetchBookings(): Promise<IBookingsResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_URI}`;
@@ -14,4 +14,13 @@ export async function postBooking(): Promise<IBookingsResponse> {
 export async function fetchBookingByID(id: string): Promise<IBookingResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_URI}/` + id;
   return (await get<IBookingResponse>(response)).data;
+}
+export async function deleteBooking(id: string): Promise<IBookingResponse> {
+  const response: string = `${process.env.REACT_APP_BOOKINGS_DELETE}/` + id;
+  return (await post<IBookingResponse>(response)).data;
+}
+
+export async function editBooking(id: string): Promise<IBookingResponse> {
+  const response: string = `${process.env.REACT_APP_BOOKINGS_EDIT}/` + id;
+  return (await put<IBookingResponse>(response)).data;
 }

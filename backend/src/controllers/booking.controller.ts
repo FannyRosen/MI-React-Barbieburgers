@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 
@@ -152,7 +152,8 @@ export const get_bookingByIdController = async (
 
 export const delete_bookingByIdController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const deleteBooking = await BookingModel.findByIdAndDelete(req.params.id);

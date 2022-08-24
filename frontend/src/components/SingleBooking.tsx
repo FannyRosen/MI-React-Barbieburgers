@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { bookingsDefaultValue, IBooking } from "../models/IBooking";
 import { customersDefaultValue, ICustomer } from "../models/ICustomer";
-import { fetchBookingByID } from "../services/handleBookingsFetch.service";
-import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
+import {
+  deleteBooking,
+  fetchBookingByID,
+} from "../services/handleBookingsFetch.service";
+import {
+  deleteCustomer,
+  fetchCustomerByID,
+} from "../services/handleCustomersFetch.service";
 
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
@@ -48,7 +54,9 @@ export const SingleBooking = () => {
       <p>DATE OF RESERVATION {bookingById.date}</p>
       <p>PEOPLE ON RESERVATION {bookingById.numberOfPeople}</p>
       <button>Edit</button>
-      <button>Delete</button>
+      <button onClick={() => deleteBooking(bookingById._id)}>
+        <Link to={"/admin"}>Delete</Link>
+      </button>
     </>
   );
 };
