@@ -11,3 +11,13 @@ export interface IBooking {
 export interface IBookingResponse {
   data: IBooking[];
 }
+
+//Hur bör denna se ut?
+
+export const bookingsDefaultValue: IBooking = {
+  _id: "",
+  date: new Date(),
+  numberOfPeople: 0,
+  sittingTime: "",
+  clientId: customersDefaultValue,
+};
