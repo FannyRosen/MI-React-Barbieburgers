@@ -1,4 +1,4 @@
-import { Navbar } from "../../StyledComponents/Nav/Navbar";
+import { Navbar } from "../StyledComponents/Nav/Navbar";
 import { FlexDiv, ImageDiv } from "../StyledComponents/Wrappers";
 import Logo from "../../assets/bb-logo.png";
 import { LogoImage } from "../StyledComponents/Images";

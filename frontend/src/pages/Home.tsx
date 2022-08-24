@@ -3,7 +3,7 @@ import background from "../assets/background.png";
 import burgers from "../assets/burgers.png";
 import { colors } from "../components/StyledComponents/mixins";
 import { StyledP } from "../components/StyledComponents/TextElements";
-import { Background } from "../StyledComponents/Background";
+import { Background } from "../components/StyledComponents/Background";
 
 export const Home = () => {
   return (
