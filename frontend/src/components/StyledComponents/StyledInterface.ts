@@ -34,4 +34,5 @@ export interface IStylingProps {
   borderRadius?: string;
   textAlign?: string;
   transition?: string;
+  minheight?: string;
 }
