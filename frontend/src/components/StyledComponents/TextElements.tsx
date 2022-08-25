@@ -10,5 +10,5 @@ export const StyledP = styled.p`
 `;
 
 export const StyledA = styled.a`
-  color: ${(props: IStylingProps) => props.color || "black"};
+  color: ${(props: IStylingProps) => props.color || "white"};
 `;

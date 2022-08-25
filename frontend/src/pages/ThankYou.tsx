@@ -15,7 +15,8 @@ export const ThankYou = () => {
           dir="column"
         >
           <FlexDiv width="90%" dir="column" tabletdir="row" margin="20px">
-            <FlexDiv width="50%">
+            <FlexDiv width="80%" dir="column">
+              <h2>Thank you!</h2>
               <StyledP fontsize="20px" margin="20px">
                 Your booking is completed! A confirmation email has been sent
                 to:

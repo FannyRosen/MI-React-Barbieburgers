@@ -4,7 +4,7 @@ import { colors } from "../mixins";
 
 const Nav = styled.nav`
   width: 100%;
-  margin-top: 10px;
+
   display: flex;
   justify-content: center;
   background-color: ${colors.Blue};

@@ -7,9 +7,19 @@ const Ul = styled.ul`
   list-style: none;
   display: flex;
   flex-flow: row nowrap;
+  padding: 0;
 
   li {
-    padding: 0 10px 0 10px;
+    color: white;
+    display: inline;
+    list-style: none;
+    padding: 5px 20px 5px 20px;
+    margin: 0 40px 0 40px;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
   }
 
   @media (max-width: 768px) {
@@ -25,8 +35,8 @@ const Ul = styled.ul`
     transition: transform 0.3s ease-in-out;
 
     li {
-      color: white;
       margin-bottom: 40px;
+      padding: 0 20px 0 20px;
     }
   }
 `;
