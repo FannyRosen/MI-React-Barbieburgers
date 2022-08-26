@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { bookingsDefaultValue, IBooking } from "../models/IBooking";
 import { customersDefaultValue, ICustomer } from "../models/ICustomer";
@@ -14,6 +14,7 @@ export const SingleBooking = () => {
   const [customerById, setCustomerById] = useState<ICustomer>(
     customersDefaultValue
   );
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   let params = useParams();
   //Försök göra utan en fetch, props?
@@ -43,16 +44,30 @@ export const SingleBooking = () => {
       SingleBooking works!
       <p>CUSTOMERS NAME</p>
       <p>{customerById._id}</p>
-      <Link to={"/admin/customers/"}>
+      <Link to={"/admin/customers/" + customerById._id}>
         <button>GO TO CUSTOMER</button>
       </Link>
       <p>DATE OF SITTING {bookingById.date.toLocaleString()}</p>
       <p>WHICH SITTING {bookingById.sittingTime}</p>
       <p>PEOPLE ON RESERVATION {bookingById.numberOfPeople}</p>
       <button>Edit</button>
-      <button onClick={() => deleteBooking(bookingById._id)}>
-        <Link to={"/admin"}>Delete</Link>
-      </button>
+      {confirmDelete ? (
+        <>
+          <button onClick={() => deleteBooking(bookingById._id)}>
+            <Link to={"/admin"}>Confirm</Link>
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            onClick={() => {
+              setConfirmDelete(true);
+            }}
+          >
+            Delete
+          </button>
+        </>
+      )}
     </>
   );
 };

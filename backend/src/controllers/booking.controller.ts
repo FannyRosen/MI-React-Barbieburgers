@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { statusFailed, statusSuccess } from "./statusMessages";
@@ -29,28 +29,10 @@ export const get_bookingsController = async (req: Request, res: Response) => {
 
 export const post_newBookingsController = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
-    /////////////////////////
-    // EMAIL SETUP
-    /////////////////////////
-    const contactEmail = nodemailer.createTransport({
-      service: process.env.SERVICE_EMAIL,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PSW,
-      },
-    });
-
-    contactEmail.verify((error: any) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Ready to send.");
-      }
-    });
-
     /////////////////////////
     // Om mindre än <= 6 personer POST en gång,
     // om >= 6 och max 12 personer POST två gånger
@@ -98,29 +80,6 @@ export const post_newBookingsController = async (
       });
 
       await postNewBooking.save();
-
-      /////////////////////////
-      // BEKRÄFTELSE MAIL PÅ BOKNING. GÖRA TILL EGEN FUNKTION? FÖR ATT SNYGGA UPP
-      /////////////////////////
-      let bookingid = await BookingModel.findById(req.params.id); // BLIR NULL, FIX
-
-      const mail = {
-        from: req.body.name,
-        to: req.body.email,
-        html: `<p>Hej ${req.body.name}! </p>
-        Embedded image: <img src="../../../frontend/src/assets/bb-logo.png"/>
-        
-        <span>Din reservation för ${req.body.numberOfPeople} personer hos oss på barbie burgers datum: ${req.body.date} klockan: ${req.body.sittingTime} är nu bokad!</span>
-        <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingid}">här</a></span>`,
-      };
-
-      contactEmail.sendMail(mail, (error: any) => {
-        if (error) {
-          res.json({ status: "ERROR" });
-        } else {
-          res.json({ status: "SENT" });
-        }
-      });
     } else {
       /////////////////////////
       // FINNS INTE KUND I DATBASEN? => SKAPA NY KUND
@@ -147,6 +106,51 @@ export const post_newBookingsController = async (
 
       await postNewBooking.save();
     }
+
+    /////////////////////////
+    // EMAIL SETUP
+    /////////////////////////
+    /////////////////////////
+    // BEKRÄFTELSE MAIL PÅ BOKNING. GÖRA TILL EGEN FUNKTION? FÖR ATT SNYGGA UPP
+    /////////////////////////
+    const contactEmail = nodemailer.createTransport({
+      service: process.env.SERVICE_EMAIL,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PSW,
+      },
+    });
+
+    contactEmail.verify((error: any) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Confirmation sent");
+      }
+    });
+
+    const bookingid = await BookingModel.findById(req.params.id); // BLIR NULL, FIX
+    console.log("Id", req.params.id);
+
+    console.log("Booking", bookingid);
+
+    const mail = {
+      from: req.body.name,
+      to: req.body.email,
+      html: `<p>Hej ${req.body.name}! </p>
+        Embedded image: <img src="../../../frontend/src/assets/bb-logo.png"/>
+        
+        <span>Din reservation för ${req.body.numberOfPeople} personer hos oss på barbie burgers datum: ${req.body.date} klockan: ${req.body.sittingTime} är nu bokad!</span>
+        <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingid}">här</a></span>`,
+    };
+
+    contactEmail.sendMail(mail, (error: any) => {
+      if (error) {
+        res.json({ status: "ERROR" });
+      } else {
+        res.json({ status: "SENT" });
+      }
+    });
 
     res.status(200).json({
       status: statusSuccess,
