@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
+import { ICustomer } from "src/models/ICustomer";
 import { CustomerModel } from "../models/Customer.model";
-import { post_newBookingsController } from "./booking.controller";
+import { deleteOneBooking } from "./booking.controller";
 import { statusFailed, statusSuccess } from "./statusMessages";
 
-export function postCust(req: Request, res: Response) {
+export async function deletecustomerAndBookings(req: Request, res: Response) {
+  await CustomerModel.findByIdAndDelete(req.params.id);
+  deleteOneBooking(req, res);
+}
+export function postNewCustomer(req: Request, res: Response) {
   let { name, email, phone } = req.body;
   const postNewCustomer = new CustomerModel({
     name: name,
@@ -28,7 +33,7 @@ export const get_customerController = async (req: Request, res: Response) => {
       status: statusSuccess,
       data: customer,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       status: statusFailed,
       message: error,
@@ -41,7 +46,7 @@ export const post_newCustomerController = async (
   res: Response
 ) => {
   try {
-    postCust(req, res); // Post från funktionen postCust högre upp i koden
+    postNewCustomer(req, res);
   } catch (error: any) {
     res.status(500).json({
       status: statusFailed,
@@ -75,12 +80,13 @@ export const delete_customerByIdController = async (
   res: Response
 ) => {
   try {
-    const deleteById = await CustomerModel.findByIdAndDelete(req.params.id);
-
+    /* 
+    const id = req.params.id;
+    deletecustomerAndBookings(id, res); */
     res.status(200).json({
       status: statusSuccess,
       message: "Delete id works",
-      data: deleteById,
+      data: deletecustomerAndBookings(req, res),
     });
   } catch (error: any) {
     res.status(500).json({
