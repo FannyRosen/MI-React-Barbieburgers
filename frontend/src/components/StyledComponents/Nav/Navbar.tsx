@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { Burger } from "./Burger";
-import { colors } from "../../components/StyledComponents/mixins";
+import { colors } from "../mixins";
 
 const Nav = styled.nav`
   width: 100%;
-  margin-top: 10px;
+
   display: flex;
   justify-content: center;
   background-color: ${colors.Blue};

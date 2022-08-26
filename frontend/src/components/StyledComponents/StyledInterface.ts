@@ -35,4 +35,5 @@ export interface IStylingProps {
   border?: string;
   textAlign?: string;
   transition?: string;
+  minheight?: string;
 }

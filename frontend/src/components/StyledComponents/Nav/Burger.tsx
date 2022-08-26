@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { IStylingProps } from "../../components/StyledComponents/StyledInterface";
+import { IStylingProps } from "../StyledInterface";
 import RightNav from "./RightNav";
-import { colors } from "../../components/StyledComponents/mixins";
+import { colors } from "../mixins";
 
 const StyledBurger = styled.div`
   width: 2rem;

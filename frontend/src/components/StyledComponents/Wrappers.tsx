@@ -55,4 +55,5 @@ export const ImageDiv = styled(FlexDiv)`
   //background-size: 100%;
   //background-position: 68% 65%;
   position: ${(props: IStylingProps) => props.position || ""};
+  min-height: ${(props: IStylingProps) => props.minheight || "0"};
 `;

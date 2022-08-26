@@ -1,15 +1,25 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { IStylingProps } from "../../components/StyledComponents/StyledInterface";
-import { colors } from "../../components/StyledComponents/mixins";
+import { IStylingProps } from "../StyledInterface";
+import { colors } from "../mixins";
 
 const Ul = styled.ul`
   list-style: none;
   display: flex;
   flex-flow: row nowrap;
+  padding: 0;
 
   li {
-    padding: 0 10px 0 10px;
+    color: white;
+    display: inline;
+    list-style: none;
+    padding: 5px 20px 5px 20px;
+    margin: 0 40px 0 40px;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
   }
 
   @media (max-width: 768px) {
@@ -25,8 +35,8 @@ const Ul = styled.ul`
     transition: transform 0.3s ease-in-out;
 
     li {
-      color: white;
       margin-bottom: 40px;
+      padding: 0 20px 0 20px;
     }
   }
 `;
@@ -39,13 +49,13 @@ const RightNav = (propsopen: IOpen) => {
   return (
     <Ul ultransform={propsopen.open ? "translateX(0)" : "translateX(100%)"}>
       <li>
-        <Link to="/">HOME</Link>
-      </li>
-      <li>
         <Link to="/menu">MENU</Link>
       </li>
       <li>
         <Link to="/contact">CONTACT</Link>
+      </li>
+      <li>
+        <Link to="/book">BOOK</Link>
         {""}
       </li>
     </Ul>
