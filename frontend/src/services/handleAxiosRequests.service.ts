@@ -7,3 +7,7 @@ export async function get<T>(url: string) {
 export async function post<T>(url: string) {
   return await axios.post<T>(url);
 }
+
+export async function put<T>(url: string) {
+  return await axios.put<T>(url);
+}
