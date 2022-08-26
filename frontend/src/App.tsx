@@ -11,11 +11,6 @@ import { SingleBooking } from "./components/SingleBooking";
 import { Customers } from "./components/Customers";
 import { Customer } from "./components/Customer";
 import { AdminBookings } from "./components/AdminBookings";
-import { fetchBookings } from "./services/handleBookingsFetch.service";
-import { useEffect, useState } from "react";
-import { IBookingResponse } from "./models/IBooking";
-import { ICustomerResponse } from "./models/ICustomer";
-import { fetchCustomers } from "./services/handleCustomersFetch.service";
 
 function App() {
   return (

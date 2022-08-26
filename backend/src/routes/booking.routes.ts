@@ -12,6 +12,6 @@ const router: Router = express.Router();
 router.get("/", get_bookingsController);
 router.post("/new", post_newBookingsController);
 router.get("/:id", get_bookingByIdController);
-router.delete("/delete/:id", delete_bookingByIdController);
+router.post("/delete/:id", delete_bookingByIdController);
 router.put("/edit/:id", put_bookingByIdController);
 export default router;

@@ -39,14 +39,19 @@ export const AdminBookings = () => {
                 {bookings.map((booking) => {
                   if (booking.clientId.toString() === customer._id) {
                     return (
-                      <div key={booking._id}>
-                        <div>{booking.date}</div>
-                        <div>{booking.sittingTime}</div>
-                        <Link to={"/admin/" + booking._id}>
-                          <button>GO TO BOOKING</button>
-                        </Link>
-                      </div>
+                      <>
+                        <div key={booking._id}>
+                          <div>{booking.date.toLocaleString()}</div>
+                          <div>{booking.sittingTime}</div>
+                          <div>{booking.numberOfPeople}</div>
+                          <Link to={"/admin/" + booking._id}>
+                            <button>GO TO BOOKING</button>
+                          </Link>
+                        </div>
+                      </>
                     );
+                  } else {
+                    return <></>;
                   }
                 })}
               </div>
