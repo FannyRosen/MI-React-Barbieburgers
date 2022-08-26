@@ -6,11 +6,19 @@ import { saveBooking } from "../services/StorageServices";
 import { useState } from "react";
 import { PageIndicator } from "./partials/PageIndicator";
 import { Link } from "react-router-dom";
+import { fetchCustomers } from "../services/handleCustomersFetch.service";
+import { IBooking } from "../models/IBooking";
+import { ICustomer } from "../models/ICustomer";
+import { fetchBookings } from "../services/handleBookingsFetch.service";
+import { Loader } from "./partials/Loader";
 
 export const Book = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [phase, setPhase] = useState(1);
   const [date, setDate] = useState<Date>(new Date());
   const [numberOfPeople, setNOP] = useState<number>(0);
+  const [bookings, setBookings] = useState<IBooking[]>([]);
+  const [customers, setCustomers] = useState<ICustomer[]>([]);
 
   const curr = new Date();
   curr.setDate(curr.getDate());
@@ -22,6 +30,18 @@ export const Book = () => {
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNOP(parseInt(e.target.value));
+  };
+
+  const checkDate = () => {
+    //saveBooking({ date, numberOfPeople });
+    fetchBookings()
+      .then(async (response) => {
+        setBookings(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setPhase(2);
   };
 
   return (
@@ -82,9 +102,7 @@ export const Book = () => {
                     color='black'
                     onClick={() => {
                       if (numberOfPeople != 0) {
-                        saveBooking({ date, numberOfPeople });
-
-                        setPhase(2);
+                        checkDate();
                       }
                     }}
                   >
@@ -93,7 +111,7 @@ export const Book = () => {
                 </FlexDiv>
               </form>
             </>
-          )}{" "}
+          )}
           {phase === 2 && (
             <>
               <p>Här ska vi välja sittning</p>
