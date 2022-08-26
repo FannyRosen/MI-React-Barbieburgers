@@ -102,7 +102,7 @@ export const post_newBookingsController = async (
       /////////////////////////
       // BEKRÄFTELSE MAIL PÅ BOKNING. GÖRA TILL EGEN FUNKTION? FÖR ATT SNYGGA UPP
       /////////////////////////
-      let bookingid = await BookingModel.findById(req.params._id); // BLIR NULL, FIX
+      let bookingid = await BookingModel.findById(req.params.id); // BLIR NULL, FIX
 
       const mail = {
         from: req.body.name,
@@ -113,6 +113,7 @@ export const post_newBookingsController = async (
         <span>Din reservation för ${req.body.numberOfPeople} personer hos oss på barbie burgers datum: ${req.body.date} klockan: ${req.body.sittingTime} är nu bokad!</span>
         <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingid}">här</a></span>`,
       };
+
       contactEmail.sendMail(mail, (error: any) => {
         if (error) {
           res.json({ status: "ERROR" });
