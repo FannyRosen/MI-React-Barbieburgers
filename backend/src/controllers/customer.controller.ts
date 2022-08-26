@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
+import { ICustomer } from "src/models/ICustomer";
 import { CustomerModel } from "../models/Customer.model";
 import { post_newBookingsController } from "./booking.controller";
 import { statusFailed, statusSuccess } from "./statusMessages";
 
-export function postCust(req: Request, res: Response) {
+export async function deletecustomerAndBookings(req: Request, res: Response) {
+  await CustomerModel.findByIdAndDelete(req.params.id);
+  deleteOneBooking(req, res);
+}
+export function postNewCustomer(req: Request, res: Response) {
   let { name, email, phone } = req.body;
   const postNewCustomer = new CustomerModel({
     name: name,

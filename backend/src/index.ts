@@ -8,7 +8,6 @@ import bookingRoute from "./routes/booking.routes";
 import customerRoute from "./routes/customer.routes";
 
 const app = express();
-
 app.use(helmet());
 app.use(cors({ origin: true }));
 app.use(express.urlencoded({ extended: true }));

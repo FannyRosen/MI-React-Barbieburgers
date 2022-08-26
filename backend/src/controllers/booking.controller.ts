@@ -1,8 +1,11 @@
+require("dotenv").config();
+
 import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 
 import { statusFailed, statusSuccess } from "./statusMessages";
+import nodemailer from "nodemailer";
 
 export const get_bookingsController = async (req: Request, res: Response) => {
   const bookings = await BookingModel.find();
@@ -28,6 +31,26 @@ export const post_newBookingsController = async (
   res: Response
 ) => {
   try {
+    /////////////////////////
+    // EMAIL SETUP
+    /////////////////////////
+    const contactEmail = nodemailer.createTransport({
+      service: process.env.SERVICE_EMAIL,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PSW,
+      },
+    });
+
+    contactEmail.verify((error: any) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Ready to send.");
+      }
+    });
+
+    /////////////////////////
     // Om mindre än <= 6 personer POST en gång,
     // om >= 6 och max 12 personer POST två gånger
     let numberOfPeopleBooked = (
@@ -36,8 +59,6 @@ export const post_newBookingsController = async (
       }).lean()
     ).length;
 
-    ///////////////
-    // Hitta datum för bokning för att sedan kontrollera hur många bokningar det finns på det datumet.
     let checkBookings: number = (
       await BookingModel.find({
         date: req.body.date,
@@ -45,8 +66,8 @@ export const post_newBookingsController = async (
       }).lean()
     ).length;
 
-    let maximumNumberOfBookings = 2;
-    let addone = checkBookings++;
+    let maximumNumberOfBookings: number = 2; // MAX ANTAL BOKNINGAR/BORD OCH SITTNING
+    let addone: number = checkBookings++;
 
     if (checkBookings > maximumNumberOfBookings) {
       addone;
@@ -56,8 +77,6 @@ export const post_newBookingsController = async (
         message: "Fullbokat, so sorry!",
       });
     }
-    ///////////
-    // Om fler än 6 och mindre än 12, boka 2 bord, HUR?
 
     ///////////////
     // Kolla om kunden med samma email finns i databasen
@@ -87,7 +106,33 @@ export const post_newBookingsController = async (
       });
 
       await postNewBooking.save();
+
+      /////////////////////////
+      // BEKRÄFTELSE MAIL PÅ BOKNING. GÖRA TILL EGEN FUNKTION? FÖR ATT SNYGGA UPP
+      /////////////////////////
+      let bookingid = await BookingModel.findById(req.params._id); // BLIR NULL, FIX
+
+      const mail = {
+        from: req.body.name,
+        to: req.body.email,
+        html: `<p>Hej ${req.body.name}! </p>
+        Embedded image: <img src="../../../frontend/src/assets/bb-logo.png"/>
+        
+        <span>Din reservation för ${req.body.numberOfPeople} personer hos oss på barbie burgers datum: ${req.body.date} klockan: ${req.body.sittingTime} är nu bokad!</span>
+        <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingid}">här</a></span>`,
+      };
+      contactEmail.sendMail(mail, (error: any) => {
+        if (error) {
+          res.json({ status: "ERROR" });
+        } else {
+          res.json({ status: "SENT" });
+        }
+      });
     } else {
+      /////////////////////////
+      // FINNS INTE KUND I DATBASEN? => SKAPA NY KUND
+      /////////////////////////
+
       let { name, email, phone } = req.body;
       // POSTA FRÅN CUSTOMER CONTROLLER
       const postCustomer = new CustomerModel({
