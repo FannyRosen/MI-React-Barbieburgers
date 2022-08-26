@@ -1,17 +1,26 @@
-import { IBookingResponse } from "../models/IBooking";
-import { get, post } from "./handleAxiosRequests.service";
+import { IBookingResponse, IBookingsResponse } from "../models/IBooking";
+import { get, post, put } from "./handleAxiosRequests.service";
 
-export async function fetchBookings(): Promise<IBookingResponse> {
+export async function fetchBookings(): Promise<IBookingsResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_URI}`;
-  return (await get<IBookingResponse>(response)).data;
+  return (await get<IBookingsResponse>(response)).data;
 }
 
-export async function postBooking(): Promise<IBookingResponse> {
+export async function postBooking(): Promise<IBookingsResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_POST}`;
-  return (await post<IBookingResponse>(response)).data;
+  return (await post<IBookingsResponse>(response)).data;
 }
 
 export async function fetchBookingByID(id: string): Promise<IBookingResponse> {
-  const response: string = `${process.env.REACT_APP_BOOKINGS_URI}` + id;
+  const response: string = `${process.env.REACT_APP_BOOKINGS_URI}/` + id;
   return (await get<IBookingResponse>(response)).data;
+}
+export async function deleteBooking(id: string): Promise<IBookingResponse> {
+  const response: string = `${process.env.REACT_APP_BOOKINGS_DELETE}/` + id;
+  return (await post<IBookingResponse>(response)).data;
+}
+
+export async function editBooking(id: string): Promise<IBookingResponse> {
+  const response: string = `${process.env.REACT_APP_BOOKINGS_EDIT}/` + id;
+  return (await put<IBookingResponse>(response)).data;
 }

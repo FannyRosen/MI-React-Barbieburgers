@@ -1,4 +1,4 @@
-const statusSuccess = "Success";
-const statusFailed = "Failed";
+const statusSuccess: string = "Success";
+const statusFailed: string = "Failed";
 
 export { statusSuccess, statusFailed };
