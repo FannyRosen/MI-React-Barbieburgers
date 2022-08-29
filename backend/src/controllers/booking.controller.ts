@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { statusFailed, statusSuccess } from "./statusMessages";

@@ -24,7 +24,6 @@ export const AdminBookings = () => {
 
   return (
     <>
-      Admin Bookings works!
       <div>
         {customers.map((customer) => {
           return (
@@ -41,7 +40,7 @@ export const AdminBookings = () => {
                     return (
                       <>
                         <div key={booking._id}>
-                          <div>{booking.date.toLocaleString()}</div>
+                          <div>{booking.date.toString()}</div>
                           <div>{booking.sittingTime}</div>
                           <div>{booking.numberOfPeople}</div>
                           <Link to={"/admin/" + booking._id}>
