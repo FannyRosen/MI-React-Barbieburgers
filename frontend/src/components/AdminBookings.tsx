@@ -33,7 +33,7 @@ export const AdminBookings = () => {
                 <p>{customer.name}</p>
                 <p>{customer.email}</p>
                 <Link to={"/admin/customers/" + customer._id}>
-                  <button> GO TO CUSTOMER</button>{" "}
+                  <button> GO TO CUSTOMER</button>
                 </Link>
 
                 {bookings.map((booking) => {
