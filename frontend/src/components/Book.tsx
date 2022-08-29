@@ -11,7 +11,7 @@ import {
 } from "../services/handleBookingsFetch.service";
 import { Loader } from "./partials/Loader";
 import { StyledLabel } from "./StyledComponents/TextElements";
-import { Form, Input } from "./StyledComponents/Form";
+import { Form, Input, Label } from "./StyledComponents/Form";
 import { Background } from "./StyledComponents/Background";
 
 export const Book = () => {
@@ -153,7 +153,7 @@ export const Book = () => {
                       max={"2023-12-31"}
                     />
 
-                    <label>Number of people</label>
+                    <Label>Number of people</Label>
                     <select
                       required
                       id='date'
@@ -233,21 +233,21 @@ export const Book = () => {
 
                 <Form onSubmit={completeBooking}>
                   <FlexDiv dir='column'>
-                    <label>Name:</label>
+                    <Label>Name:</Label>
                     <input
                       required
                       onChange={handleChange}
                       type='text'
                       name='name'
                     />
-                    <label>Email:</label>
+                    <Label>Email:</Label>
                     <input
                       required
                       onChange={handleChange}
                       type='email'
                       name='email'
                     />
-                    <label>Phone number:</label>
+                    <Label>Phone number:</Label>
                     <input
                       required
                       onChange={handleChange}

@@ -16,6 +16,9 @@ export const StyledButton = styled.button`
   padding: ${(props: IStylingProps) => props.padding || "0"};
   color: ${(props: IStylingProps) => props.color || "white"};
   border-radius: ${(props: IStylingProps) => props.borderRadius || "10px"};
+  :hover {
+    cursor: pointer;
+  }
   @media ${device.tablet} {
     flex-direction: ${(props: IStylingProps) => props.tabletdir || props.dir};
     align-items: ${(props: IStylingProps) => props.tabletalign || props.align};

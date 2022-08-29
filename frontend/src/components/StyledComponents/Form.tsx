@@ -4,8 +4,12 @@ export const Form = styled.form`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
 `;
 
+export const Label = styled.label`
+  margin: 5px 0;
+`;
 export const Input = styled.input`
   border: none;
   background-color: ${colors.Purple};
@@ -17,4 +21,7 @@ export const Input = styled.input`
   align-items: center;
   justify-content: center;
   color: black;
+  :hover {
+    cursor: pointer;
+  }
 `;
