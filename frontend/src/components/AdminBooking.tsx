@@ -23,42 +23,35 @@ export const AdminBookings = () => {
   }, []);
 
   return (
-    <>
-      Admin Bookings works!
-      <div>
-        {customers.map((customer) => {
-          return (
-            <>
-              <div key={customer._id}>
-                <p>{customer.name}</p>
-                <p>{customer.email}</p>
-                <Link to={"/admin/customers/" + customer._id}>
-                  <button> GO TO CUSTOMER</button>
-                </Link>
+    <div>
+      {customers.map((customer) => {
+        return (
+          <div key={customer._id}>
+            <p>{customer.name}</p>
+            <p>{customer.email}</p>
+            <Link to={"/admin/customers/" + customer._id}>
+              <button> GO TO CUSTOMER</button>
+            </Link>
 
-                {bookings.map((booking) => {
-                  if (booking.clientId.toString() === customer._id) {
-                    return (
-                      <>
-                        <div key={booking._id}>
-                          <div>{booking.date.toLocaleString()}</div>
-                          <div>{booking.sittingTime}</div>
-                          <div>{booking.numberOfPeople}</div>
-                          <Link to={"/admin/" + booking._id}>
-                            <button>GO TO BOOKING</button>
-                          </Link>
-                        </div>
-                      </>
-                    );
-                  } else {
-                    return <></>;
-                  }
-                })}
-              </div>
-            </>
-          );
-        })}
-      </div>
-    </>
+            {bookings.map((booking) => {
+              if (booking.clientId.toString() === customer._id) {
+                return (
+                  <div key={booking._id}>
+                    <p>{booking.date.toString()}</p>
+                    <p>{booking.sittingTime}</p>
+                    <p>{booking.numberOfPeople}</p>
+                    <Link to={"/admin/" + booking._id}>
+                      <button>GO TO BOOKING</button>
+                    </Link>
+                  </div>
+                );
+              } else {
+                return <></>;
+              }
+            })}
+          </div>
+        );
+      })}
+    </div>
   );
 };

@@ -21,7 +21,7 @@ export const GlobalStyle = createGlobalStyle`
   p {
   font-family: 'JosefinSlabLight';
 }
-a, button, li, label {
+a, button, li, label, input {
   font-family: 'JosefinSlabLight';
   }
 `;
