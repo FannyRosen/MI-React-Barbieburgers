@@ -1,11 +1,15 @@
-import { Request, Response } from "express";
+require("dotenv").config();
+
+import { NextFunction, Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { statusFailed, statusSuccess } from "./statusMessages";
+import nodemailer from "nodemailer";
 
 export async function deleteOneBooking(req: Request, res: Response) {
   await BookingModel.findByIdAndDelete(req.params.id);
 }
+
 export const get_bookingsController = async (req: Request, res: Response) => {
   const bookings = await BookingModel.find();
 
@@ -29,8 +33,6 @@ export const post_newBookingsController = async (
   res: Response
 ) => {
   try {
-    // Om mindre än <= 6 personer POST en gång,
-    // om >= 6 och max 12 personer POST två gånger
     let numberOfPeopleBooked = (
       await CustomerModel.find({
         numberOfPeople: req.body.numberOfPeople,
@@ -44,8 +46,8 @@ export const post_newBookingsController = async (
       }).lean()
     ).length;
 
-    let maximumNumberOfBookings = 2;
-    let addone = checkBookings++;
+    let maximumNumberOfBookings: number = 2; // MAXIMUM NUMBER OF BOOKINGS PER DATE AND SITTING
+    let addone: number = checkBookings++; // ADD A BOOKING
 
     if (checkBookings > maximumNumberOfBookings) {
       addone;
@@ -76,6 +78,9 @@ export const post_newBookingsController = async (
 
       await postNewBooking.save();
     } else {
+      /////////////////////////
+      // NO CUSTOMER IN DB? => CREATE CUSTOMER
+      /////////////////////////
       let { name, email, phone } = req.body;
 
       const postCustomer = new CustomerModel({
@@ -97,6 +102,54 @@ export const post_newBookingsController = async (
 
       await postNewBooking.save();
     }
+    /////////////////////////
+    // !NO CUSTOMER IN DB? => CREATE CUSTOMER
+    /////////////////////////
+
+    /////////////////////////
+    // CONFIRMATION EMAIL
+    /////////////////////////
+    const contactEmail = nodemailer.createTransport({
+      service: process.env.SERVICE_EMAIL,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PSW,
+      },
+    });
+
+    contactEmail.verify((error: any) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Confirmation sent");
+      }
+    });
+
+    const bookingid = await BookingModel.findById(req.params.id); // BLIR NULL, FIX
+    console.log("Id", req.params.id);
+
+    console.log("Booking", bookingid);
+
+    const mail = {
+      from: req.body.name,
+      to: req.body.email,
+      html: `<p>Hej ${req.body.name}! </p>
+        Embedded image: <img src="../../../frontend/src/assets/bb-logo.png"/>
+        
+        <span>Din reservation för ${req.body.numberOfPeople} personer hos oss på barbie burgers datum: ${req.body.date} klockan: ${req.body.sittingTime} är nu bokad!</span>
+        <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingid}">här</a></span>`,
+    };
+
+    contactEmail.sendMail(mail, (error: any) => {
+      if (error) {
+        res.json({ status: "ERROR" });
+      } else {
+        res.json({ status: "SENT" });
+      }
+    });
+    /////////////////////////
+    // !CONFIRMATION EMAIL
+    /////////////////////////
 
     res.status(200).json({
       status: statusSuccess,
