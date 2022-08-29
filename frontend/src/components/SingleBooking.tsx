@@ -4,6 +4,7 @@ import { bookingsDefaultValue, IBooking } from "../models/IBooking";
 import { customersDefaultValue, ICustomer } from "../models/ICustomer";
 import {
   deleteBooking,
+  editBooking,
   fetchBookingByID,
 } from "../services/handleBookingsFetch.service";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
