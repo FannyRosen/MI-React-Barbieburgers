@@ -17,14 +17,17 @@ export const SingleBooking = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   let params = useParams();
-  //Försök göra utan en fetch, props?
+
   useEffect(() => {
     fetchCustomerByID(customerById._id)
       .then(async (customerByIdResponse) => {
         setCustomerById(customerByIdResponse.data);
         console.log(customerByIdResponse);
 
-        if (customerByIdResponse.data._id === bookingById.clientId.toString()) {
+        if (
+          /* customerByIdResponse.data._id === bookingById.clientId.toString() */
+          bookingById.clientId.toString() === customerByIdResponse.data._id
+        ) {
           console.log("stämmer");
         } else {
           console.log("fel");
@@ -43,7 +46,7 @@ export const SingleBooking = () => {
     <>
       SingleBooking works!
       <p>CUSTOMERS NAME</p>
-      <p>{customerById._id}</p>
+      <p>ID: {customerById._id}</p>
       <Link to={"/admin/customers/" + customerById._id}>
         <button>GO TO CUSTOMER</button>
       </Link>

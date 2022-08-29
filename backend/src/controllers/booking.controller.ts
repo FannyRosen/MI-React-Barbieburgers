@@ -9,6 +9,7 @@ import nodemailer from "nodemailer";
 export async function deleteOneBooking(req: Request, res: Response) {
   await BookingModel.findByIdAndDelete(req.params.id);
 }
+
 export const get_bookingsController = async (req: Request, res: Response) => {
   const bookings = await BookingModel.find();
 
@@ -29,13 +30,9 @@ export const get_bookingsController = async (req: Request, res: Response) => {
 
 export const post_newBookingsController = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   try {
-    /////////////////////////
-    // Om mindre än <= 6 personer POST en gång,
-    // om >= 6 och max 12 personer POST två gånger
     let numberOfPeopleBooked = (
       await CustomerModel.find({
         numberOfPeople: req.body.numberOfPeople,
@@ -49,8 +46,8 @@ export const post_newBookingsController = async (
       }).lean()
     ).length;
 
-    let maximumNumberOfBookings: number = 2; // MAX ANTAL BOKNINGAR/BORD OCH SITTNING
-    let addone: number = checkBookings++;
+    let maximumNumberOfBookings: number = 2; // MAXIMUM NUMBER OF BOOKINGS PER DATE AND SITTING
+    let addone: number = checkBookings++; // ADD A BOOKING
 
     if (checkBookings > maximumNumberOfBookings) {
       addone;
@@ -82,9 +79,8 @@ export const post_newBookingsController = async (
       await postNewBooking.save();
     } else {
       /////////////////////////
-      // FINNS INTE KUND I DATBASEN? => SKAPA NY KUND
+      // NO CUSTOMER IN DB? => CREATE CUSTOMER
       /////////////////////////
-
       let { name, email, phone } = req.body;
 
       const postCustomer = new CustomerModel({
@@ -106,12 +102,12 @@ export const post_newBookingsController = async (
 
       await postNewBooking.save();
     }
+    /////////////////////////
+    // !NO CUSTOMER IN DB? => CREATE CUSTOMER
+    /////////////////////////
 
     /////////////////////////
-    // EMAIL SETUP
-    /////////////////////////
-    /////////////////////////
-    // BEKRÄFTELSE MAIL PÅ BOKNING. GÖRA TILL EGEN FUNKTION? FÖR ATT SNYGGA UPP
+    // CONFIRMATION EMAIL
     /////////////////////////
     const contactEmail = nodemailer.createTransport({
       service: process.env.SERVICE_EMAIL,
@@ -151,6 +147,9 @@ export const post_newBookingsController = async (
         res.json({ status: "SENT" });
       }
     });
+    /////////////////////////
+    // !CONFIRMATION EMAIL
+    /////////////////////////
 
     res.status(200).json({
       status: statusSuccess,
