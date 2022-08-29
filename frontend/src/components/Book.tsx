@@ -4,7 +4,7 @@ import background from "../assets/background.png";
 import { StyledButton } from "./StyledComponents/StyledButton";
 import { useEffect, useRef, useState } from "react";
 import { PageIndicator } from "./partials/PageIndicator";
-import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
 import {
   fetchBookings,
@@ -12,11 +12,11 @@ import {
 } from "../services/handleBookingsFetch.service";
 import { Loader } from "./partials/Loader";
 import { StyledLabel } from "./StyledComponents/TextElements";
+import { Form, Input } from "./StyledComponents/Form";
 
 // validera datum
 
 export const Book = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [phase, setPhase] = useState(1);
   const [date, setDate] = useState<Date>(new Date());
   const [numberOfPeople, setNOP] = useState<number>(0);
@@ -45,11 +45,13 @@ export const Book = () => {
   };
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNOP(parseInt(e.target.value));
+    setNOP(parseInt(e.currentTarget.value));
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInfo({ ...customerInfo, [e.target.value]: e.target.value });
+    console.log(customerInfo);
+    setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value });
+    <Navigate to={"/thankyou"} />;
   };
 
   interface IArrayOfDates {
@@ -96,10 +98,11 @@ export const Book = () => {
       date,
       sittingTime: sitting.toString(),
       numberOfPeople,
-      name: "JL bbhihihiihy",
+      name: customerInfo.name,
       email: customerInfo.email,
       phone: customerInfo.phone,
     });
+    <Navigate to={"/thankyou"} />;
   };
 
   return (
@@ -115,7 +118,15 @@ export const Book = () => {
           {phase === 1 && (
             <>
               <h2>Book a table</h2>
-              <form>
+              <Form
+                onSubmit={() => {
+                  if (numberOfPeople != 0) {
+                    checkDate();
+                  } else {
+                    console.log("error");
+                  }
+                }}
+              >
                 <FlexDiv dir='column' gap='10px'>
                   <StyledLabel>Choose a date</StyledLabel>
                   <input
@@ -158,20 +169,9 @@ export const Book = () => {
                     If you are more than 6 people you will be divided between
                     tables
                   </p>
-                  <StyledButton
-                    color={"white"}
-                    onClick={() => {
-                      if (numberOfPeople != 0) {
-                        checkDate();
-                      } else {
-                        console.log("error");
-                      }
-                    }}
-                  >
-                    Check availability
-                  </StyledButton>
+                  <Input type='submit' value={"Check availability"} />
                 </FlexDiv>
-              </form>
+              </Form>
             </>
           )}
           {phase === 2 && (
@@ -217,7 +217,8 @@ export const Book = () => {
                 <br />
                 {numberOfPeople} people
               </p>
-              <form>
+
+              <Form onSubmit={completeBooking}>
                 <FlexDiv dir='column'>
                   <label>Name:</label>
                   <input
@@ -241,11 +242,9 @@ export const Book = () => {
                     name='phone'
                   />
 
-                  <Link to='/thankyou' onClick={completeBooking} type='submit'>
-                    <StyledButton>Book</StyledButton>
-                  </Link>
+                  <Input type='submit' value={"book"} />
                 </FlexDiv>
-              </form>
+              </Form>
             </>
           )}
           <PageIndicator phase={phase} />
