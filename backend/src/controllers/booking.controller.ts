@@ -33,12 +33,6 @@ export const post_newBookingsController = async (
   res: Response
 ) => {
   try {
-    let numberOfPeopleBooked = (
-      await CustomerModel.find({
-        numberOfPeople: req.body.numberOfPeople,
-      }).lean()
-    ).length;
-
     let checkBookings: number = (
       await BookingModel.find({
         date: req.body.date,
@@ -48,10 +42,15 @@ export const post_newBookingsController = async (
 
     let maximumNumberOfBookings: number = 2; // MAXIMUM NUMBER OF BOOKINGS PER DATE AND SITTING
     let addone: number = checkBookings++; // ADD A BOOKING
-
+    let checkNoPeople: number = await BookingModel.find({
+      numberOfPeople: req.body.numberOfPeople,
+    }).lean();
     if (checkBookings > maximumNumberOfBookings) {
       addone;
 
+      if (checkNoPeople > 2) {
+        return console.log("hej");
+      }
       return res.status(200).json({
         status: statusFailed,
         message: "Fullbokat, so sorry!",
