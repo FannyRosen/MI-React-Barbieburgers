@@ -2,23 +2,39 @@ import { colors } from "./StyledComponents/mixins";
 import { FlexDiv, ImageDiv } from "./StyledComponents/Wrappers";
 import background from "../assets/background.png";
 import { StyledButton } from "./StyledComponents/StyledButton";
-import { saveBooking } from "../services/StorageServices";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PageIndicator } from "./partials/PageIndicator";
 import { Link } from "react-router-dom";
-import { fetchCustomers } from "../services/handleCustomersFetch.service";
-import { IBooking } from "../models/IBooking";
-import { ICustomer } from "../models/ICustomer";
-import { fetchBookings } from "../services/handleBookingsFetch.service";
+import { IFormCustomer } from "../models/ICustomer";
+import {
+  fetchBookings,
+  postBooking,
+} from "../services/handleBookingsFetch.service";
 import { Loader } from "./partials/Loader";
+import { StyledLabel } from "./StyledComponents/TextElements";
+
+// validera datum
 
 export const Book = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [phase, setPhase] = useState(1);
   const [date, setDate] = useState<Date>(new Date());
   const [numberOfPeople, setNOP] = useState<number>(0);
-  const [bookings, setBookings] = useState<IBooking[]>([]);
-  const [customers, setCustomers] = useState<ICustomer[]>([]);
+  const [customerInfo, setCustomerInfo] = useState<IFormCustomer>({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [arrayFirstSitting, setArrayFirstSitting] = useState<IArrayOfDates[]>(
+    []
+  );
+  const [firstIsAvailable, setFirstIsAvailable] = useState(false);
+  const [secondIsAvailable, setSecondIsAvailable] = useState(false);
+
+  const [arraySecondSitting, setArraySecondSitting] = useState<IArrayOfDates[]>(
+    []
+  );
+  const [sitting, setSitting] = useState(0);
 
   const curr = new Date();
   curr.setDate(curr.getDate());
@@ -32,16 +48,58 @@ export const Book = () => {
     setNOP(parseInt(e.target.value));
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomerInfo({ ...customerInfo, [e.target.value]: e.target.value });
+  };
+
+  interface IArrayOfDates {
+    date: Date;
+  }
+
   const checkDate = () => {
-    //saveBooking({ date, numberOfPeople });
     fetchBookings()
       .then(async (response) => {
-        setBookings(response.data);
+        for (let i = 0; i < response.data.length; i++) {
+          let dbDate = new Date(response.data[i].date);
+          if (dbDate.getTime() == date.getTime()) {
+            if (response.data[i].sittingTime == "6.00 pm") {
+              setArrayFirstSitting([...arrayFirstSitting, { date: dbDate }]);
+            }
+            if (response.data[i].sittingTime == "9.00 pm") {
+              setArraySecondSitting([...arraySecondSitting, { date: dbDate }]);
+            }
+          }
+        }
       })
       .catch((error) => {
         console.log(error);
       });
+
     setPhase(2);
+  };
+
+  useEffect(() => {
+    if (arrayFirstSitting.length >= 15) {
+      setFirstIsAvailable(false);
+    } else if (arrayFirstSitting.length <= 15) {
+      setFirstIsAvailable(true);
+    }
+    if (arraySecondSitting.length >= 15) {
+      setSecondIsAvailable(false);
+    } else if (arraySecondSitting.length <= 15) {
+      setSecondIsAvailable(true);
+    }
+  }, [arrayFirstSitting, arraySecondSitting]);
+
+  const completeBooking = () => {
+    postBooking({
+      date,
+      sittingTime: sitting.toString(),
+      numberOfPeople,
+      name: "JL bbhihihiihy",
+      email: customerInfo.email,
+      phone: customerInfo.phone,
+    });
   };
 
   return (
@@ -59,8 +117,9 @@ export const Book = () => {
               <h2>Book a table</h2>
               <form>
                 <FlexDiv dir='column' gap='10px'>
-                  <label>Choose a date</label>
+                  <StyledLabel>Choose a date</StyledLabel>
                   <input
+                    required
                     onChange={handleDateChange}
                     id='date'
                     type='date'
@@ -72,6 +131,7 @@ export const Book = () => {
 
                   <label>Number of people</label>
                   <select
+                    required
                     id='date'
                     name='date'
                     onChange={handleNOPChange}
@@ -99,10 +159,12 @@ export const Book = () => {
                     tables
                   </p>
                   <StyledButton
-                    color='black'
+                    color={"white"}
                     onClick={() => {
                       if (numberOfPeople != 0) {
                         checkDate();
+                      } else {
+                        console.log("error");
                       }
                     }}
                   >
@@ -114,23 +176,76 @@ export const Book = () => {
           )}
           {phase === 2 && (
             <>
-              <p>Här ska vi välja sittning</p>
-              <StyledButton
-                color='black'
-                onClick={() => {
-                  setPhase(3);
-                }}
-              >
-                Check availability
-              </StyledButton>
+              <h2>Available sittings</h2>
+              <FlexDiv gap='10px' dir='column'>
+                {firstIsAvailable ? (
+                  <StyledButton
+                    color='white'
+                    onClick={() => {
+                      setSitting(1);
+                      setPhase(3);
+                    }}
+                  >
+                    Book 6.00pm
+                  </StyledButton>
+                ) : (
+                  <p>First sitting is not available</p>
+                )}
+                {secondIsAvailable ? (
+                  <StyledButton
+                    color='white'
+                    onClick={() => {
+                      setSitting(2);
+                      setPhase(3);
+                    }}
+                  >
+                    Book 9.00pm
+                  </StyledButton>
+                ) : (
+                  <p>Second sitting is not available</p>
+                )}
+              </FlexDiv>
             </>
           )}
           {phase === 3 && (
             <>
-              <p>Här ska vi ha inputs för customer info </p>
-              <Link to='/thankyou'>
-                <StyledButton>Book</StyledButton>
-              </Link>
+              <h2>Your information</h2>
+              <p>
+                Your booking: <br />
+                {date.toLocaleDateString()} <br />
+                {sitting == 1 ? "6.00 pm" : "9.00 pm"}
+                <br />
+                {numberOfPeople} people
+              </p>
+              <form>
+                <FlexDiv dir='column'>
+                  <label>Name:</label>
+                  <input
+                    required
+                    onChange={handleChange}
+                    type='text'
+                    name='name'
+                  />
+                  <label>Email:</label>
+                  <input
+                    required
+                    onChange={handleChange}
+                    type='email'
+                    name='email'
+                  />
+                  <label>Phone number:</label>
+                  <input
+                    required
+                    onChange={handleChange}
+                    type='number'
+                    name='phone'
+                  />
+
+                  <Link to='/thankyou' onClick={completeBooking} type='submit'>
+                    <StyledButton>Book</StyledButton>
+                  </Link>
+                </FlexDiv>
+              </form>
             </>
           )}
           <PageIndicator phase={phase} />

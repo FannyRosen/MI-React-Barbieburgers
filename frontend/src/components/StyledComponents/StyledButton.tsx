@@ -14,7 +14,7 @@ export const StyledButton = styled.button`
   height: ${(props: IStylingProps) => props.height || "40px"};
   margin: ${(props: IStylingProps) => props.margin || "0"};
   padding: ${(props: IStylingProps) => props.padding || "0"};
-  color: ${(props: IStylingProps) => props.color || "none"};
+  color: ${(props: IStylingProps) => props.color || "white"};
   border-radius: ${(props: IStylingProps) => props.borderRadius || "10px"};
   @media ${device.tablet} {
     flex-direction: ${(props: IStylingProps) => props.tabletdir || props.dir};
