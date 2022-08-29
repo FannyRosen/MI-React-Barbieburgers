@@ -4,6 +4,11 @@ export interface ICustomer {
   email: string;
   phone: string;
 }
+export interface INewCustomer {
+  name: string;
+  email: string;
+  phone: string;
+}
 
 export interface ICustomersResponse {
   data: ICustomer[];
@@ -19,3 +24,9 @@ export const customersDefaultValue: ICustomer = {
   email: "",
   phone: "",
 };
+
+export interface IFormCustomer {
+  name: string;
+  email: string;
+  phone: string;
+}
