@@ -7,6 +7,7 @@ import {
   fetchBookingByID,
 } from "../services/handleBookingsFetch.service";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
+import { Customer } from "./Customer";
 
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
@@ -41,8 +42,8 @@ export const SingleBooking = () => {
   return (
     <>
       SingleBooking works!
-      <p>CUSTOMERS NAME</p>
-      <p>{customerById._id}</p>
+      <p>CUSTOMER NAME</p>
+      <p>{bookingById.clientId.name}</p>
       <Link to={"/admin/customers/"}>
         <button>GO TO CUSTOMER</button>
       </Link>
