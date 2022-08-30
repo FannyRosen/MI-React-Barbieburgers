@@ -48,7 +48,10 @@ export const Book = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value });
+    setCustomerInfo((customerInfo) => ({
+      ...customerInfo,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   interface IArrayOfDates {
@@ -66,13 +69,13 @@ export const Book = () => {
           if (dbDate.getTime() == date.getTime()) {
             console.log("found same date");
 
-            if (response.data[i].sittingTime == "1") {
+            if (response.data[i].sittingTime === 1) {
               setArrayFirstSitting((arrayFirstSitting) => [
                 ...arrayFirstSitting,
                 { date: dbDate },
               ]);
             }
-            if (response.data[i].sittingTime == "2") {
+            if (response.data[i].sittingTime === 2) {
               setArraySecondSitting((arraySecondSitting) => [
                 ...arraySecondSitting,
                 { date: dbDate },
@@ -106,7 +109,7 @@ export const Book = () => {
   const completeBooking = () => {
     postBooking({
       date,
-      sittingTime: sitting.toString(),
+      sittingTime: sitting,
       numberOfPeople,
       name: customerInfo.name,
       email: customerInfo.email,
@@ -226,7 +229,7 @@ export const Book = () => {
                 <p>
                   Your booking: <br />
                   {date.toLocaleDateString()} <br />
-                  {sitting == 1 ? "6.00 pm" : "9.00 pm"}
+                  {sitting === 1 ? "6.00 pm" : "9.00 pm"}
                   <br />
                   {numberOfPeople} people
                 </p>
