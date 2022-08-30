@@ -93,10 +93,10 @@ export const SingleBooking = () => {
               />
               <StyledLabel>Edit sitting time</StyledLabel>
 
-              <select name="time" defaultValue={} onChange={}>
+              {/* <select name="time" defaultValue={} onChange={}>
                 <option value="1">6.00 pm</option>
                 <option value="2">9.00 pm</option>
-              </select>
+              </select> */}
               <StyledLabel>Edit number of people</StyledLabel>
               <input
                 type="number"
