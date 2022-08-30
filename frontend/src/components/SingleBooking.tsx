@@ -8,9 +8,14 @@ import {
   fetchBookingByID,
 } from "../services/handleBookingsFetch.service";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
+import { checkAvailableSittings, ISittings } from "../services/utils";
 import { Form } from "./StyledComponents/Form";
 import { StyledLabel } from "./StyledComponents/TextElements";
 import { FlexDiv } from "./StyledComponents/Wrappers";
+
+interface IArrayOfDates {
+  date: Date;
+}
 
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
@@ -22,7 +27,8 @@ export const SingleBooking = () => {
   const [inEdit, setInEdit] = useState(false);
   const [editNOP, setEditNOP] = useState<number>(0);
   const [editDate, setEditDate] = useState<Date>(new Date("1999-01-01"));
-  const [editTime, setEditTime] = useState<number>(0);
+  const [editSittingTime, setEditSittingTime] = useState<number>(0);
+  const [isAvailable, setIsAvailable] = useState<ISittings>();
 
   let params = useParams();
 
@@ -30,15 +36,6 @@ export const SingleBooking = () => {
     fetchCustomerByID(customerById._id)
       .then(async (customerByIdResponse) => {
         setCustomerById(customerByIdResponse.data);
-
-        if (
-          /* customerByIdResponse.data._id === bookingById.clientId.toString() */
-          bookingById.clientId.toString() === customerByIdResponse.data._id
-        ) {
-          console.log("stämmer");
-        } else {
-          console.log("fel");
-        }
 
         const bookingsByIdResponse = await fetchBookingByID(params.id!);
         setBookingById(bookingsByIdResponse.data);
@@ -52,23 +49,36 @@ export const SingleBooking = () => {
   useEffect(() => {
     setEditDate(new Date(bookingById.date));
     setEditNOP(bookingById.numberOfPeople);
-    //setEditTime(bookingById.sittingTime)
+    setEditSittingTime(bookingById.sittingTime);
   }, [bookingById]);
+
+  useEffect(() => {
+    const checkDate = async () => {
+      const isAvailableinDB = await checkAvailableSittings(editDate);
+      setIsAvailable(isAvailableinDB);
+    };
+    checkDate().catch(console.error);
+    console.log(isAvailable);
+  }, [editDate]);
 
   const curr = new Date();
   curr.setDate(curr.getDate());
   const inputDate = curr.toISOString().substring(0, 10);
 
-  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEditChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditDate(new Date(e.target.value));
+    const isAvailableinDB = await checkAvailableSittings(editDate);
+    setIsAvailable(isAvailableinDB);
   };
-
-  /*   const handleEditNOP = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditNOP(parseInt(e.currentTarget.value));
-  }; */
 
   const handleEditNOP = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditNOP(parseInt(e.target.value));
+  };
+
+  const handleEditSittingTime = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setEditSittingTime(parseInt(e.target.value));
   };
 
   return (
@@ -93,10 +103,23 @@ export const SingleBooking = () => {
               />
               <StyledLabel>Edit sitting time</StyledLabel>
 
-              {/* <select name="time" defaultValue={} onChange={}>
-                <option value="1">6.00 pm</option>
-                <option value="2">9.00 pm</option>
-              </select> */}
+              <select
+                name="time"
+                defaultValue={editSittingTime.toString()}
+                onChange={handleEditSittingTime}
+              >
+                {isAvailable?.firstSitting ? (
+                  <option value="1">6.00 pm</option>
+                ) : (
+                  <option>not available</option>
+                )}
+                {isAvailable?.secondSitting ? (
+                  <option value="1">9.00 pm</option>
+                ) : (
+                  <option>not available</option>
+                )}
+              </select>
+
               <StyledLabel>Edit number of people</StyledLabel>
               <input
                 type="number"
@@ -140,6 +163,3 @@ export const SingleBooking = () => {
     </>
   );
 };
-function setDate(arg0: Date) {
-  throw new Error("Function not implemented.");
-}
