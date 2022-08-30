@@ -42,19 +42,57 @@ export const post_newBookingsController = async (
 
     let maximumNumberOfBookings: number = 2; // MAXIMUM NUMBER OF BOOKINGS PER DATE AND SITTING
     let addone: number = checkBookings++; // ADD A BOOKING
-    let checkNoPeople: number = await BookingModel.find({
-      numberOfPeople: req.body.numberOfPeople,
-    }).lean();
+
     if (checkBookings > maximumNumberOfBookings) {
       addone;
 
-      if (checkNoPeople > 2) {
-        return console.log("hej");
-      }
-      return res.status(200).json({
+      return res.status(404).json({
         status: statusFailed,
-        message: "Fullbokat, so sorry!",
+        message: "FULLY BOOKED",
       });
+    }
+
+    ////////////////
+    // HÄR TAR DET STOPP OM DET ÄR FULLBOKAT
+    ////////////////
+
+    ////////////////
+    // OM FLER ÄN 6 LÖS DET
+    ////////////////
+
+    //// Loopa igenom bokningar på aktuell dag och sittning
+
+    let { date, sittingTime, numberOfPeople } = req.body;
+
+    for (let i = 0; i < checkBookings; i++) {
+      if (date === date && sittingTime === sittingTime) {
+        //Boka 2 bord // Gör något baserat på antal människor
+        if (numberOfPeople > 6) {
+          let { name, email, phone } = req.body;
+
+          const postCustomer = new CustomerModel({
+            name: name,
+            email: email,
+            phone: phone,
+          });
+
+          const saveCustomerToDB = await postCustomer.save();
+
+          let { date, sittingTime, numberOfPeople } = req.body;
+          let splitNOP = numberOfPeople / 2;
+          const postNewBooking = new BookingModel({
+            date: date,
+            sittingTime: sittingTime,
+            numberOfPeople: splitNOP,
+            clientId: saveCustomerToDB._id,
+          });
+
+          await postNewBooking.save();
+        } else {
+          //Fortsätt som innan
+          console.log("Datum och sittning rullar vidare");
+        }
+      }
     }
 
     const returningCustomer = await CustomerModel.findOne({
@@ -108,6 +146,7 @@ export const post_newBookingsController = async (
     /////////////////////////
     // CONFIRMATION EMAIL
     /////////////////////////
+    /* 
     const contactEmail = nodemailer.createTransport({
       service: process.env.SERVICE_EMAIL,
       auth: {
@@ -145,7 +184,7 @@ export const post_newBookingsController = async (
       } else {
         res.json({ status: "SENT" });
       }
-    });
+    }); */
     /////////////////////////
     // !CONFIRMATION EMAIL
     /////////////////////////
