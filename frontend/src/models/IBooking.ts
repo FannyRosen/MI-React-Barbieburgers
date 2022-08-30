@@ -3,13 +3,13 @@ import { customersDefaultValue, ICustomer, INewCustomer } from "./ICustomer";
 export interface IBooking {
   _id: string;
   date: Date;
-  sittingTime: string;
+  sittingTime: number;
   numberOfPeople: number;
   clientId: ICustomer;
 }
 export interface INewBooking {
   date: Date;
-  sittingTime: string;
+  sittingTime: number;
   numberOfPeople: number;
   name: string;
   email: string;
@@ -27,7 +27,7 @@ export interface IBookingResponse {
 export const bookingsDefaultValue: IBooking = {
   _id: "",
   date: new Date(),
-  sittingTime: "",
+  sittingTime: 0,
   clientId: customersDefaultValue,
   numberOfPeople: 0,
 };

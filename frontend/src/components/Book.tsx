@@ -11,7 +11,7 @@ import {
 } from "../services/handleBookingsFetch.service";
 import { Loader } from "./partials/Loader";
 import { StyledLabel } from "./StyledComponents/TextElements";
-import { Form, Input } from "./StyledComponents/Form";
+import { Form, Input, Label } from "./StyledComponents/Form";
 import { Background } from "./StyledComponents/Background";
 
 export const Book = () => {
@@ -48,7 +48,10 @@ export const Book = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value });
+    setCustomerInfo((customerInfo) => ({
+      ...customerInfo,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   interface IArrayOfDates {
@@ -66,13 +69,13 @@ export const Book = () => {
           if (dbDate.getTime() == date.getTime()) {
             console.log("found same date");
 
-            if (response.data[i].sittingTime == "1") {
+            if (response.data[i].sittingTime === 1) {
               setArrayFirstSitting((arrayFirstSitting) => [
                 ...arrayFirstSitting,
                 { date: dbDate },
               ]);
             }
-            if (response.data[i].sittingTime == "2") {
+            if (response.data[i].sittingTime === 2) {
               setArraySecondSitting((arraySecondSitting) => [
                 ...arraySecondSitting,
                 { date: dbDate },
@@ -106,7 +109,7 @@ export const Book = () => {
   const completeBooking = () => {
     postBooking({
       date,
-      sittingTime: sitting.toString(),
+      sittingTime: sitting,
       numberOfPeople,
       name: customerInfo.name,
       email: customerInfo.email,
@@ -153,7 +156,7 @@ export const Book = () => {
                       max={"2023-12-31"}
                     />
 
-                    <label>Number of people</label>
+                    <Label>Number of people</Label>
                     <select
                       required
                       id='date'
@@ -226,28 +229,28 @@ export const Book = () => {
                 <p>
                   Your booking: <br />
                   {date.toLocaleDateString()} <br />
-                  {sitting == 1 ? "6.00 pm" : "9.00 pm"}
+                  {sitting === 1 ? "6.00 pm" : "9.00 pm"}
                   <br />
                   {numberOfPeople} people
                 </p>
 
                 <Form onSubmit={completeBooking}>
                   <FlexDiv dir='column'>
-                    <label>Name:</label>
+                    <Label>Name:</Label>
                     <input
                       required
                       onChange={handleChange}
                       type='text'
                       name='name'
                     />
-                    <label>Email:</label>
+                    <Label>Email:</Label>
                     <input
                       required
                       onChange={handleChange}
                       type='email'
                       name='email'
                     />
-                    <label>Phone number:</label>
+                    <Label>Phone number:</Label>
                     <input
                       required
                       onChange={handleChange}
