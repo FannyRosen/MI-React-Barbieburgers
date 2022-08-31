@@ -5,6 +5,7 @@ import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { statusFailed, statusSuccess } from "./statusMessages";
 import nodemailer from "nodemailer";
+import { table } from "console";
 
 export async function deleteOneBooking(req: Request, res: Response) {
   await BookingModel.findByIdAndDelete(req.params.id);
@@ -27,89 +28,50 @@ export const get_bookingsController = async (req: Request, res: Response) => {
     });
   }
 };
-
 export const post_newBookingsController = async (
   req: Request,
   res: Response
 ) => {
   try {
-    let checkBookings: number = (
-      await BookingModel.find({
-        date: req.body.date,
-        sittingTime: req.body.sittingTime,
-      }).lean()
-    ).length;
+    let { date, sittingTime, numberOfPeople, name, email, phone } = req.body;
 
-    let maximumNumberOfBookings: number = 2; // MAXIMUM NUMBER OF BOOKINGS PER DATE AND SITTING
-    let addone: number = checkBookings++; // ADD A BOOKING
+    let checkBookings = await BookingModel.find({
+      date,
+      sittingTime,
+    }).lean();
 
-    if (checkBookings > maximumNumberOfBookings) {
-      addone;
+    let maximumNumberOfBookings: number = 2;
 
+    let tables: number = checkBookings.length;
+
+    for (let i = 0; i < checkBookings.length; i++) {
+      if (checkBookings[i].numberOfPeople > 6) {
+        tables = tables + 1;
+      }
+    }
+
+    if (
+      tables >= maximumNumberOfBookings ||
+      (numberOfPeople > 6 && tables >= maximumNumberOfBookings - 1)
+    ) {
       return res.status(404).json({
         status: statusFailed,
         message: "FULLY BOOKED",
       });
     }
 
-    ////////////////
-    // HÄR TAR DET STOPP OM DET ÄR FULLBOKAT
-    ////////////////
-
-    ////////////////
-    // OM FLER ÄN 6 LÖS DET
-    ////////////////
-
-    //// Loopa igenom bokningar på aktuell dag och sittning
-
-    let { date, sittingTime, numberOfPeople } = req.body;
-
-    for (let i = 0; i < checkBookings; i++) {
-      if (date === date && sittingTime === sittingTime) {
-        //Boka 2 bord // Gör något baserat på antal människor
-        if (numberOfPeople > 6) {
-          let { name, email, phone } = req.body;
-
-          const postCustomer = new CustomerModel({
-            name: name,
-            email: email,
-            phone: phone,
-          });
-
-          const saveCustomerToDB = await postCustomer.save();
-
-          let { date, sittingTime, numberOfPeople } = req.body;
-          let splitNOP = numberOfPeople / 2;
-          const postNewBooking = new BookingModel({
-            date: date,
-            sittingTime: sittingTime,
-            numberOfPeople: splitNOP,
-            clientId: saveCustomerToDB._id,
-          });
-
-          await postNewBooking.save();
-        } else {
-          //Fortsätt som innan
-          console.log("Datum och sittning rullar vidare");
-        }
-      }
-    }
-
     const returningCustomer = await CustomerModel.findOne({
-      email: req.body.email,
-      numberOfPeople: req.body.numberOfPeople,
-      phone: req.body.phone,
+      email,
+      phone,
     });
 
     if (returningCustomer) {
       const saveCustomerId = await returningCustomer.save();
 
-      let { date, sittingTime, numberOfPeople } = req.body;
-
       const postNewBooking = new BookingModel({
-        date: date,
-        sittingTime: sittingTime,
-        numberOfPeople: numberOfPeople,
+        date,
+        sittingTime,
+        numberOfPeople,
         clientId: saveCustomerId._id,
       });
 
@@ -118,22 +80,19 @@ export const post_newBookingsController = async (
       /////////////////////////
       // NO CUSTOMER IN DB? => CREATE CUSTOMER
       /////////////////////////
-      let { name, email, phone } = req.body;
 
       const postCustomer = new CustomerModel({
-        name: name,
-        email: email,
-        phone: phone,
+        name,
+        email,
+        phone,
       });
 
       const saveCustomerToDB = await postCustomer.save();
 
-      let { date, sittingTime, numberOfPeople } = req.body;
-
       const postNewBooking = new BookingModel({
-        date: date,
-        sittingTime: sittingTime,
-        numberOfPeople: numberOfPeople,
+        date,
+        sittingTime,
+        numberOfPeople,
         clientId: saveCustomerToDB._id,
       });
 
@@ -146,7 +105,6 @@ export const post_newBookingsController = async (
     /////////////////////////
     // CONFIRMATION EMAIL
     /////////////////////////
-    /* 
     const contactEmail = nodemailer.createTransport({
       service: process.env.SERVICE_EMAIL,
       auth: {
@@ -163,19 +121,24 @@ export const post_newBookingsController = async (
       }
     });
 
-    const bookingid = await BookingModel.findById(req.params.id); // BLIR NULL, FIX
-    console.log("Id", req.params.id);
+    const bookingById = await BookingModel.findById(checkBookings).lean(); // Går att skicka mail med id flera gånger per datum, men inte om man bokar ett till
 
-    console.log("Booking", bookingid);
+    console.log("BOOKING BY ID: " + bookingById._id);
+
+    if (sittingTime === 1) {
+      sittingTime = "SITTNING 1";
+    } else if (sittingTime === 2) {
+      sittingTime = "SITTNING 2";
+    }
 
     const mail = {
-      from: req.body.name,
-      to: req.body.email,
-      html: `<p>Hej ${req.body.name}! </p>
-        Embedded image: <img src="../../../frontend/src/assets/bb-logo.png"/>
-        
-        <span>Din reservation för ${req.body.numberOfPeople} personer hos oss på barbie burgers datum: ${req.body.date} klockan: ${req.body.sittingTime} är nu bokad!</span>
-        <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingid}">här</a></span>`,
+      from: name,
+      to: email,
+      subject: "Your booking at barbieburgers",
+      html: `<p>Hej ${name}! </p>
+        <img src="../../../frontend/src/assets/bb-logo.png"/>
+        <span>Din reservation för ${numberOfPeople} personer hos oss på barbie burgers datum: ${date} klockan: ${sittingTime} är nu bokad!</span>
+        <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingById}">här</a></span>`,
     };
 
     contactEmail.sendMail(mail, (error: any) => {
@@ -184,7 +147,7 @@ export const post_newBookingsController = async (
       } else {
         res.json({ status: "SENT" });
       }
-    }); */
+    });
     /////////////////////////
     // !CONFIRMATION EMAIL
     /////////////////////////
@@ -246,11 +209,13 @@ export const put_bookingByIdController = async (
   res: Response
 ) => {
   try {
+    let { date, sittingTime, numberOfPeople } = req.body;
+
     const editBooking = await BookingModel.findByIdAndUpdate(req.params.id);
 
-    editBooking.sittingTime = req.body.sittingTime;
-    editBooking.date = req.body.date;
-    editBooking.numberOfPeople = req.body.numberOfPeople;
+    editBooking.sittingTime = sittingTime;
+    editBooking.date = date;
+    editBooking.numberOfPeople = numberOfPeople;
 
     await editBooking.save();
 
