@@ -13,6 +13,7 @@ import { Loader } from "./partials/Loader";
 import { StyledLabel } from "./StyledComponents/TextElements";
 import { Form, Input, Label } from "./StyledComponents/Form";
 import { Background } from "./StyledComponents/Background";
+import { MyModal } from "./partials/Modal";
 
 export const Book = () => {
   const [phase, setPhase] = useState(1);
@@ -257,7 +258,7 @@ export const Book = () => {
                       type="number"
                       name="phone"
                     />
-
+                    <MyModal></MyModal>
                     <Input type="submit" value={"book"} />
                   </FlexDiv>
                 </Form>

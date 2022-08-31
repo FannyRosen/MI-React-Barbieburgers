@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { colors } from "./mixins";
+import { colors, device } from "./mixins";
+import { IStylingProps } from "./StyledInterface";
 export const Form = styled.form`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
