@@ -5,7 +5,7 @@ import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { statusFailed, statusSuccess } from "./statusMessages";
 import nodemailer from "nodemailer";
-import { table } from "console";
+import { IBooking } from "src/models/IBooking";
 
 export async function deleteOneBooking(req: Request, res: Response) {
   await BookingModel.findByIdAndDelete(req.params.id);
@@ -28,12 +28,14 @@ export const get_bookingsController = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const post_newBookingsController = async (
   req: Request,
   res: Response
 ) => {
   try {
-    let { date, sittingTime, numberOfPeople, name, email, phone } = req.body;
+    let { _id, date, sittingTime, numberOfPeople, name, email, phone } =
+      req.body;
 
     let checkBookings = await BookingModel.find({
       date,
@@ -65,6 +67,47 @@ export const post_newBookingsController = async (
       phone,
     });
 
+    const sendConfirmationEmail = (booking: IBooking) => {
+      const contactEmail = nodemailer.createTransport({
+        service: process.env.SERVICE_EMAIL,
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PSW,
+        },
+      });
+
+      contactEmail.verify((error: any) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Confirmation sent");
+        }
+      });
+
+      if (sittingTime === 1) {
+        sittingTime = "06:00pm";
+      } else if (sittingTime === 2) {
+        sittingTime = "09:00pm";
+      }
+
+      const mail = {
+        from: name,
+        to: email,
+        subject: "Your booking at barbieburgers",
+        html: `<p>Hello ${name}! </p>
+          <span>Your reservation for ${numberOfPeople} people hos oss på barbie burgers datum: ${date} klockan: ${sittingTime} är nu bokad!</span>
+          <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${booking._id}">här</a></span>`,
+      };
+
+      contactEmail.sendMail(mail, (error: any) => {
+        if (error) {
+          res.json({ status: "ERROR" });
+        } else {
+          res.json({ status: "SENT" });
+        }
+      });
+    };
+
     if (returningCustomer) {
       const saveCustomerId = await returningCustomer.save();
 
@@ -75,12 +118,9 @@ export const post_newBookingsController = async (
         clientId: saveCustomerId._id,
       });
 
-      await postNewBooking.save();
+      let booking = await postNewBooking.save();
+      sendConfirmationEmail(booking);
     } else {
-      /////////////////////////
-      // NO CUSTOMER IN DB? => CREATE CUSTOMER
-      /////////////////////////
-
       const postCustomer = new CustomerModel({
         name,
         email,
@@ -96,61 +136,9 @@ export const post_newBookingsController = async (
         clientId: saveCustomerToDB._id,
       });
 
-      await postNewBooking.save();
+      let booking = await postNewBooking.save();
+      sendConfirmationEmail(booking);
     }
-    /////////////////////////
-    // !NO CUSTOMER IN DB? => CREATE CUSTOMER
-    /////////////////////////
-
-    /////////////////////////
-    // CONFIRMATION EMAIL
-    /////////////////////////
-    const contactEmail = nodemailer.createTransport({
-      service: process.env.SERVICE_EMAIL,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PSW,
-      },
-    });
-
-    contactEmail.verify((error: any) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Confirmation sent");
-      }
-    });
-
-    const bookingById = await BookingModel.findById(checkBookings).lean(); // Går att skicka mail med id flera gånger per datum, men inte om man bokar ett till
-
-    console.log("BOOKING BY ID: " + bookingById._id);
-
-    if (sittingTime === 1) {
-      sittingTime = "SITTNING 1";
-    } else if (sittingTime === 2) {
-      sittingTime = "SITTNING 2";
-    }
-
-    const mail = {
-      from: name,
-      to: email,
-      subject: "Your booking at barbieburgers",
-      html: `<p>Hej ${name}! </p>
-        <img src="../../../frontend/src/assets/bb-logo.png"/>
-        <span>Din reservation för ${numberOfPeople} personer hos oss på barbie burgers datum: ${date} klockan: ${sittingTime} är nu bokad!</span>
-        <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${bookingById}">här</a></span>`,
-    };
-
-    contactEmail.sendMail(mail, (error: any) => {
-      if (error) {
-        res.json({ status: "ERROR" });
-      } else {
-        res.json({ status: "SENT" });
-      }
-    });
-    /////////////////////////
-    // !CONFIRMATION EMAIL
-    /////////////////////////
 
     res.status(200).json({
       status: statusSuccess,
@@ -189,8 +177,6 @@ export const delete_bookingByIdController = async (
   res: Response
 ) => {
   try {
-    // const deleteBooking = await BookingModel.findByIdAndDelete(req.params.id);
-
     res.status(200).json({
       status: statusSuccess,
       message: "Delete booking works",

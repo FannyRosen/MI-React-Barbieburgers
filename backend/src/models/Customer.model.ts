@@ -4,10 +4,12 @@ import { ICustomer } from "./ICustomer";
 const CustomerSchema = new mongoose.Schema<ICustomer>({
   name: {
     type: String,
+    lowercase: true,
     // required: true,
   },
   email: {
     type: String,
+    lowercase: true,
     // required: true,
   },
   phone: {
