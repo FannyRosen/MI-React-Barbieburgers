@@ -34,8 +34,7 @@ export const post_newBookingsController = async (
   res: Response
 ) => {
   try {
-    let { _id, date, sittingTime, numberOfPeople, name, email, phone } =
-      req.body;
+    let { date, sittingTime, numberOfPeople, name, email, phone } = req.body;
 
     let checkBookings = await BookingModel.find({
       date,
