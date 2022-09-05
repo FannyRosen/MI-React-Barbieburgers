@@ -32,3 +32,11 @@ export const StyledHr = styled.hr`
 export const StyledH2 = styled.h2`
   padding-top: 40px;
 `;
+
+export const StyledSelect = styled.select`
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 2px;
+  font-family: "JosefinSlabSemiBold";
+  padding: 3px;
+`;
