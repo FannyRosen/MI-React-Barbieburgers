@@ -29,6 +29,7 @@ export const Book = () => {
     email: "",
     phone: "",
   });
+
   const [arrayFirstSitting, setArrayFirstSitting] = useState<IArrayOfDates[]>(
     []
   );
@@ -261,7 +262,9 @@ export const Book = () => {
                       type="number"
                       name="phone"
                     />
+
                     <MyModal></MyModal>
+
                     <Input type="submit" value={"book"} />
                   </FlexDiv>
                 </Form>

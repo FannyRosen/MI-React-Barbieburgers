@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, matchRoutes, useLocation, useParams } from "react-router-dom";
 import { bookingsDefaultValue, IBooking } from "../models/IBooking";
 import { customersDefaultValue, ICustomer } from "../models/ICustomer";
 import {
@@ -34,11 +34,24 @@ export const SingleBooking = () => {
   const [isAvailable, setIsAvailable] = useState<ISittings>();
 
   let params = useParams();
+  const location = useLocation();
+  const adminPath = location.pathname === "/admin/" + bookingById._id;
+  const guestPath = location.pathname === "/reservation/" + bookingById._id;
 
   useEffect(() => {
     fetchCustomerByID(customerById._id)
       .then(async (customerByIdResponse) => {
         setCustomerById(customerByIdResponse.data);
+        console.log(customerByIdResponse);
+
+        if (
+          /* customerByIdResponse.data._id === bookingById.clientId.toString() */
+          bookingById.clientId.toString() === customerByIdResponse.data._id
+        ) {
+          console.log("stämmer");
+        } else {
+          console.log("fel");
+        }
 
         const bookingsByIdResponse = await fetchBookingByID(params.id!);
         setBookingById(bookingsByIdResponse.data);
@@ -47,7 +60,7 @@ export const SingleBooking = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [params]); // håll kanske tom []
+  }, [bookingById.clientId, customerById._id, params]);
 
   useEffect(() => {
     setEditDate(new Date(bookingById.date));
@@ -86,12 +99,6 @@ export const SingleBooking = () => {
 
   return (
     <>
-      {/*   SingleBooking works!
-      <p>CUSTOMERS NAME</p>
-      <p>ID: {customerById._id}</p>
-      <Link to={"/admin/customers/" + customerById._id}>
-        <button>GO TO CUSTOMER</button>
-      </Link> */}
       <Background>
         <FlexDiv
           borderRadius="10px"
@@ -101,88 +108,124 @@ export const SingleBooking = () => {
           dir="column"
           padding="40px"
         >
-          {inEdit ? (
-            <Form>
-              <FlexDiv dir="column" gap="10px">
-                <StyledLabel>Edit date</StyledLabel>
-                <input
-                  type="date"
-                  min={inputDate}
-                  max={"2023-12-31"}
-                  defaultValue={editDate.toLocaleDateString()}
-                  onChange={handleEditChange}
-                />
-                <StyledLabel>Edit sitting time</StyledLabel>
+          {adminPath ? (
+            <>
+              {inEdit ? (
+                <Form>
+                  <FlexDiv dir="column" gap="10px">
+                    <StyledLabel>Edit date</StyledLabel>
+                    <input
+                      type="date"
+                      min={inputDate}
+                      max={"2023-12-31"}
+                      defaultValue={editDate.toLocaleDateString()}
+                      onChange={handleEditChange}
+                    />
+                    <StyledLabel>Edit sitting time</StyledLabel>
 
-                <select
-                  name="time"
-                  defaultValue={editSittingTime.toString()}
-                  onChange={handleEditSittingTime}
-                >
-                  {isAvailable?.firstSitting ? (
-                    <option value="1">6.00 pm</option>
-                  ) : (
-                    <option>not available</option>
-                  )}
-                  {isAvailable?.secondSitting ? (
-                    <option value="1">9.00 pm</option>
-                  ) : (
-                    <option>not available</option>
-                  )}
-                </select>
+                    <select
+                      name="time"
+                      defaultValue={editSittingTime.toString()}
+                      onChange={handleEditSittingTime}
+                    >
+                      {isAvailable?.firstSitting ? (
+                        <option value="1">6.00 pm</option>
+                      ) : (
+                        <option>not available</option>
+                      )}
+                      {isAvailable?.secondSitting ? (
+                        <option value="1">9.00 pm</option>
+                      ) : (
+                        <option>not available</option>
+                      )}
+                    </select>
 
-                <StyledLabel>Edit number of people</StyledLabel>
-                <input
-                  type="number"
-                  defaultValue={editNOP}
-                  onChange={handleEditNOP}
-                  min="1"
-                  max="12"
-                />
-                {/* <button onClick={() => setEditBooking()}>Save</button> */}
-              </FlexDiv>
-            </Form>
+                    <StyledLabel>Edit number of people</StyledLabel>
+                    <input
+                      type="number"
+                      defaultValue={editNOP}
+                      onChange={handleEditNOP}
+                      min="1"
+                      max="12"
+                    />
+                    {/* <button onClick={() => setEditBooking()}>Save</button> */}
+                  </FlexDiv>
+                </Form>
+              ) : (
+                <>
+                  <p>
+                    DATE OF SITTING:
+                    {new Date(bookingById.date).toLocaleDateString()}
+                  </p>
+                  <p>WHICH SITTING: {bookingById.sittingTime}</p>
+                  <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
+                  <FlexDiv gap="10px">
+                    <StyledButton
+                      width="70px"
+                      height="30px"
+                      onClick={() => setInEdit(true)}
+                    >
+                      Edit
+                    </StyledButton>
+
+                    {confirmDelete ? (
+                      <>
+                        <StyledButton
+                          width="70px"
+                          height="30px"
+                          onClick={() => deleteBooking(bookingById._id)}
+                        >
+                          <Link to={"/admin"}>Confirm</Link>
+                        </StyledButton>
+                      </>
+                    ) : (
+                      <>
+                        <StyledButton
+                          width="70px"
+                          height="30px"
+                          onClick={() => {
+                            setConfirmDelete(true);
+                          }}
+                        >
+                          Delete
+                        </StyledButton>
+                      </>
+                    )}
+                  </FlexDiv>
+                </>
+              )}
+            </>
           ) : (
             <>
-              <p>
-                DATE OF SITTING:{" "}
-                {new Date(bookingById.date).toLocaleDateString()}
-              </p>
-              <p>WHICH SITTING: {bookingById.sittingTime}</p>
-              <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
-              <FlexDiv gap="10px">
-                <StyledButton
-                  width="70px"
-                  height="30px"
-                  onClick={() => setInEdit(true)}
-                >
-                  Edit
-                </StyledButton>
-
-                {confirmDelete ? (
-                  <>
-                    <StyledButton
-                      width="70px"
-                      height="30px"
-                      onClick={() => deleteBooking(bookingById._id)}
-                    >
-                      <Link to={"/admin"}>Confirm</Link>
-                    </StyledButton>
-                  </>
-                ) : (
-                  <>
-                    <StyledButton
-                      width="70px"
-                      height="30px"
-                      onClick={() => {
-                        setConfirmDelete(true);
-                      }}
-                    >
-                      Delete
-                    </StyledButton>
-                  </>
-                )}
-              </FlexDiv>
+              {guestPath ? (
+                <>
+                  <p>
+                    DATE OF SITTING:
+                    {new Date(bookingById.date).toLocaleDateString()}
+                  </p>
+                  <p>WHICH SITTING: {bookingById.sittingTime}</p>
+                  <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
+                  {confirmDelete ? (
+                    <>
+                      <button onClick={() => deleteBooking(bookingById._id)}>
+                        <Link to={"/"}>Confirm</Link>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          setConfirmDelete(true);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </>
+              ) : (
+                <></>
+              )}
             </>
           )}
         </FlexDiv>

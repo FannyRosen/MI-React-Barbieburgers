@@ -96,7 +96,7 @@ export const post_newBookingsController = async (
         subject: "Your booking at barbieburgers",
         html: `<p>Hello ${name}! </p>
           <span>Your reservation for ${numberOfPeople} people hos oss på barbie burgers datum: ${date} klockan: ${sittingTime} är nu bokad!</span>
-          <span>Vill du avboka? Följ länken <a href="http://localhost:3000/admin/${booking._id}">här</a></span>`,
+          <span>Vill du avboka? Följ länken <a href="http://localhost:3000/reservation/${booking._id}">här</a></span>`,
       };
 
       contactEmail.sendMail(mail, (error: any) => {
