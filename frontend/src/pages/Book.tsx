@@ -5,43 +5,41 @@ import { useEffect, useState } from "react";
 import { PageIndicator } from "../components/partials/PageIndicator";
 import { useNavigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
-import {
-  fetchBookings,
-  postBooking,
-} from "../services/handleBookingsFetch.service";
+import { postBooking } from "../services/handleBookingsFetch.service";
 import { Loader } from "../components/partials/Loader";
 import { StyledLabel } from "../components/StyledComponents/TextElements";
 import { Form, Input, Label } from "../components/StyledComponents/Form";
 import { Background } from "../components/StyledComponents/Background";
+import { MyModal } from "../components/partials/Modal";
+import { MyCalendar } from "../components/partials/Calendar";
+import { checkAvailableSittings, ISittings } from "../services/utils";
 
 export const Book = () => {
   const [phase, setPhase] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState("");
   const [numberOfPeople, setNOP] = useState<number>(0);
   const [customerInfo, setCustomerInfo] = useState<IFormCustomer>({
     name: "",
     email: "",
     phone: "",
   });
-  const [arrayFirstSitting, setArrayFirstSitting] = useState<IArrayOfDates[]>(
-    []
-  );
-  const [firstIsAvailable, setFirstIsAvailable] = useState(false);
-  const [secondIsAvailable, setSecondIsAvailable] = useState(false);
+  const [isAvailable, setIsAvailable] = useState<ISittings>();
 
-  const [arraySecondSitting, setArraySecondSitting] = useState<IArrayOfDates[]>(
-    []
-  );
   const [sitting, setSitting] = useState(0);
   const navigate = useNavigate();
-  const curr = new Date();
-  curr.setDate(curr.getDate());
-  const inputDate = curr.toISOString().substring(0, 10);
 
-  /*   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(new Date(e.target.value));
-  }; */
+  useEffect(() => {
+    const checkDate = async () => {
+      const isAvailableinDB = await checkAvailableSittings(new Date(date));
+      setIsAvailable(isAvailableinDB);
+    };
+    checkDate().catch(console.error);
+  }, [date]);
+
+  const handleDateChange = async (e: Date) => {
+    setDate(e.toLocaleDateString());
+  };
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNOP(parseInt(e.currentTarget.value));
@@ -54,65 +52,20 @@ export const Book = () => {
     }));
   };
 
-  interface IArrayOfDates {
-    date: Date;
-  }
-
-  const checkDate = () => {
-    setIsLoading(true);
-    fetchBookings()
-      .then(async (response) => {
-        for (let i = 0; i < response.data.length; i++) {
-          let dbDate = new Date(response.data[i].date);
-          if (dbDate.getTime() == date.getTime()) {
-            //if same date is found - check sittings
-            if (response.data[i].sittingTime === 1) {
-              setArrayFirstSitting((arrayFirstSitting) => [
-                ...arrayFirstSitting,
-                { date: dbDate },
-              ]);
-            }
-            if (response.data[i].sittingTime === 2) {
-              setArraySecondSitting((arraySecondSitting) => [
-                ...arraySecondSitting,
-                { date: dbDate },
-              ]);
-            }
-          }
-        }
-
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    setPhase(2);
-  };
-
-  useEffect(() => {
-    if (arrayFirstSitting.length >= 2) {
-      setFirstIsAvailable(false);
-    } else if (arrayFirstSitting.length <= 2) {
-      setFirstIsAvailable(true);
-    }
-    if (arraySecondSitting.length >= 2) {
-      setSecondIsAvailable(false);
-    } else if (arraySecondSitting.length <= 2) {
-      setSecondIsAvailable(true);
-    }
-  }, [arrayFirstSitting, arraySecondSitting, phase]);
-
   const completeBooking = async () => {
     let booking = {
-      date,
+      date: new Date(date),
       sittingTime: sitting,
       email: customerInfo.email,
       numberOfPeople: numberOfPeople,
       name: customerInfo.name,
       phone: customerInfo.phone,
     };
-    postBooking(booking);
+    let completedBooking = await postBooking(booking).then((data) => {
+      console.log(data.data);
+    });
+    console.log(completedBooking);
+
     navigate("/thankyou", { state: booking });
   };
 
@@ -122,69 +75,59 @@ export const Book = () => {
         <Loader />
       ) : (
         <FlexDiv
-          borderRadius="10px"
+          borderRadius='10px'
           background={colors.LightPink}
-          width="80%"
-          height="min-content"
-          dir="column"
+          width='80%'
+          height='min-content'
+          dir='column'
         >
-          <FlexDiv dir="column" padding="40px">
+          <FlexDiv dir='column' padding='40px'>
             {phase === 1 && (
               <>
                 <h2>Book a table</h2>
                 <Form
                   onSubmit={() => {
                     if (numberOfPeople != 0) {
-                      checkDate();
+                      setPhase(2);
                     } else {
                       console.log("error");
                     }
                   }}
                 >
-                  <FlexDiv dir="column" gap="10px">
+                  <FlexDiv dir='column' gap='10px'>
                     <StyledLabel>Choose a date</StyledLabel>
-                    <MyCalendar></MyCalendar>
-                    {/* <input
-                      required
-                      onChange={handleDateChange}
-                      id="date"
-                      type="date"
-                      name="date"
-                      defaultValue={""}
-                      min={inputDate}
-                      max={"2023-12-31"}
-                    /> */}
+                    <MyCalendar handleDate={handleDateChange} />
 
                     <Label>Number of people</Label>
                     <select
                       required
-                      id="date"
-                      name="date"
+                      id='date'
+                      name='date'
                       onChange={handleNOPChange}
-                      defaultValue="0"
+                      defaultValue='0'
                     >
-                      <option disabled value="0">
+                      <option disabled value='0'>
                         0
                       </option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
+                      <option value='1'>1</option>
+                      <option value='2'>2</option>
+                      <option value='3'>3</option>
+                      <option value='4'>4</option>
+                      <option value='5'>5</option>
+                      <option value='6'>6</option>
+                      <option value='7'>7</option>
+                      <option value='8'>8</option>
+                      <option value='9'>9</option>
+                      <option value='10'>10</option>
+                      <option value='11'>11</option>
+                      <option value='12'>12</option>
                     </select>
                     <p>
                       Maximum per table: 6 <br />
                       If you are more than 6 people you will be divided between
                       tables
                     </p>
-                    <Input type="submit" value={"Check availability"} />
+                    <Input type='submit' value={"Check availability"} />
                   </FlexDiv>
                 </Form>
               </>
@@ -192,10 +135,10 @@ export const Book = () => {
             {phase === 2 && (
               <>
                 <h2>Available sittings</h2>
-                <FlexDiv gap="10px" dir="column">
-                  {firstIsAvailable ? (
+                <FlexDiv gap='10px' dir='column'>
+                  {isAvailable?.firstSitting ? (
                     <StyledButton
-                      color="white"
+                      color='white'
                       onClick={() => {
                         setSitting(1);
                         setPhase(3);
@@ -206,9 +149,9 @@ export const Book = () => {
                   ) : (
                     <p>First sitting is not available</p>
                   )}
-                  {secondIsAvailable ? (
+                  {isAvailable?.secondSitting ? (
                     <StyledButton
-                      color="white"
+                      color='white'
                       onClick={() => {
                         setSitting(2);
                         setPhase(3);
@@ -227,37 +170,37 @@ export const Book = () => {
                 <h2>Your information</h2>
                 <p>
                   Your booking: <br />
-                  {date.toLocaleDateString()} <br />
+                  {date} <br />
                   {sitting === 1 ? "6.00 pm" : "9.00 pm"}
                   <br />
                   {numberOfPeople} people
                 </p>
 
                 <Form onSubmit={completeBooking}>
-                  <FlexDiv dir="column">
+                  <FlexDiv dir='column'>
                     <Label>Name:</Label>
                     <input
                       required
                       onChange={handleChange}
-                      type="text"
-                      name="name"
+                      type='text'
+                      name='name'
                     />
                     <Label>Email:</Label>
                     <input
                       required
                       onChange={handleChange}
-                      type="email"
-                      name="email"
+                      type='email'
+                      name='email'
                     />
                     <Label>Phone number:</Label>
                     <input
                       required
                       onChange={handleChange}
-                      type="number"
-                      name="phone"
+                      type='number'
+                      name='phone'
                     />
                     <MyModal></MyModal>
-                    <Input type="submit" value={"book"} />
+                    <Input type='submit' value={"book"} />
                   </FlexDiv>
                 </Form>
               </>
