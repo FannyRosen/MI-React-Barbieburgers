@@ -1,6 +1,6 @@
 import { FlexDiv, ImageDiv } from "../components/StyledComponents/Wrappers";
 import background from "../assets/background.png";
-import burgers from "../assets/burgers.png";
+import burgers from "../assets/blueburger.jpeg";
 import { colors } from "../components/StyledComponents/mixins";
 import { StyledP } from "../components/StyledComponents/TextElements";
 import { Background } from "../components/StyledComponents/Background";

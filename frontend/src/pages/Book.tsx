@@ -39,9 +39,9 @@ export const Book = () => {
   curr.setDate(curr.getDate());
   const inputDate = curr.toISOString().substring(0, 10);
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /*   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(new Date(e.target.value));
-  };
+  }; */
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNOP(parseInt(e.currentTarget.value));
@@ -122,13 +122,13 @@ export const Book = () => {
         <Loader />
       ) : (
         <FlexDiv
-          borderRadius='10px'
+          borderRadius="10px"
           background={colors.LightPink}
-          width='80%'
-          height='min-content'
-          dir='column'
+          width="80%"
+          height="min-content"
+          dir="column"
         >
-          <FlexDiv dir='column' padding='40px'>
+          <FlexDiv dir="column" padding="40px">
             {phase === 1 && (
               <>
                 <h2>Book a table</h2>
@@ -141,49 +141,50 @@ export const Book = () => {
                     }
                   }}
                 >
-                  <FlexDiv dir='column' gap='10px'>
+                  <FlexDiv dir="column" gap="10px">
                     <StyledLabel>Choose a date</StyledLabel>
-                    <input
+                    <MyCalendar></MyCalendar>
+                    {/* <input
                       required
                       onChange={handleDateChange}
-                      id='date'
-                      type='date'
-                      name='date'
+                      id="date"
+                      type="date"
+                      name="date"
                       defaultValue={""}
                       min={inputDate}
                       max={"2023-12-31"}
-                    />
+                    /> */}
 
                     <Label>Number of people</Label>
                     <select
                       required
-                      id='date'
-                      name='date'
+                      id="date"
+                      name="date"
                       onChange={handleNOPChange}
-                      defaultValue='0'
+                      defaultValue="0"
                     >
-                      <option disabled value='0'>
+                      <option disabled value="0">
                         0
                       </option>
-                      <option value='1'>1</option>
-                      <option value='2'>2</option>
-                      <option value='3'>3</option>
-                      <option value='4'>4</option>
-                      <option value='5'>5</option>
-                      <option value='6'>6</option>
-                      <option value='7'>7</option>
-                      <option value='8'>8</option>
-                      <option value='9'>9</option>
-                      <option value='10'>10</option>
-                      <option value='11'>11</option>
-                      <option value='12'>12</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
                     </select>
                     <p>
                       Maximum per table: 6 <br />
                       If you are more than 6 people you will be divided between
                       tables
                     </p>
-                    <Input type='submit' value={"Check availability"} />
+                    <Input type="submit" value={"Check availability"} />
                   </FlexDiv>
                 </Form>
               </>
@@ -191,10 +192,10 @@ export const Book = () => {
             {phase === 2 && (
               <>
                 <h2>Available sittings</h2>
-                <FlexDiv gap='10px' dir='column'>
+                <FlexDiv gap="10px" dir="column">
                   {firstIsAvailable ? (
                     <StyledButton
-                      color='white'
+                      color="white"
                       onClick={() => {
                         setSitting(1);
                         setPhase(3);
@@ -207,7 +208,7 @@ export const Book = () => {
                   )}
                   {secondIsAvailable ? (
                     <StyledButton
-                      color='white'
+                      color="white"
                       onClick={() => {
                         setSitting(2);
                         setPhase(3);
@@ -233,30 +234,30 @@ export const Book = () => {
                 </p>
 
                 <Form onSubmit={completeBooking}>
-                  <FlexDiv dir='column'>
+                  <FlexDiv dir="column">
                     <Label>Name:</Label>
                     <input
                       required
                       onChange={handleChange}
-                      type='text'
-                      name='name'
+                      type="text"
+                      name="name"
                     />
                     <Label>Email:</Label>
                     <input
                       required
                       onChange={handleChange}
-                      type='email'
-                      name='email'
+                      type="email"
+                      name="email"
                     />
                     <Label>Phone number:</Label>
                     <input
                       required
                       onChange={handleChange}
-                      type='number'
-                      name='phone'
+                      type="number"
+                      name="phone"
                     />
-
-                    <Input type='submit' value={"book"} />
+                    <MyModal></MyModal>
+                    <Input type="submit" value={"book"} />
                   </FlexDiv>
                 </Form>
               </>
