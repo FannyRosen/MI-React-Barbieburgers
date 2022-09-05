@@ -41,7 +41,7 @@ export const SingleBooking = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [bookingById.clientId, customerById._id, params]); // håll kanske tom []
+  }, [bookingById.clientId, customerById._id, params]);
 
   return (
     <>
