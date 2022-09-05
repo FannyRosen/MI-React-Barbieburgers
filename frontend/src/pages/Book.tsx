@@ -13,6 +13,8 @@ import { Loader } from "../components/partials/Loader";
 import { StyledLabel } from "../components/StyledComponents/TextElements";
 import { Form, Input, Label } from "../components/StyledComponents/Form";
 import { Background } from "../components/StyledComponents/Background";
+import { MyModal } from "../components/partials/Modal";
+import { MyCalendar } from "../components/partials/Calendar";
 
 export const Book = () => {
   const [phase, setPhase] = useState(1);

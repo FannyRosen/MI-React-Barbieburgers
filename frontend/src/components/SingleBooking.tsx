@@ -154,7 +154,7 @@ export const SingleBooking = () => {
               ) : (
                 <>
                   <p>
-                    DATE OF SITTING:{" "}
+                    DATE OF SITTING:
                     {new Date(bookingById.date).toLocaleDateString()}
                   </p>
                   <p>WHICH SITTING: {bookingById.sittingTime}</p>
@@ -197,22 +197,34 @@ export const SingleBooking = () => {
             </>
           ) : (
             <>
-              {confirmDelete ? (
+              {guestPath ? (
                 <>
-                  <button onClick={() => deleteBooking(bookingById._id)}>
-                    <Link to={"/"}>Confirm</Link>
-                  </button>
+                  <p>
+                    DATE OF SITTING:
+                    {new Date(bookingById.date).toLocaleDateString()}
+                  </p>
+                  <p>WHICH SITTING: {bookingById.sittingTime}</p>
+                  <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
+                  {confirmDelete ? (
+                    <>
+                      <button onClick={() => deleteBooking(bookingById._id)}>
+                        <Link to={"/"}>Confirm</Link>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          setConfirmDelete(true);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </>
               ) : (
-                <>
-                  <button
-                    onClick={() => {
-                      setConfirmDelete(true);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </>
+                <></>
               )}
             </>
           )}
