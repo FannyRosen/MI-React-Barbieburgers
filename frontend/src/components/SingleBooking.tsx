@@ -9,7 +9,10 @@ import {
 } from "../services/handleBookingsFetch.service";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
 import { checkAvailableSittings, ISittings } from "../services/utils";
+import { Background } from "./StyledComponents/Background";
 import { Form } from "./StyledComponents/Form";
+import { colors } from "./StyledComponents/mixins";
+import { StyledButton } from "./StyledComponents/StyledButton";
 import { StyledLabel } from "./StyledComponents/TextElements";
 import { FlexDiv } from "./StyledComponents/Wrappers";
 
@@ -83,83 +86,107 @@ export const SingleBooking = () => {
 
   return (
     <>
-      SingleBooking works!
+      {/*   SingleBooking works!
       <p>CUSTOMERS NAME</p>
       <p>ID: {customerById._id}</p>
       <Link to={"/admin/customers/" + customerById._id}>
         <button>GO TO CUSTOMER</button>
-      </Link>
-      {inEdit ? (
-        <>
-          <Form>
-            <FlexDiv dir="column" gap="10px">
-              <StyledLabel>Edit date</StyledLabel>
-              <input
-                type="date"
-                min={inputDate}
-                max={"2023-12-31"}
-                defaultValue={editDate.toLocaleDateString()}
-                onChange={handleEditChange}
-              />
-              <StyledLabel>Edit sitting time</StyledLabel>
+      </Link> */}
+      <Background>
+        <FlexDiv
+          borderRadius="10px"
+          background={colors.LightPink}
+          width="80%"
+          height="min-content"
+          dir="column"
+          padding="40px"
+        >
+          {inEdit ? (
+            <Form>
+              <FlexDiv dir="column" gap="10px">
+                <StyledLabel>Edit date</StyledLabel>
+                <input
+                  type="date"
+                  min={inputDate}
+                  max={"2023-12-31"}
+                  defaultValue={editDate.toLocaleDateString()}
+                  onChange={handleEditChange}
+                />
+                <StyledLabel>Edit sitting time</StyledLabel>
 
-              <select
-                name="time"
-                defaultValue={editSittingTime.toString()}
-                onChange={handleEditSittingTime}
-              >
-                {isAvailable?.firstSitting ? (
-                  <option value="1">6.00 pm</option>
-                ) : (
-                  <option>not available</option>
-                )}
-                {isAvailable?.secondSitting ? (
-                  <option value="1">9.00 pm</option>
-                ) : (
-                  <option>not available</option>
-                )}
-              </select>
+                <select
+                  name="time"
+                  defaultValue={editSittingTime.toString()}
+                  onChange={handleEditSittingTime}
+                >
+                  {isAvailable?.firstSitting ? (
+                    <option value="1">6.00 pm</option>
+                  ) : (
+                    <option>not available</option>
+                  )}
+                  {isAvailable?.secondSitting ? (
+                    <option value="1">9.00 pm</option>
+                  ) : (
+                    <option>not available</option>
+                  )}
+                </select>
 
-              <StyledLabel>Edit number of people</StyledLabel>
-              <input
-                type="number"
-                defaultValue={editNOP}
-                onChange={handleEditNOP}
-                min="1"
-                max="12"
-              />
-              {/* <button onClick={() => setEditBooking()}>Save</button> */}
-            </FlexDiv>
-          </Form>
-        </>
-      ) : (
-        <>
-          {" "}
-          <p>
-            DATE OF SITTING {new Date(bookingById.date).toLocaleDateString()}
-          </p>
-          <p>WHICH SITTING {bookingById.sittingTime}</p>
-          <p>PEOPLE ON RESERVATION {bookingById.numberOfPeople}</p>
-        </>
-      )}
-      <button onClick={() => setInEdit(true)}>Edit</button>
-      {confirmDelete ? (
-        <>
-          <button onClick={() => deleteBooking(bookingById._id)}>
-            <Link to={"/admin"}>Confirm</Link>
-          </button>
-        </>
-      ) : (
-        <>
-          <button
-            onClick={() => {
-              setConfirmDelete(true);
-            }}
-          >
-            Delete
-          </button>
-        </>
-      )}
+                <StyledLabel>Edit number of people</StyledLabel>
+                <input
+                  type="number"
+                  defaultValue={editNOP}
+                  onChange={handleEditNOP}
+                  min="1"
+                  max="12"
+                />
+                {/* <button onClick={() => setEditBooking()}>Save</button> */}
+              </FlexDiv>
+            </Form>
+          ) : (
+            <>
+              <p>
+                DATE OF SITTING:{" "}
+                {new Date(bookingById.date).toLocaleDateString()}
+              </p>
+              <p>WHICH SITTING: {bookingById.sittingTime}</p>
+              <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
+              <FlexDiv gap="10px">
+                <StyledButton
+                  width="70px"
+                  height="30px"
+                  onClick={() => setInEdit(true)}
+                >
+                  Edit
+                </StyledButton>
+
+                {confirmDelete ? (
+                  <>
+                    <StyledButton
+                      width="70px"
+                      height="30px"
+                      onClick={() => deleteBooking(bookingById._id)}
+                    >
+                      <Link to={"/admin"}>Confirm</Link>
+                    </StyledButton>
+                  </>
+                ) : (
+                  <>
+                    <StyledButton
+                      width="70px"
+                      height="30px"
+                      onClick={() => {
+                        setConfirmDelete(true);
+                      }}
+                    >
+                      Delete
+                    </StyledButton>
+                  </>
+                )}
+              </FlexDiv>
+            </>
+          )}
+        </FlexDiv>
+      </Background>
     </>
   );
 };

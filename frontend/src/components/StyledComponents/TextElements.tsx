@@ -24,3 +24,11 @@ export const StyledLink = styled(Link)`
   color: ${(props: IStylingProps) => props.color || "white"};
   text-decoration: ${(props: IStylingProps) => props.textDecoration || "none"};
 `;
+
+export const StyledHr = styled.hr`
+  width: 200px;
+`;
+
+export const StyledH2 = styled.h2`
+  padding-top: 40px;
+`;

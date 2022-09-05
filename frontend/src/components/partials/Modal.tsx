@@ -21,7 +21,6 @@ const customStyles = {
 };
 
 export const MyModal = () => {
-  // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
   Modal.setAppElement("#root");
 
   const [modalIsOpen, setIsOpen] = React.useState(true);
@@ -41,9 +40,11 @@ export const MyModal = () => {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <StyledButton onClick={closeModal} width="50px" height="30px">
-          Close
-        </StyledButton>
+        <StyledLink to={"/"}>
+          <StyledButton onClick={closeModal} width="50px" height="30px">
+            Close
+          </StyledButton>
+        </StyledLink>
         <FlexDiv
           width="90%"
           dir="column"

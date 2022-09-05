@@ -14,6 +14,7 @@ import { StyledLabel } from "./StyledComponents/TextElements";
 import { Form, Input, Label } from "./StyledComponents/Form";
 import { Background } from "./StyledComponents/Background";
 import { MyModal } from "./partials/Modal";
+import { MyCalendar } from "./partials/Calendar";
 
 export const Book = () => {
   const [phase, setPhase] = useState(1);
@@ -40,9 +41,9 @@ export const Book = () => {
   curr.setDate(curr.getDate());
   const inputDate = curr.toISOString().substring(0, 10);
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /*   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(new Date(e.target.value));
-  };
+  }; */
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNOP(parseInt(e.currentTarget.value));
@@ -146,7 +147,8 @@ export const Book = () => {
                 >
                   <FlexDiv dir="column" gap="10px">
                     <StyledLabel>Choose a date</StyledLabel>
-                    <input
+                    <MyCalendar></MyCalendar>
+                    {/* <input
                       required
                       onChange={handleDateChange}
                       id="date"
@@ -155,7 +157,7 @@ export const Book = () => {
                       defaultValue={""}
                       min={inputDate}
                       max={"2023-12-31"}
-                    />
+                    /> */}
 
                     <Label>Number of people</Label>
                     <select
