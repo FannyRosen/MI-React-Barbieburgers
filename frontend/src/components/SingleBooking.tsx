@@ -111,46 +111,55 @@ export const SingleBooking = () => {
           {adminPath ? (
             <>
               {inEdit ? (
-                <Form>
-                  <FlexDiv dir="column" gap="10px">
-                    <StyledLabel>Edit date</StyledLabel>
-                    <input
-                      type="date"
-                      min={inputDate}
-                      max={"2023-12-31"}
-                      defaultValue={editDate.toLocaleDateString()}
-                      onChange={handleEditChange}
-                    />
-                    <StyledLabel>Edit sitting time</StyledLabel>
+                <>
+                  <Form>
+                    <FlexDiv dir="column" gap="10px">
+                      <StyledLabel>Edit date</StyledLabel>
+                      <input
+                        type="date"
+                        min={inputDate}
+                        max={"2023-12-31"}
+                        defaultValue={editDate.toLocaleDateString()}
+                        onChange={handleEditChange}
+                      />
+                      <StyledLabel>Edit sitting time</StyledLabel>
 
-                    <select
-                      name="time"
-                      defaultValue={editSittingTime.toString()}
-                      onChange={handleEditSittingTime}
-                    >
-                      {isAvailable?.firstSitting ? (
-                        <option value="1">6.00 pm</option>
-                      ) : (
-                        <option>not available</option>
-                      )}
-                      {isAvailable?.secondSitting ? (
-                        <option value="1">9.00 pm</option>
-                      ) : (
-                        <option>not available</option>
-                      )}
-                    </select>
+                      <select
+                        name="time"
+                        defaultValue={editSittingTime.toString()}
+                        onChange={handleEditSittingTime}
+                      >
+                        {isAvailable?.firstSitting ? (
+                          <option value="1">6.00 pm</option>
+                        ) : (
+                          <option>not available</option>
+                        )}
+                        {isAvailable?.secondSitting ? (
+                          <option value="1">9.00 pm</option>
+                        ) : (
+                          <option>not available</option>
+                        )}
+                      </select>
 
-                    <StyledLabel>Edit number of people</StyledLabel>
-                    <input
-                      type="number"
-                      defaultValue={editNOP}
-                      onChange={handleEditNOP}
-                      min="1"
-                      max="12"
-                    />
-                    {/* <button onClick={() => setEditBooking()}>Save</button> */}
-                  </FlexDiv>
-                </Form>
+                      <StyledLabel>Edit number of people</StyledLabel>
+                      <input
+                        type="number"
+                        defaultValue={editNOP}
+                        onChange={handleEditNOP}
+                        min="1"
+                        max="12"
+                      />
+                      {/* <button onClick={() => setEditBooking()}>Save</button> */}
+                    </FlexDiv>
+                  </Form>
+                  <StyledButton
+                    width="70px"
+                    height="30px"
+                    onClick={() => setInEdit(false)}
+                  >
+                    Back
+                  </StyledButton>
+                </>
               ) : (
                 <>
                   <p>
@@ -159,6 +168,7 @@ export const SingleBooking = () => {
                   </p>
                   <p>WHICH SITTING: {bookingById.sittingTime}</p>
                   <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
+
                   <FlexDiv gap="10px">
                     <StyledButton
                       width="70px"
