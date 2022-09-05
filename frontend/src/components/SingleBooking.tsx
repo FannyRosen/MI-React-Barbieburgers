@@ -8,6 +8,17 @@ import {
   fetchBookingByID,
 } from "../services/handleBookingsFetch.service";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
+import { checkAvailableSittings, ISittings } from "../services/utils";
+import { Background } from "./StyledComponents/Background";
+import { Form } from "./StyledComponents/Form";
+import { colors } from "./StyledComponents/mixins";
+import { StyledButton } from "./StyledComponents/StyledButton";
+import { StyledLabel } from "./StyledComponents/TextElements";
+import { FlexDiv } from "./StyledComponents/Wrappers";
+
+interface IArrayOfDates {
+  date: Date;
+}
 
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
@@ -16,6 +27,11 @@ export const SingleBooking = () => {
     customersDefaultValue
   );
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [inEdit, setInEdit] = useState(false);
+  const [editNOP, setEditNOP] = useState<number>(0);
+  const [editDate, setEditDate] = useState<Date>(new Date("1999-01-01"));
+  const [editSittingTime, setEditSittingTime] = useState<number>(0);
+  const [isAvailable, setIsAvailable] = useState<ISittings>();
 
   let params = useParams();
   const location = useLocation();
@@ -46,59 +62,162 @@ export const SingleBooking = () => {
       });
   }, [bookingById.clientId, customerById._id, params]);
 
+  useEffect(() => {
+    setEditDate(new Date(bookingById.date));
+    setEditNOP(bookingById.numberOfPeople);
+    setEditSittingTime(bookingById.sittingTime);
+  }, [bookingById]);
+
+  useEffect(() => {
+    const checkDate = async () => {
+      const isAvailableinDB = await checkAvailableSittings(editDate);
+      setIsAvailable(isAvailableinDB);
+    };
+    checkDate().catch(console.error);
+    console.log(isAvailable);
+  }, [editDate]);
+
+  const curr = new Date();
+  curr.setDate(curr.getDate());
+  const inputDate = curr.toISOString().substring(0, 10);
+
+  const handleEditChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditDate(new Date(e.target.value));
+    const isAvailableinDB = await checkAvailableSittings(editDate);
+    setIsAvailable(isAvailableinDB);
+  };
+
+  const handleEditNOP = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditNOP(parseInt(e.target.value));
+  };
+
+  const handleEditSittingTime = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setEditSittingTime(parseInt(e.target.value));
+  };
+
   return (
     <>
-      SingleBooking works!
-      <p>CUSTOMERS NAME</p>
-      <p>ID: {customerById._id}</p>
-      <Link to={"/admin/customers/" + customerById._id}>
-        <button>GO TO CUSTOMER</button>
-      </Link>
-      <p>DATE OF SITTING {bookingById.date.toLocaleString()}</p>
-      <p>WHICH SITTING {bookingById.sittingTime}</p>
-      <p>PEOPLE ON RESERVATION {bookingById.numberOfPeople}</p>
-      {adminPath ? (
-        <>
-          <button>EDIT</button>
-          {confirmDelete ? (
+      <Background>
+        <FlexDiv
+          borderRadius="10px"
+          background={colors.LightPink}
+          width="80%"
+          height="min-content"
+          dir="column"
+          padding="40px"
+        >
+          {adminPath ? (
             <>
-              <button onClick={() => deleteBooking(bookingById._id)}>
-                <Link to={"/admin"}>Confirm</Link>
-              </button>
+              {inEdit ? (
+                <Form>
+                  <FlexDiv dir="column" gap="10px">
+                    <StyledLabel>Edit date</StyledLabel>
+                    <input
+                      type="date"
+                      min={inputDate}
+                      max={"2023-12-31"}
+                      defaultValue={editDate.toLocaleDateString()}
+                      onChange={handleEditChange}
+                    />
+                    <StyledLabel>Edit sitting time</StyledLabel>
+
+                    <select
+                      name="time"
+                      defaultValue={editSittingTime.toString()}
+                      onChange={handleEditSittingTime}
+                    >
+                      {isAvailable?.firstSitting ? (
+                        <option value="1">6.00 pm</option>
+                      ) : (
+                        <option>not available</option>
+                      )}
+                      {isAvailable?.secondSitting ? (
+                        <option value="1">9.00 pm</option>
+                      ) : (
+                        <option>not available</option>
+                      )}
+                    </select>
+
+                    <StyledLabel>Edit number of people</StyledLabel>
+                    <input
+                      type="number"
+                      defaultValue={editNOP}
+                      onChange={handleEditNOP}
+                      min="1"
+                      max="12"
+                    />
+                    {/* <button onClick={() => setEditBooking()}>Save</button> */}
+                  </FlexDiv>
+                </Form>
+              ) : (
+                <>
+                  <p>
+                    DATE OF SITTING:{" "}
+                    {new Date(bookingById.date).toLocaleDateString()}
+                  </p>
+                  <p>WHICH SITTING: {bookingById.sittingTime}</p>
+                  <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
+                  <FlexDiv gap="10px">
+                    <StyledButton
+                      width="70px"
+                      height="30px"
+                      onClick={() => setInEdit(true)}
+                    >
+                      Edit
+                    </StyledButton>
+
+                    {confirmDelete ? (
+                      <>
+                        <StyledButton
+                          width="70px"
+                          height="30px"
+                          onClick={() => deleteBooking(bookingById._id)}
+                        >
+                          <Link to={"/admin"}>Confirm</Link>
+                        </StyledButton>
+                      </>
+                    ) : (
+                      <>
+                        <StyledButton
+                          width="70px"
+                          height="30px"
+                          onClick={() => {
+                            setConfirmDelete(true);
+                          }}
+                        >
+                          Delete
+                        </StyledButton>
+                      </>
+                    )}
+                  </FlexDiv>
+                </>
+              )}
             </>
           ) : (
             <>
-              <button
-                onClick={() => {
-                  setConfirmDelete(true);
-                }}
-              >
-                Delete
-              </button>
+              {confirmDelete ? (
+                <>
+                  <button onClick={() => deleteBooking(bookingById._id)}>
+                    <Link to={"/"}>Confirm</Link>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setConfirmDelete(true);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
             </>
           )}
-        </>
-      ) : (
-        <>
-          {confirmDelete ? (
-            <>
-              <button onClick={() => deleteBooking(bookingById._id)}>
-                <Link to={"/"}>Confirm</Link>
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => {
-                  setConfirmDelete(true);
-                }}
-              >
-                Delete
-              </button>
-            </>
-          )}
-        </>
-      )}
+        </FlexDiv>
+      </Background>
     </>
   );
 };

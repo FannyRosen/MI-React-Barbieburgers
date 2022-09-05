@@ -119,3 +119,20 @@ export const put_customerByIdController = async (
     });
   }
 };
+
+export const get_bookingByEmail = async (req: Request, res: Response) => {
+  try {
+    const bookingById = await CustomerModel.findOne(req.params);
+
+    res.status(200).json({
+      status: statusSuccess,
+      message: "Get id works",
+      data: bookingById,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: statusFailed,
+      message: error,
+    });
+  }
+};

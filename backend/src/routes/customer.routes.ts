@@ -5,6 +5,7 @@ import {
   get_customerByIdController,
   delete_customerByIdController,
   put_customerByIdController,
+  get_bookingByEmail,
 } from "../controllers/customer.controller";
 
 const router: Router = express.Router();
@@ -14,5 +15,6 @@ router.post("/new", post_newCustomerController);
 router.get("/:id", get_customerByIdController);
 router.post("/delete/:id", delete_customerByIdController);
 router.put("/edit/:id", put_customerByIdController);
+router.put("/newcustomer", get_bookingByEmail);
 
 export default router;
