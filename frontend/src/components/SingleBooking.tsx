@@ -108,6 +108,7 @@ export const SingleBooking = () => {
           dir="column"
           padding="40px"
         >
+          {/*  ADMIN VIEW  */}
           {adminPath ? (
             <>
               {inEdit ? (
@@ -206,6 +207,7 @@ export const SingleBooking = () => {
               )}
             </>
           ) : (
+            /*  GUEST VIEW  */
             <>
               {guestPath ? (
                 <>
@@ -217,19 +219,23 @@ export const SingleBooking = () => {
                   <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
                   {confirmDelete ? (
                     <>
-                      <button onClick={() => deleteBooking(bookingById._id)}>
+                      <StyledButton
+                        width="70px"
+                        height="30px"
+                        onClick={() => deleteBooking(bookingById._id)}
+                      >
                         <Link to={"/"}>Confirm</Link>
-                      </button>
+                      </StyledButton>
                     </>
                   ) : (
                     <>
-                      <button
-                        onClick={() => {
-                          setConfirmDelete(true);
-                        }}
+                      <StyledButton
+                        width="70px"
+                        height="30px"
+                        onClick={() => deleteBooking(bookingById._id)}
                       >
                         Delete
-                      </button>
+                      </StyledButton>
                     </>
                   )}
                 </>
