@@ -62,7 +62,7 @@ export const post_newBookingsController = async (
       numberOfPeople: req.body.numberOfPeople,
       phone: req.body.phone,
     });
-
+    let booking;
     if (returningCustomer) {
       const saveCustomerId = await returningCustomer.save();
 
@@ -75,7 +75,7 @@ export const post_newBookingsController = async (
         clientId: saveCustomerId._id,
       });
 
-      await postNewBooking.save();
+      booking = await postNewBooking.save();
     } else {
       /////////////////////////
       // NO CUSTOMER IN DB? => CREATE CUSTOMER
@@ -151,6 +151,7 @@ export const post_newBookingsController = async (
     /////////////////////////
 
     res.status(200).json({
+      booking: booking,
       status: statusSuccess,
       message: "New booking added to DB",
     });

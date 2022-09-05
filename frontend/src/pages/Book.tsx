@@ -103,18 +103,16 @@ export const Book = () => {
     }
   }, [arrayFirstSitting, arraySecondSitting, phase]);
 
-  const completeBooking = () => {
-    postBooking({
+  const completeBooking = async () => {
+    let booking = {
       date,
       sittingTime: sitting,
-      numberOfPeople,
-      name: customerInfo.name,
       email: customerInfo.email,
+      numberOfPeople: numberOfPeople,
+      name: customerInfo.name,
       phone: customerInfo.phone,
-    }).then((data) => {
-      console.log(data.data);
-    });
-    navigate("/thankyou");
+    };
+    navigate("/thankyou", { state: booking });
   };
 
   return (

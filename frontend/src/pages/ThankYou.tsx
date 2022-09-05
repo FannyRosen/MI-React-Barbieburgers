@@ -1,39 +1,66 @@
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Loader } from "../components/partials/Loader";
 import { Background } from "../components/StyledComponents/Background";
 import { colors } from "../components/StyledComponents/mixins";
 import { StyledP } from "../components/StyledComponents/TextElements";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
+import { IBooking } from "../models/IBooking";
+import { findBookingByEmail } from "../services/handleBookingsFetch.service";
+import { fetchCustomers } from "../services/handleCustomersFetch.service";
 
 export const ThankYou = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [bookingNumber, setBookingNumber] = useState("");
+
+  interface LocationState {
+    date: Date;
+    sittingTime: number;
+    numberOfPeople: number;
+    name: string;
+    email: string;
+    phone: string;
+  }
+
+  const location = useLocation();
+  const state = location.state as LocationState;
+
   return (
-    <>
-      <Background>
+    <Background>
+      {isLoading ? (
+        <>
+          <Loader />
+        </>
+      ) : (
         <FlexDiv
           borderRadius='10px'
           background={colors.LightPink}
           width='80%'
           height='min-content'
+          minheight='40vh'
           dir='column'
         >
           <FlexDiv width='90%' dir='column' tabletdir='row' margin='20px'>
             <FlexDiv width='80%' dir='column'>
-              <h2>Thank you!</h2>
+              <h2>Thank you {state.name}!</h2>
               <StyledP fontsize='20px' margin='20px'>
                 Your booking is completed! A confirmation email has been sent
-                to:
+                to: {state.email}
               </StyledP>
+
               <StyledP fontsize='20px' margin='20px'>
-                Email PlaceHolder
+                See you at:{` `}
+                {state.date.toLocaleDateString()}
               </StyledP>
-              <StyledP fontsize='20px' margin='20px'>
-                Booking Number PlaceHolder
+              <StyledP fontsize='20px'>
+                We expect:{` `}
+                {state.numberOfPeople} number of people.
               </StyledP>
-              <StyledP fontsize='20px' margin='20px'>
-                Booking PlaceHolder
-              </StyledP>
+              <StyledP fontsize='20px'>We expect:{` `}</StyledP>
             </FlexDiv>
           </FlexDiv>
         </FlexDiv>
-      </Background>
-    </>
+      )}
+    </Background>
   );
 };
