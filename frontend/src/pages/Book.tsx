@@ -10,9 +10,14 @@ import {
   postBooking,
 } from "../services/handleBookingsFetch.service";
 import { Loader } from "../components/partials/Loader";
-import { StyledLabel } from "../components/StyledComponents/TextElements";
+import {
+  StyledLabel,
+  StyledSelect,
+} from "../components/StyledComponents/TextElements";
 import { Form, Input, Label } from "../components/StyledComponents/Form";
 import { Background } from "../components/StyledComponents/Background";
+import { MyCalendar } from "../components/partials/Calendar";
+import { MyModal } from "../components/partials/Modal";
 
 export const Book = () => {
   const [phase, setPhase] = useState(1);
@@ -39,9 +44,9 @@ export const Book = () => {
   curr.setDate(curr.getDate());
   const inputDate = curr.toISOString().substring(0, 10);
 
-  /*   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(new Date(e.target.value));
-  }; */
+  };
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNOP(parseInt(e.currentTarget.value));
@@ -144,7 +149,7 @@ export const Book = () => {
                   <FlexDiv dir="column" gap="10px">
                     <StyledLabel>Choose a date</StyledLabel>
                     <MyCalendar></MyCalendar>
-                    {/* <input
+                    <input
                       required
                       onChange={handleDateChange}
                       id="date"
@@ -153,10 +158,10 @@ export const Book = () => {
                       defaultValue={""}
                       min={inputDate}
                       max={"2023-12-31"}
-                    /> */}
+                    />
 
                     <Label>Number of people</Label>
-                    <select
+                    <StyledSelect
                       required
                       id="date"
                       name="date"
@@ -178,7 +183,7 @@ export const Book = () => {
                       <option value="10">10</option>
                       <option value="11">11</option>
                       <option value="12">12</option>
-                    </select>
+                    </StyledSelect>
                     <p>
                       Maximum per table: 6 <br />
                       If you are more than 6 people you will be divided between
