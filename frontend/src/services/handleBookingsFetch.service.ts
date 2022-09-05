@@ -30,3 +30,10 @@ export async function editBooking(id: string): Promise<IBookingResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_EDIT}/` + id;
   return (await put<IBookingResponse>(response)).data;
 }
+
+export async function findBookingByEmail(
+  email: string
+): Promise<IBookingResponse> {
+  const response: string = `${process.env.REACT_APP_BOOKINGS_URI}/` + email;
+  return (await get<IBookingResponse>(response)).data;
+}

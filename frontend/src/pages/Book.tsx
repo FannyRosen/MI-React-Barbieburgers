@@ -1,18 +1,18 @@
-import { colors } from "./StyledComponents/mixins";
-import { FlexDiv } from "./StyledComponents/Wrappers";
-import { StyledButton } from "./StyledComponents/StyledButton";
+import { colors } from "../components/StyledComponents/mixins";
+import { FlexDiv } from "../components/StyledComponents/Wrappers";
+import { StyledButton } from "../components/StyledComponents/StyledButton";
 import { useEffect, useState } from "react";
-import { PageIndicator } from "./partials/PageIndicator";
+import { PageIndicator } from "../components/partials/PageIndicator";
 import { useNavigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
 import {
   fetchBookings,
   postBooking,
 } from "../services/handleBookingsFetch.service";
-import { Loader } from "./partials/Loader";
-import { StyledLabel } from "./StyledComponents/TextElements";
-import { Form, Input, Label } from "./StyledComponents/Form";
-import { Background } from "./StyledComponents/Background";
+import { Loader } from "../components/partials/Loader";
+import { StyledLabel } from "../components/StyledComponents/TextElements";
+import { Form, Input, Label } from "../components/StyledComponents/Form";
+import { Background } from "../components/StyledComponents/Background";
 
 export const Book = () => {
   const [phase, setPhase] = useState(1);
@@ -62,13 +62,10 @@ export const Book = () => {
     setIsLoading(true);
     fetchBookings()
       .then(async (response) => {
-        console.log(response);
-
         for (let i = 0; i < response.data.length; i++) {
           let dbDate = new Date(response.data[i].date);
           if (dbDate.getTime() == date.getTime()) {
-            console.log("found same date");
-
+            //if same date is found - check sittings
             if (response.data[i].sittingTime === 1) {
               setArrayFirstSitting((arrayFirstSitting) => [
                 ...arrayFirstSitting,
@@ -106,16 +103,16 @@ export const Book = () => {
     }
   }, [arrayFirstSitting, arraySecondSitting, phase]);
 
-  const completeBooking = () => {
-    postBooking({
+  const completeBooking = async () => {
+    let booking = {
       date,
       sittingTime: sitting,
-      numberOfPeople,
-      name: customerInfo.name,
       email: customerInfo.email,
+      numberOfPeople: numberOfPeople,
+      name: customerInfo.name,
       phone: customerInfo.phone,
-    });
-    navigate("/thankyou");
+    };
+    navigate("/thankyou", { state: booking });
   };
 
   return (
