@@ -112,6 +112,7 @@ export const Book = () => {
       name: customerInfo.name,
       phone: customerInfo.phone,
     };
+    postBooking(booking);
     navigate("/thankyou", { state: booking });
   };
 
