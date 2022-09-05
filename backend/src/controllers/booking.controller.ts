@@ -65,7 +65,6 @@ export const post_newBookingsController = async (
       email,
       phone,
     });
-<<<<<<< HEAD
 
     const sendConfirmationEmail = (booking: IBooking) => {
       const contactEmail = nodemailer.createTransport({
@@ -108,16 +107,18 @@ export const post_newBookingsController = async (
       });
     };
 
-=======
-    let booking;
->>>>>>> feature-user-book
+    if (returningCustomer) {
+      const saveCustomerId = await returningCustomer.save();
 
-<<<<<<< HEAD
+      const postNewBooking = new BookingModel({
+        date,
+        sittingTime,
+        numberOfPeople,
+        clientId: saveCustomerId._id,
+      });
+
       let booking = await postNewBooking.save();
       sendConfirmationEmail(booking);
-=======
-      booking = await postNewBooking.save();
->>>>>>> feature-user-booking
     } else {
       const postCustomer = new CustomerModel({
         name,
@@ -139,7 +140,6 @@ export const post_newBookingsController = async (
     }
 
     res.status(200).json({
-      booking: booking,
       status: statusSuccess,
       message: "New booking added to DB",
     });
