@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, matchRoutes, useLocation, useParams } from "react-router-dom";
 import { bookingsDefaultValue, IBooking } from "../models/IBooking";
 import { customersDefaultValue, ICustomer } from "../models/ICustomer";
 import {
@@ -18,6 +18,9 @@ export const SingleBooking = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   let params = useParams();
+  const location = useLocation();
+  const adminPath = location.pathname === "/admin/" + bookingById._id;
+  const guestPath = location.pathname === "/reservation/" + bookingById._id;
 
   useEffect(() => {
     fetchCustomerByID(customerById._id)
@@ -54,22 +57,46 @@ export const SingleBooking = () => {
       <p>DATE OF SITTING {bookingById.date.toLocaleString()}</p>
       <p>WHICH SITTING {bookingById.sittingTime}</p>
       <p>PEOPLE ON RESERVATION {bookingById.numberOfPeople}</p>
-      <button>Edit</button>
-      {confirmDelete ? (
+      {adminPath ? (
         <>
-          <button onClick={() => deleteBooking(bookingById._id)}>
-            <Link to={"/admin"}>Confirm</Link>
-          </button>
+          <button>EDIT</button>
+          {confirmDelete ? (
+            <>
+              <button onClick={() => deleteBooking(bookingById._id)}>
+                <Link to={"/admin"}>Confirm</Link>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  setConfirmDelete(true);
+                }}
+              >
+                Delete
+              </button>
+            </>
+          )}
         </>
       ) : (
         <>
-          <button
-            onClick={() => {
-              setConfirmDelete(true);
-            }}
-          >
-            Delete
-          </button>
+          {confirmDelete ? (
+            <>
+              <button onClick={() => deleteBooking(bookingById._id)}>
+                <Link to={"/"}>Confirm</Link>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  setConfirmDelete(true);
+                }}
+              >
+                Delete
+              </button>
+            </>
+          )}
         </>
       )}
     </>
