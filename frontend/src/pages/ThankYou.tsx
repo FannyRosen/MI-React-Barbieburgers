@@ -4,8 +4,6 @@ import { StyledP } from "../components/StyledComponents/TextElements";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 
 export const ThankYou = () => {
-  console.log("====================================");
-  console.log("====================================");
   return (
     <>
       <Background>

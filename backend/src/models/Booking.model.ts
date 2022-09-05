@@ -7,7 +7,7 @@ const BookingSchema = new mongoose.Schema<IBooking>({
     // required: true,
   },
   sittingTime: {
-    type: String,
+    type: Number,
     // required: true,
   },
   numberOfPeople: {
