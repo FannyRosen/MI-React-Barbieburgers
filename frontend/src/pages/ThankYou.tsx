@@ -20,6 +20,7 @@ export const ThankYou = () => {
     name: string;
     email: string;
     phone: string;
+    id: string;
   }
 
   const location = useLocation();
@@ -44,19 +45,16 @@ export const ThankYou = () => {
             <FlexDiv width='80%' dir='column'>
               <h2>Thank you {state.name}!</h2>
               <StyledP fontsize='20px' margin='20px'>
-                Your booking is completed! A confirmation email has been sent
-                to: {state.email}
+                Your booking is completed!
+                <br /> A confirmation email has been sent to: {state.email}
               </StyledP>
 
               <StyledP fontsize='20px' margin='20px'>
-                See you at:{` `}
-                {state.date.toLocaleDateString()}
+                Date:{` `} {state.date.toLocaleDateString()} <br />
+                Number of people:{` `}
+                {state.numberOfPeople} <br />
+                Booking number: {state.id}
               </StyledP>
-              <StyledP fontsize='20px'>
-                We expect:{` `}
-                {state.numberOfPeople} number of people.
-              </StyledP>
-              <StyledP fontsize='20px'>We expect:{` `}</StyledP>
             </FlexDiv>
           </FlexDiv>
         </FlexDiv>

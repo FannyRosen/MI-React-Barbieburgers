@@ -10,9 +10,7 @@ export async function fetchBookings(): Promise<IBookingsResponse> {
   return (await get<IBookingsResponse>(response)).data;
 }
 
-export async function postBooking(
-  booking: INewBooking
-): Promise<IBookingResponse> {
+export async function postBooking(booking: INewBooking) {
   const response: string = `${process.env.REACT_APP_BOOKINGS_POST}`;
   return (await post<IBookingResponse, INewBooking>(response, booking)).data;
 }
@@ -26,9 +24,12 @@ export async function deleteBooking(id: string): Promise<IBookingResponse> {
   return (await axiosDelete<IBookingResponse>(response)).data;
 }
 
-export async function editBooking(id: string): Promise<IBookingResponse> {
+export async function editBooking(
+  id: string,
+  booking: INewBooking
+): Promise<IBookingResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_EDIT}/` + id;
-  return (await put<IBookingResponse>(response)).data;
+  return (await put<IBookingResponse, INewBooking>(response, booking)).data;
 }
 
 export async function findBookingByEmail(

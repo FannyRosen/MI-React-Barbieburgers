@@ -1,7 +1,7 @@
 import { colors } from "../components/StyledComponents/mixins";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 import { StyledButton } from "../components/StyledComponents/StyledButton";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { PageIndicator } from "../components/partials/PageIndicator";
 import { useNavigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
@@ -25,7 +25,6 @@ export const Book = () => {
     phone: "",
   });
   const [isAvailable, setIsAvailable] = useState<ISittings>();
-
   const [sitting, setSitting] = useState(0);
   const navigate = useNavigate();
 
@@ -52,7 +51,9 @@ export const Book = () => {
     }));
   };
 
-  const completeBooking = async () => {
+  const completeBooking = async (e: FormEvent) => {
+    e.preventDefault();
+
     let booking = {
       date: new Date(date),
       sittingTime: sitting,
@@ -60,13 +61,17 @@ export const Book = () => {
       numberOfPeople: numberOfPeople,
       name: customerInfo.name,
       phone: customerInfo.phone,
+      id: "",
     };
-    let completedBooking = await postBooking(booking).then((data) => {
-      console.log(data.data);
-    });
-    console.log(completedBooking);
 
-    navigate("/thankyou", { state: booking });
+    postBooking(booking)
+      .then((data) => {
+        booking.id = data.data._id;
+        navigate("/thankyou", { state: booking });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (

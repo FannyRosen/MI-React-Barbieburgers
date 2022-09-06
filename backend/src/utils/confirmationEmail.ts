@@ -27,12 +27,12 @@ export const sendConfirmationEmail = (
     to: customer.email,
     subject: "Your booking",
     text: "Your booking at Barbie Burgers is confirmed",
-    html: `Hello ${customer.name} din gullis!
+    html: `Hello ${customer.name}!
           Your reservation for ${
             booking.numberOfPeople
           } people at Barbie Burgers is confirmed.<br/>
         Date: ${booking.date.toLocaleDateString()}<br/>
-        Time: ${booking.sittingTime == 1 ? "6.00 pm" : "9.00pm"}
+        Time: ${booking.sittingTime == 1 ? "6.00 pm" : "9.00pm"}<br/>
           <span>Would you like to cancel?? Follow this <a href="http://localhost:3000/reservation/${
             booking._id
           }">link</a></span>`,

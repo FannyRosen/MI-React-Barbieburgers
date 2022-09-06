@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { statusFailed, statusSuccess } from "./statusMessages";
-import { sendConfirmationEmail } from "src/utils/confirmationEmail";
+import { sendConfirmationEmail } from "../utils/confirmationEmail";
 
 export async function deleteOneBooking(req: Request, res: Response) {
   await BookingModel.findByIdAndDelete(req.params.id);
@@ -40,9 +40,7 @@ export const post_newBookingsController = async (
     }).lean();
 
     let maximumNumberOfBookings: number = 2;
-
     let tables: number = checkBookings.length;
-
     for (let i = 0; i < checkBookings.length; i++) {
       if (checkBookings[i].numberOfPeople > 6) {
         tables = tables + 1;
@@ -73,8 +71,13 @@ export const post_newBookingsController = async (
         clientId: saveCustomerId._id,
       });
 
-      let booking = await postNewBooking.save();
+      const booking = await postNewBooking.save();
       sendConfirmationEmail(booking, returningCustomer);
+      res.status(200).json({
+        status: statusSuccess,
+        message: "New booking added to DB",
+        data: booking,
+      });
     } else {
       const postCustomer = new CustomerModel({
         name,
@@ -91,14 +94,16 @@ export const post_newBookingsController = async (
         clientId: saveCustomerToDB._id,
       });
 
-      let booking = await postNewBooking.save();
+      const booking = await postNewBooking.save();
       sendConfirmationEmail(booking, postCustomer);
-    }
+      console.log("hej");
 
-    res.status(200).json({
-      status: statusSuccess,
-      message: "New booking added to DB",
-    });
+      res.status(200).json({
+        status: statusSuccess,
+        message: "New booking added to DB",
+        data: booking,
+      });
+    }
   } catch (error: any) {
     res.status(500).json({
       status: statusFailed,
