@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { IBooking } from "../models/IBooking";
 import { deleteBooking } from "../services/handleBookingsFetch.service";
 import { StyledButton } from "./StyledComponents/StyledButton";
-interface ITest {
+interface IDeleteButtons {
   bookingById: IBooking;
   guestPath: boolean;
   adminPath: boolean;
 }
 
-export const BookingDeleteButton = (props: ITest) => {
+export const BookingDeleteButton = (props: IDeleteButtons) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
@@ -30,7 +30,6 @@ export const BookingDeleteButton = (props: ITest) => {
           <StyledButton
             width="70px"
             height="30px"
-            // onClick={() => deleteBooking(props.bookingById._id!)}
             onClick={() => setConfirmDelete(true)}
           >
             Delete

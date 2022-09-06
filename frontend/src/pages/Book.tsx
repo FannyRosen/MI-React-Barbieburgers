@@ -29,6 +29,7 @@ export const Book = () => {
   });
   const [isAvailable, setIsAvailable] = useState<ISittings>();
   const [sitting, setSitting] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {

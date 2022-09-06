@@ -4,7 +4,6 @@ import { ICustomer } from "../models/ICustomer";
 import { fetchBookings } from "../services/handleBookingsFetch.service";
 import { fetchCustomers } from "../services/handleCustomersFetch.service";
 import { AdminBookingDetail } from "./AdminBookingDetails";
-import { Customer } from "./Customer";
 import { Background } from "./StyledComponents/Background";
 import { Input } from "./StyledComponents/Form";
 import { colors } from "./StyledComponents/mixins";

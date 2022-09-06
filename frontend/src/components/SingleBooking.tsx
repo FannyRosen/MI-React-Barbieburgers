@@ -44,7 +44,6 @@ export const SingleBooking = () => {
     fetchCustomerByID(customerById._id)
       .then(async (customerByIdResponse) => {
         setCustomerById(customerByIdResponse.data);
-        // console.log(customerByIdResponse);
 
         if (
           /* customerByIdResponse.data._id === bookingById.clientId.toString() */
