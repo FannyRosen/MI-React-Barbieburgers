@@ -1,5 +1,4 @@
 import axios from "axios";
-import { INewBooking } from "../models/IBooking";
 
 export async function get<T>(url: string) {
   return await axios.get<T>(url);

@@ -1,5 +1,4 @@
 import {
-  ICustomer,
   ICustomerResponse,
   ICustomersResponse,
   INewCustomer,
