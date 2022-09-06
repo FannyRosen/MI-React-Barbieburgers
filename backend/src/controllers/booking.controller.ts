@@ -202,6 +202,7 @@ export const put_bookingByIdController = async (
     editBooking.sittingTime = sittingTime;
     editBooking.date = date;
     editBooking.numberOfPeople = numberOfPeople;
+    console.log(editBooking);
 
     await editBooking.save();
 

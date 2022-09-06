@@ -30,7 +30,10 @@ export async function deleteCustomer(id: string): Promise<ICustomerResponse> {
   return (await axiosDelete<ICustomerResponse>(response)).data;
 }
 
-export async function editCustomer(id: string): Promise<ICustomerResponse> {
+export async function editCustomer(
+  id: string,
+  customer: INewCustomer
+): Promise<ICustomerResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_EDIT}/` + id;
-  return (await put<ICustomerResponse>(response)).data;
+  return (await put<ICustomerResponse, INewCustomer>(response, customer)).data;
 }

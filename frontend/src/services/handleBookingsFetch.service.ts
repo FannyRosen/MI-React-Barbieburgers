@@ -1,4 +1,5 @@
 import {
+  IBooking,
   IBookingResponse,
   IBookingsResponse,
   INewBooking,
@@ -25,10 +26,12 @@ export async function deleteBooking(id: string): Promise<IBookingResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_DELETE}/` + id;
   return (await axiosDelete<IBookingResponse>(response)).data;
 }
-
-export async function editBooking(id: string): Promise<IBookingResponse> {
+export async function editBooking(
+  id: string,
+  booking: IBooking
+): Promise<IBookingResponse> {
   const response: string = `${process.env.REACT_APP_BOOKINGS_EDIT}/` + id;
-  return (await put<IBookingResponse>(response)).data;
+  return (await put<IBookingResponse, IBooking>(response, booking)).data;
 }
 
 export async function findBookingByEmail(

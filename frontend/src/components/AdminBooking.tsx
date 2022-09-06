@@ -56,7 +56,7 @@ export const AdminBookings = () => {
                 {bookings.map((booking) => {
                   let date = new Date(booking.date);
 
-                  if (booking.clientId.toString() === customer._id) {
+                  if (booking.clientId!.toString() === customer._id) {
                     return (
                       <div key={booking._id}>
                         <FlexDiv gap="10px" dir="column" tabletdir="row">
