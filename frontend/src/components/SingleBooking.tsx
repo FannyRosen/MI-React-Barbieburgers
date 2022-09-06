@@ -11,6 +11,7 @@ import {
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
 import { checkAvailableSittings, ISittings } from "../services/utils";
 import { UpdateBooking } from "./admin/UpdateBooking";
+import { BookingDeleteButton } from "./BookingDeleteButton";
 import { SingleBookingRender } from "./SingleBookingRender";
 import { Background } from "./StyledComponents/Background";
 import { Form } from "./StyledComponents/Form";
@@ -32,8 +33,6 @@ export const SingleBooking = () => {
   const [editDate, setEditDate] = useState<Date>(new Date("1999-01-01"));
   const [editSittingTime, setEditSittingTime] = useState<number>(0);
   const [isAvailable, setIsAvailable] = useState<ISittings>();
-
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmEdit, setConfirmEdit] = useState<IBooking>(bookingById);
 
   let params = useParams();
@@ -128,8 +127,7 @@ export const SingleBooking = () => {
             <>
               {inEdit ? (
                 <>
-                  {/* 
-                  <Form>
+                  {/* <Form>
                     <FlexDiv dir="column" gap="10px">
                       <StyledLabel>Edit date</StyledLabel>
                       <input
@@ -170,7 +168,8 @@ export const SingleBooking = () => {
                         Save
                       </button>
                     </FlexDiv>
-                  </Form> */}
+                  </Form>  */}
+
                   {/* UPDATE FORM */}
 
                   <UpdateBooking></UpdateBooking>
@@ -187,14 +186,6 @@ export const SingleBooking = () => {
                 </>
               ) : (
                 <>
-                  {/* 
-                  <p>
-                    DATE OF SITTING:
-                    {new Date(bookingById.date).toLocaleDateString()}
-                  </p>
-                  <p>WHICH SITTING: {bookingById.sittingTime}</p>
-                  <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
- */}
                   <FlexDiv gap="10px">
                     <StyledButton
                       width="70px"
@@ -208,29 +199,11 @@ export const SingleBooking = () => {
                       bookingById={bookingById}
                     ></SingleBookingRender>
 
-                    {confirmDelete ? (
-                      <>
-                        <StyledButton
-                          width="70px"
-                          height="30px"
-                          onClick={() => deleteBooking(bookingById._id!)}
-                        >
-                          <Link to={"/admin"}>Confirm</Link>
-                        </StyledButton>
-                      </>
-                    ) : (
-                      <>
-                        <StyledButton
-                          width="70px"
-                          height="30px"
-                          onClick={() => {
-                            setConfirmDelete(true);
-                          }}
-                        >
-                          Delete
-                        </StyledButton>
-                      </>
-                    )}
+                    <BookingDeleteButton
+                      adminPath={adminPath}
+                      guestPath={guestPath}
+                      bookingById={bookingById}
+                    ></BookingDeleteButton>
                   </FlexDiv>
                 </>
               )}
@@ -243,27 +216,11 @@ export const SingleBooking = () => {
                     bookingById={bookingById}
                   ></SingleBookingRender>
 
-                  {confirmDelete ? (
-                    <>
-                      <StyledButton
-                        width="70px"
-                        height="30px"
-                        onClick={() => deleteBooking(bookingById._id!)}
-                      >
-                        <Link to={"/"}>Confirm</Link>
-                      </StyledButton>
-                    </>
-                  ) : (
-                    <>
-                      <StyledButton
-                        width="70px"
-                        height="30px"
-                        onClick={() => deleteBooking(bookingById._id!)}
-                      >
-                        Delete
-                      </StyledButton>
-                    </>
-                  )}
+                  <BookingDeleteButton
+                    adminPath={adminPath}
+                    guestPath={guestPath}
+                    bookingById={bookingById}
+                  ></BookingDeleteButton>
                 </>
               ) : (
                 <></>

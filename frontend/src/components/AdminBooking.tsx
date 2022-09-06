@@ -54,6 +54,7 @@ export const AdminBookings = () => {
                     <StyledHr></StyledHr>
                     <h4>{customer.name}</h4>
                   </StyledLink>
+
                   <AdminBookingDetail
                     bookings={bookings.filter(
                       (booking) => booking.clientId!.toString() === customer._id
