@@ -13,7 +13,6 @@ import { FlexDiv } from "./StyledComponents/Wrappers";
 export const AdminBookings = () => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [customers, setCustomers] = useState<ICustomer[]>([]);
-
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
