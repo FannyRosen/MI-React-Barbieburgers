@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { IBooking } from "../models/IBooking";
 import { ICustomer } from "../models/ICustomer";
 import { fetchBookings } from "../services/handleBookingsFetch.service";
@@ -50,6 +49,7 @@ export const AdminBookings = () => {
                   to={"/admin/customers/" + customer._id}
                 >
                   <StyledHr></StyledHr>
+                  {bookings ? <></> : <></>}
                   <h4>{customer.name}</h4>
                 </StyledLink>
 

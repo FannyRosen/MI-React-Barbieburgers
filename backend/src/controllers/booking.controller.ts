@@ -32,6 +32,7 @@ export const get_bookingsController = async (req: Request, res: Response) => {
 export const post_newBookingsController = async (
   req: Request,
   res: Response
+  // checkBookings:IBooking
 ) => {
   try {
     let { date, sittingTime, numberOfPeople, name, email, phone } = req.body;
