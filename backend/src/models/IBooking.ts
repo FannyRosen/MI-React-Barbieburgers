@@ -2,7 +2,7 @@ import { ObjectId } from "mongoose";
 
 export interface IBooking {
   _id: ObjectId;
-  date: string;
+  date: Date;
   numberOfPeople: number;
   sittingTime: number;
   clientId: ObjectId;

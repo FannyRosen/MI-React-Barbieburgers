@@ -16,10 +16,6 @@ import { StyledButton } from "./StyledComponents/StyledButton";
 import { StyledLabel } from "./StyledComponents/TextElements";
 import { FlexDiv } from "./StyledComponents/Wrappers";
 
-interface IArrayOfDates {
-  date: Date;
-}
-
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
     useState<IBooking>(bookingsDefaultValue);
@@ -101,12 +97,12 @@ export const SingleBooking = () => {
     <>
       <Background>
         <FlexDiv
-          borderRadius="10px"
+          borderRadius='10px'
           background={colors.LightPink}
-          width="80%"
-          height="min-content"
-          dir="column"
-          padding="40px"
+          width='80%'
+          height='min-content'
+          dir='column'
+          padding='40px'
         >
           {/*  ADMIN VIEW  */}
           {adminPath ? (
@@ -114,10 +110,10 @@ export const SingleBooking = () => {
               {inEdit ? (
                 <>
                   <Form>
-                    <FlexDiv dir="column" gap="10px">
+                    <FlexDiv dir='column' gap='10px'>
                       <StyledLabel>Edit date</StyledLabel>
                       <input
-                        type="date"
+                        type='date'
                         min={inputDate}
                         max={"2023-12-31"}
                         defaultValue={editDate.toLocaleDateString()}
@@ -126,17 +122,17 @@ export const SingleBooking = () => {
                       <StyledLabel>Edit sitting time</StyledLabel>
 
                       <select
-                        name="time"
+                        name='time'
                         defaultValue={editSittingTime.toString()}
                         onChange={handleEditSittingTime}
                       >
                         {isAvailable?.firstSitting ? (
-                          <option value="1">6.00 pm</option>
+                          <option value='1'>6.00 pm</option>
                         ) : (
                           <option>not available</option>
                         )}
                         {isAvailable?.secondSitting ? (
-                          <option value="1">9.00 pm</option>
+                          <option value='1'>9.00 pm</option>
                         ) : (
                           <option>not available</option>
                         )}
@@ -144,18 +140,18 @@ export const SingleBooking = () => {
 
                       <StyledLabel>Edit number of people</StyledLabel>
                       <input
-                        type="number"
+                        type='number'
                         defaultValue={editNOP}
                         onChange={handleEditNOP}
-                        min="1"
-                        max="12"
+                        min='1'
+                        max='12'
                       />
                       {/* <button onClick={() => setEditBooking()}>Save</button> */}
                     </FlexDiv>
                   </Form>
                   <StyledButton
-                    width="70px"
-                    height="30px"
+                    width='70px'
+                    height='30px'
                     onClick={() => setInEdit(false)}
                   >
                     Back
@@ -170,10 +166,10 @@ export const SingleBooking = () => {
                   <p>WHICH SITTING: {bookingById.sittingTime}</p>
                   <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
 
-                  <FlexDiv gap="10px">
+                  <FlexDiv gap='10px'>
                     <StyledButton
-                      width="70px"
-                      height="30px"
+                      width='70px'
+                      height='30px'
                       onClick={() => setInEdit(true)}
                     >
                       Edit
@@ -182,8 +178,8 @@ export const SingleBooking = () => {
                     {confirmDelete ? (
                       <>
                         <StyledButton
-                          width="70px"
-                          height="30px"
+                          width='70px'
+                          height='30px'
                           onClick={() => deleteBooking(bookingById._id)}
                         >
                           <Link to={"/admin"}>Confirm</Link>
@@ -192,8 +188,8 @@ export const SingleBooking = () => {
                     ) : (
                       <>
                         <StyledButton
-                          width="70px"
-                          height="30px"
+                          width='70px'
+                          height='30px'
                           onClick={() => {
                             setConfirmDelete(true);
                           }}
@@ -220,8 +216,8 @@ export const SingleBooking = () => {
                   {confirmDelete ? (
                     <>
                       <StyledButton
-                        width="70px"
-                        height="30px"
+                        width='70px'
+                        height='30px'
                         onClick={() => deleteBooking(bookingById._id)}
                       >
                         <Link to={"/"}>Confirm</Link>
@@ -230,8 +226,8 @@ export const SingleBooking = () => {
                   ) : (
                     <>
                       <StyledButton
-                        width="70px"
-                        height="30px"
+                        width='70px'
+                        height='30px'
                         onClick={() => deleteBooking(bookingById._id)}
                       >
                         Delete

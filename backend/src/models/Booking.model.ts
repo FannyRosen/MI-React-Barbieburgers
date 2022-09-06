@@ -3,7 +3,7 @@ import { IBooking } from "./IBooking";
 
 const BookingSchema = new mongoose.Schema<IBooking>({
   date: {
-    type: String,
+    type: Date,
     // required: true,
   },
   sittingTime: {

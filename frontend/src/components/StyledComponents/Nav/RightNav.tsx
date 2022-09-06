@@ -50,11 +50,10 @@ const RightNav = (propsopen: IOpen) => {
   return (
     <Ul ultransform={propsopen.open ? "translateX(0)" : "translateX(100%)"}>
       <li>
-        <Link to="/contact">CONTACT </Link>
+        <Link to='/contact'>CONTACT </Link>
       </li>
       <li>
-        <Link to="/book">BOOK</Link>
-        {""}
+        <Link to='/book'>BOOK</Link>
       </li>
     </Ul>
   );
