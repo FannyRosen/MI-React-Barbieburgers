@@ -11,9 +11,7 @@ export async function fetchBookings(): Promise<IBookingsResponse> {
   return (await get<IBookingsResponse>(response)).data;
 }
 
-export async function postBooking(
-  booking: INewBooking
-): Promise<IBookingResponse> {
+export async function postBooking(booking: INewBooking) {
   const response: string = `${process.env.REACT_APP_BOOKINGS_POST}`;
   return (await post<IBookingResponse, INewBooking>(response, booking)).data;
 }

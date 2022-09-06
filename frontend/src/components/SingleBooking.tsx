@@ -16,12 +16,8 @@ import { Background } from "./StyledComponents/Background";
 import { Form } from "./StyledComponents/Form";
 import { colors } from "./StyledComponents/mixins";
 import { StyledButton } from "./StyledComponents/StyledButton";
-import { StyledLabel } from "./StyledComponents/TextElements";
+import { StyledLabel, StyledP } from "./StyledComponents/TextElements";
 import { FlexDiv } from "./StyledComponents/Wrappers";
-
-interface IArrayOfDates {
-  date: Date;
-}
 
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
@@ -128,8 +124,6 @@ export const SingleBooking = () => {
           dir="column"
           padding="40px"
         >
-          {/* <form onSubmit={updateBooking(idOne)}></form> */}
-          {/*  ADMIN VIEW  */}
           {adminPath ? (
             <>
               {inEdit ? (
@@ -242,7 +236,6 @@ export const SingleBooking = () => {
               )}
             </>
           ) : (
-            /*  GUEST VIEW  */
             <>
               {guestPath ? (
                 <>

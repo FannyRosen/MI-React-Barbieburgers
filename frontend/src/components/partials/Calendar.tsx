@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
+import { FlexDiv } from "../StyledComponents/Wrappers";
 
-export const MyCalendar = () => {
+export const MyCalendar = ({ handleDate }: any) => {
   const [date, setDate] = useState(new Date());
+  const today = Date.now();
+  const curr = new Date(today);
+
+  useEffect(() => {
+    handleDate(date);
+  }, [date]);
 
   return (
-    <>
-      <div className="app">
-        <div className="react-calendar">
-          <Calendar onChange={setDate} value={date} />
-        </div>
-        <p className="text-center">
-          <span className="bold">Selected Date:</span> {date.toDateString()}
-        </p>
+    <FlexDiv dir={"column"} width='80%'>
+      <div className='react-calendar'>
+        <Calendar
+          minDate={curr}
+          defaultValue={curr}
+          maxDate={new Date("2023-12-31")}
+          onChange={setDate}
+          value={date}
+        />
       </div>
-    </>
+    </FlexDiv>
   );
 };
