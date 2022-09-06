@@ -64,7 +64,7 @@ export const Burger = () => {
         <div></div>
         <div></div>
       </StyledBurger>
-      <RightNav open={open} />
+      <RightNav onClick={() => setOpen(!open)} open={open} />
     </>
   );
 };
