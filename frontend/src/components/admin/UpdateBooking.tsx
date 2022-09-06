@@ -14,26 +14,18 @@ import { FlexDiv } from "../StyledComponents/Wrappers";
 export const UpdateBooking = () => {
   const [bookingById, setBookingById] =
     useState<IBooking>(bookingsDefaultValue);
-
-  const [updateBooking, setUpdateBooking] = useState<IBooking>({
-    numberOfPeople: bookingById.numberOfPeople,
-    date: bookingById.date,
-    sittingTime: bookingById.sittingTime,
-  });
-  const [date, setDate] = useState<Date>(new Date());
-  const [numberOfPeople, setNOP] = useState<number>(0);
+  const [date, setDate] = useState(bookingById.date);
+  const [numberOfPeople, setNOP] = useState<number>(bookingById.numberOfPeople);
+  const [sittingTime, setSittingTime] = useState<number>(
+    bookingById.sittingTime
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
 
-  const curr = new Date();
-  curr.setDate(curr.getDate());
-  const inputDate = curr.toISOString().substring(0, 10);
-
   useEffect(() => {
     const getBooking = async () => {
       await fetchBookingByID(params.id!).then((booking) => {
-        console.log(booking.data);
         setBookingById(booking.data); // ÖÄNDRA
         setIsLoading(false);
       });
@@ -41,24 +33,28 @@ export const UpdateBooking = () => {
     getBooking();
   }, []);
 
-  const submitUpdatedBooking = (e: FormEvent<HTMLFormElement>) => {
+  const submitUpdatedBooking = (e: FormEvent) => {
+    console.log("submit");
     e.preventDefault();
+    let updateBooking = {
+      date: new Date(date),
+      numberOfPeople,
+      sittingTime,
+    };
+    console.log(updateBooking);
+
     editBooking(params.id!, updateBooking);
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(new Date(e.target.value));
+  const handleDateChange = async (e: Date) => {
+    setDate(e);
   };
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNOP(parseInt(e.currentTarget.value));
   };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInfo((customerInfo) => ({
-      ...customerInfo,
-      [e.target.name]: e.target.value,
-    }));
+  const handleSittingTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSittingTime(parseInt(e.currentTarget.value));
   };
 
   return (
@@ -66,36 +62,16 @@ export const UpdateBooking = () => {
       {isLoading ? (
         <></>
       ) : (
-        <Form
-          onSubmit={() => {
-            if (numberOfPeople != 0) {
-              checkDate();
-            } else {
-              console.log("error");
-            }
-          }}
-        >
+        <Form onSubmit={submitUpdatedBooking}>
           <FlexDiv dir="column" gap="10px">
             <StyledLabel>Choose a date</StyledLabel>
-            <MyCalendar></MyCalendar>
-            <input
-              required
-              onChange={handleDateChange}
-              id="date"
-              type="date"
-              name="date"
-              defaultValue={""}
-              min={inputDate}
-              max={"2023-12-31"}
-            />
-
+            <MyCalendar handleDate={handleDateChange} />
             <Label>Number of people</Label>
             <StyledSelect
               required
-              id="date"
-              name="date"
+              name="numberOfPeople"
               onChange={handleNOPChange}
-              defaultValue="0"
+              defaultValue={bookingById.numberOfPeople}
             >
               <option disabled value="0">
                 0
@@ -113,11 +89,17 @@ export const UpdateBooking = () => {
               <option value="11">11</option>
               <option value="12">12</option>
             </StyledSelect>
-            <p>
-              Maximum per table: 6 <br />
-              If you are more than 6 people you will be divided between tables
-            </p>
-            <Input type="submit" value={"Check availability"} />
+            <StyledSelect
+              required
+              id="date"
+              name="date"
+              onChange={handleSittingTimeChange}
+              defaultValue={bookingById.sittingTime}
+            >
+              <option value="1">6.00 pm</option>
+              <option value="2">9.00 pm</option>
+            </StyledSelect>
+            <Input type="submit" value={"update"} />
           </FlexDiv>
         </Form>
       )}
