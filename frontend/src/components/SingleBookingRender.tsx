@@ -1,4 +1,5 @@
 import { IBooking } from "../models/IBooking";
+import { StyledP } from "./StyledComponents/TextElements";
 
 interface IRender {
   bookingById: IBooking;
@@ -7,12 +8,16 @@ interface IRender {
 export const SingleBookingRender = (props: IRender) => {
   return (
     <>
-      <p>
-        DATE OF SITTING:
+      <StyledP fontsize="18px" padding="20px">
+        Date of sitting:
         {new Date(props.bookingById.date).toLocaleDateString()}
-      </p>
-      <p>WHICH SITTING: {props.bookingById.sittingTime}</p>
-      <p>PEOPLE ON RESERVATION: {props.bookingById.numberOfPeople}</p>
+      </StyledP>
+      <StyledP fontsize="18px" padding="20px">
+        Which sitting: {props.bookingById.sittingTime}
+      </StyledP>
+      <StyledP fontsize="18px" padding="20px">
+        Number of guests: {props.bookingById.numberOfPeople}
+      </StyledP>
     </>
   );
 };
