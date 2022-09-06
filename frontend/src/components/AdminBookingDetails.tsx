@@ -24,6 +24,15 @@ export const AdminBookingDetail = (props: IBookingDetail) => {
         >
           {openBookings ? <>CLOSE</> : <>VIEW BOOKINGS</>}
         </StyledButton>
+        {props.bookings.length > 0 ? (
+          <>
+            <p>{props.bookings.length} reservations</p>
+          </>
+        ) : (
+          <>
+            <p>Currently no reservations</p>
+          </>
+        )}
 
         {openBookings ? (
           <>

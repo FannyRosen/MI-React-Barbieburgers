@@ -27,8 +27,8 @@ export const SingleBooking = () => {
   const [customerById, setCustomerById] = useState<ICustomer>(
     customersDefaultValue
   );
-
   const [inEdit, setInEdit] = useState(false);
+
   const [editNOP, setEditNOP] = useState<number>(0);
   const [editDate, setEditDate] = useState<Date>(new Date("1999-01-01"));
   const [editSittingTime, setEditSittingTime] = useState<number>(0);
