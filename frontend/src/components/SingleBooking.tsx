@@ -13,7 +13,7 @@ import { Background } from "./StyledComponents/Background";
 import { Form } from "./StyledComponents/Form";
 import { colors } from "./StyledComponents/mixins";
 import { StyledButton } from "./StyledComponents/StyledButton";
-import { StyledLabel } from "./StyledComponents/TextElements";
+import { StyledLabel, StyledP } from "./StyledComponents/TextElements";
 import { FlexDiv } from "./StyledComponents/Wrappers";
 
 interface IArrayOfDates {
@@ -108,7 +108,6 @@ export const SingleBooking = () => {
           dir="column"
           padding="40px"
         >
-          {/*  ADMIN VIEW  */}
           {adminPath ? (
             <>
               {inEdit ? (
@@ -163,12 +162,16 @@ export const SingleBooking = () => {
                 </>
               ) : (
                 <>
-                  <p>
-                    DATE OF SITTING:
+                  <StyledP fontsize="18px" padding="20px">
+                    Date of sitting:
                     {new Date(bookingById.date).toLocaleDateString()}
-                  </p>
-                  <p>WHICH SITTING: {bookingById.sittingTime}</p>
-                  <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
+                  </StyledP>
+                  <StyledP fontsize="18px" padding="20px">
+                    Which sitting: {bookingById.sittingTime}
+                  </StyledP>
+                  <StyledP fontsize="18px" padding="20px">
+                    Number of guests: {bookingById.numberOfPeople}
+                  </StyledP>
 
                   <FlexDiv gap="10px">
                     <StyledButton
@@ -207,7 +210,6 @@ export const SingleBooking = () => {
               )}
             </>
           ) : (
-            /*  GUEST VIEW  */
             <>
               {guestPath ? (
                 <>
@@ -219,23 +221,19 @@ export const SingleBooking = () => {
                   <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
                   {confirmDelete ? (
                     <>
-                      <StyledButton
-                        width="70px"
-                        height="30px"
-                        onClick={() => deleteBooking(bookingById._id)}
-                      >
+                      <button onClick={() => deleteBooking(bookingById._id)}>
                         <Link to={"/"}>Confirm</Link>
-                      </StyledButton>
+                      </button>
                     </>
                   ) : (
                     <>
-                      <StyledButton
-                        width="70px"
-                        height="30px"
-                        onClick={() => deleteBooking(bookingById._id)}
+                      <button
+                        onClick={() => {
+                          setConfirmDelete(true);
+                        }}
                       >
                         Delete
-                      </StyledButton>
+                      </button>
                     </>
                   )}
                 </>
