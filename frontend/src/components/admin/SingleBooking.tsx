@@ -11,30 +11,36 @@ import { Background } from "../StyledComponents/Background";
 import { colors } from "../StyledComponents/mixins";
 import { StyledButton } from "../StyledComponents/StyledButton";
 import { FlexDiv } from "../StyledComponents/Wrappers";
+import { Loader } from "../partials/Loader";
 
 export const SingleBooking = () => {
   const [booking, setBooking] = useState<IBooking>(bookingsDefaultValue);
-
   const [customer, setCustomer] = useState<ICustomer>(customersDefaultValue);
   const [inEdit, setInEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   let params = useParams();
   const location = useLocation();
-  const adminPath = location.pathname === "/admin/" + booking._id;
-  const guestPath = location.pathname === "/reservation/" + booking._id;
+  const adminPath = location.pathname === "/admin/" + params.id;
+  const guestPath = location.pathname === "/reservation/" + params.id;
 
   useEffect(() => {
-    fetchCustomerByID(customer._id)
-      .then(async (customerByIdResponse) => {
-        setCustomer(customerByIdResponse.data);
-        const bookingResponse = await fetchBookingByID(params.id!);
-        setBooking(bookingResponse.data);
-      })
+    const getBooking = async () => {
+      const bookingResponse = await fetchBookingByID(params.id!);
+      setBooking(bookingResponse.data);
+    };
+    getBooking();
+  }, [inEdit]);
 
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  useEffect(() => {
+    if (booking._id !== "") {
+      fetchCustomerByID(booking.clientId!.toString()).then(
+        async (customerByIdResponse) => {
+          setCustomer(customerByIdResponse.data);
+        }
+      );
+    }
+  }, [booking]);
 
   return (
     <Background>
@@ -46,54 +52,68 @@ export const SingleBooking = () => {
         dir='column'
         padding='40px'
       >
-        {adminPath ? (
+        {isLoading ? (
           <>
-            {inEdit ? (
-              <>
-                <UpdateBooking onClick={() => setInEdit(false)} />
-
-                <StyledButton
-                  width='70px'
-                  height='30px'
-                  onClick={() => setInEdit(false)}
-                >
-                  Back
-                </StyledButton>
-              </>
-            ) : (
-              <FlexDiv gap='10px'>
-                <StyledButton
-                  width='70px'
-                  height='30px'
-                  onClick={() => setInEdit(true)}
-                >
-                  Edit
-                </StyledButton>
-
-                <SingleBookingRender booking={booking}></SingleBookingRender>
-
-                <BookingDeleteButton
-                  adminPath={adminPath}
-                  guestPath={guestPath}
-                  booking={booking}
-                ></BookingDeleteButton>
-              </FlexDiv>
-            )}
+            <Loader />
           </>
         ) : (
           <>
-            {guestPath ? (
+            {adminPath ? (
               <>
-                <SingleBookingRender booking={booking}></SingleBookingRender>
+                {inEdit ? (
+                  <>
+                    <UpdateBooking onClick={() => setInEdit(false)} />
 
-                <BookingDeleteButton
-                  adminPath={adminPath}
-                  guestPath={guestPath}
-                  booking={booking}
-                ></BookingDeleteButton>
+                    <StyledButton
+                      width='70px'
+                      height='30px'
+                      onClick={() => setInEdit(false)}
+                    >
+                      Back
+                    </StyledButton>
+                  </>
+                ) : (
+                  <FlexDiv gap='10px'>
+                    <StyledButton
+                      width='70px'
+                      height='30px'
+                      onClick={() => setInEdit(true)}
+                    >
+                      Edit
+                    </StyledButton>
+
+                    <SingleBookingRender
+                      booking={booking}
+                      customer={customer}
+                    ></SingleBookingRender>
+
+                    <BookingDeleteButton
+                      adminPath={adminPath}
+                      guestPath={guestPath}
+                      booking={booking}
+                    ></BookingDeleteButton>
+                  </FlexDiv>
+                )}
               </>
             ) : (
-              <></>
+              <>
+                {guestPath ? (
+                  <>
+                    <SingleBookingRender
+                      booking={booking}
+                      customer={customer}
+                    ></SingleBookingRender>
+
+                    <BookingDeleteButton
+                      adminPath={adminPath}
+                      guestPath={guestPath}
+                      booking={booking}
+                    ></BookingDeleteButton>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
             )}
           </>
         )}

@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import { colors, device } from "./mixins";
-import { IStylingProps } from "./StyledInterface";
+import { colors } from "./mixins";
 export const Form = styled.form`
   display: flex;
   flex-direction: column;

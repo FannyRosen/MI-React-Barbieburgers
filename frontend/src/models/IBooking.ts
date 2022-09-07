@@ -1,4 +1,4 @@
-import { customersDefaultValue, ICustomer, INewCustomer } from "./ICustomer";
+import { customersDefaultValue, ICustomer } from "./ICustomer";
 
 export interface IBooking {
   _id?: string;
@@ -7,11 +7,7 @@ export interface IBooking {
   numberOfPeople: number;
   clientId?: ICustomer;
 }
-export interface IPutBooking {
-  date: Date;
-  sittingTime: number;
-  numberOfPeople: number;
-}
+
 export interface INewBooking {
   date: Date;
   sittingTime: number;
@@ -34,12 +30,4 @@ export const bookingsDefaultValue: IBooking = {
   sittingTime: 0,
   clientId: customersDefaultValue,
   numberOfPeople: 0,
-};
-export const newBookingDefaultValue: INewBooking = {
-  date: new Date(),
-  sittingTime: 0,
-  numberOfPeople: 0,
-  name: "",
-  email: "",
-  phone: "",
 };
