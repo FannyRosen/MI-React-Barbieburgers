@@ -25,7 +25,7 @@ export const UpdateBooking = (props: IProps) => {
   const [date, setDate] = useState(new Date());
   const [numberOfPeople, setNOP] = useState<number>(1);
   const [sittingTime, setSittingTime] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAvailable, setIsAvailable] = useState<ISittings>();
 
   let params = useParams();
@@ -37,17 +37,20 @@ export const UpdateBooking = (props: IProps) => {
   }, [existingBooking]);
 
   useEffect(() => {
+    setIsLoading(true);
     const checkAvailable = async () => {
       const isAvailableinDB = await checkAvailableSittings(
         date,
         numberOfPeople
       );
+      setIsLoading(false);
       setIsAvailable(isAvailableinDB);
     };
     checkAvailable();
   }, [date, numberOfPeople]);
 
   useEffect(() => {
+    setIsLoading(true);
     const getBooking = async () => {
       await fetchBookingByID(params.id!).then((booking) => {
         setExistingBooking(booking.data);

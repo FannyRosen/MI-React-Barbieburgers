@@ -25,18 +25,22 @@ export const SingleBooking = () => {
   const guestPath = location.pathname === "/reservation/" + params.id;
 
   useEffect(() => {
+    setIsLoading(true);
     const getBooking = async () => {
       const bookingResponse = await fetchBookingByID(params.id!);
       setBooking(bookingResponse.data);
+      setIsLoading(false);
     };
     getBooking();
   }, [inEdit]);
 
   useEffect(() => {
+    setIsLoading(true);
     if (booking._id !== "") {
       fetchCustomerByID(booking.clientId!.toString()).then(
         async (customerByIdResponse) => {
           setCustomer(customerByIdResponse.data);
+          setIsLoading(false);
         }
       );
     }

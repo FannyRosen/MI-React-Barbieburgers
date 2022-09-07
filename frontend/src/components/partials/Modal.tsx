@@ -19,9 +19,8 @@ const customStyles = {
 };
 
 export const MyModal = () => {
-  Modal.setAppElement("#root");
-
   const [modalIsOpen, setIsOpen] = React.useState(true);
+  Modal.setAppElement("#root");
 
   function closeModal() {
     setIsOpen(false);

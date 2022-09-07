@@ -218,7 +218,16 @@ export const Book = () => {
                 </Form>
               </>
             )}
-            <PageIndicator phase={phase} />
+            <FlexDiv dir='column' margin='40px 0 0 0 '>
+              <PageIndicator phase={phase} />
+              {phase == 1 ? (
+                <></>
+              ) : (
+                <StyledButton width='90px' onClick={() => setPhase(1)}>
+                  Start over
+                </StyledButton>
+              )}
+            </FlexDiv>
           </FlexDiv>
         </FlexDiv>
       )}
