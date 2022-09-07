@@ -38,4 +38,5 @@ export interface IStylingProps {
   minheight?: string;
   weight?: string;
   textDecoration?: string;
+  display?: string;
 }
