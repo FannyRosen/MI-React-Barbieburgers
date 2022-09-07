@@ -25,7 +25,9 @@ export const Home = () => {
                 milkshakes.
               </StyledP>
             </FlexDiv>
-            <img src={burgers} alt="Yummy burger" width="250" />
+            <FlexDiv width="50%" margin="20px" borderRadius="6px">
+              <img src={burgers} alt="Yummy burger" width="270" />
+            </FlexDiv>
           </FlexDiv>
         </FlexDiv>
       </Background>

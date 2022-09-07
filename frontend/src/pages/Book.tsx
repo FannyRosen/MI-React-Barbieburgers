@@ -7,7 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
 import { postBooking } from "../services/handleBookingsFetch.service";
 import { Loader } from "../components/partials/Loader";
-import { StyledLabel } from "../components/StyledComponents/TextElements";
+import {
+  StyledLabel,
+  StyledSelect,
+} from "../components/StyledComponents/TextElements";
 import { Form, Input, Label } from "../components/StyledComponents/Form";
 import { Background } from "../components/StyledComponents/Background";
 import { MyModal } from "../components/partials/Modal";
@@ -26,6 +29,7 @@ export const Book = () => {
   });
   const [isAvailable, setIsAvailable] = useState<ISittings>();
   const [sitting, setSitting] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,7 +108,7 @@ export const Book = () => {
                     <MyCalendar handleDate={handleDateChange} />
 
                     <Label>Number of people</Label>
-                    <select
+                    <StyledSelect
                       required
                       name='numberOfPeople'
                       onChange={handleNOPChange}
@@ -125,7 +129,7 @@ export const Book = () => {
                       <option value='10'>10</option>
                       <option value='11'>11</option>
                       <option value='12'>12</option>
-                    </select>
+                    </StyledSelect>
                     <p>
                       Maximum per table: 6 <br />
                       If you are more than 6 people you will be divided between
@@ -203,6 +207,7 @@ export const Book = () => {
                       type='number'
                       name='phone'
                     />
+
                     <MyModal></MyModal>
 
                     <Input type='submit' value={"book"} />

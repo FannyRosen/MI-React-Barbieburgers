@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { Background } from "../components/StyledComponents/Background";
 import { colors } from "../components/StyledComponents/mixins";
 import { StyledP } from "../components/StyledComponents/TextElements";

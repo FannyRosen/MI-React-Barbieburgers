@@ -4,7 +4,6 @@ import { Layout } from "./pages/Layout";
 import { NotFound } from "./pages/NotFound";
 import { Home } from "./pages/Home";
 import { Contact } from "./pages/Contact";
-import { FoodMenu } from "./pages/FoodMenu";
 import { ThankYou } from "./pages/ThankYou";
 import { Book } from "./pages/Book";
 import { SingleBooking } from "./components/SingleBooking";

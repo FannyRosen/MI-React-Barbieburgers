@@ -1,5 +1,4 @@
 import {
-  ICustomer,
   ICustomerResponse,
   ICustomersResponse,
   INewCustomer,
@@ -34,6 +33,6 @@ export async function editCustomer(
   id: string,
   customer: INewCustomer
 ): Promise<ICustomerResponse> {
-  const response: string = `${process.env.REACT_APP_CUSTOMERS_EDIT}/` + id;
+  const response: string = `${process.env.REACT_APP_BOOKINGS_EDIT}/` + id;
   return (await put<ICustomerResponse, INewCustomer>(response, customer)).data;
 }

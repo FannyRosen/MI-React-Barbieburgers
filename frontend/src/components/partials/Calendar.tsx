@@ -12,8 +12,8 @@ export const MyCalendar = ({ handleDate }: any) => {
   }, [date]);
 
   return (
-    <FlexDiv dir={"column"} width='80%'>
-      <div className='react-calendar'>
+    <FlexDiv dir={"column"} width="80%">
+      <div className="react-calendar">
         <Calendar
           minDate={curr}
           defaultValue={curr}
