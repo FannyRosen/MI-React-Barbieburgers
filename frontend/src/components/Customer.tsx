@@ -21,8 +21,6 @@ export const Customer = () => {
   useEffect(() => {
     fetchCustomerByID(params.id!).then((response) => {
       setCustomerById(response.data);
-      // Fetch i fetch = hitta bokningar med clientID === customerId
-      console.log(response);
     });
   }, [params]);
 

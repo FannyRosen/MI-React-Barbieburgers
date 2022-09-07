@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { IStylingProps } from "../StyledInterface";
 import { colors } from "../mixins";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 const Ul = styled.ul`
   list-style: none;
@@ -42,18 +42,23 @@ const Ul = styled.ul`
   }
 `;
 
-interface IOpen {
+interface IProps {
   open: boolean;
+  onClick: React.MouseEventHandler<HTMLElement>;
 }
 
-const RightNav = (propsopen: IOpen) => {
+const RightNav = (props: IProps) => {
   return (
-    <Ul ultransform={propsopen.open ? "translateX(0)" : "translateX(100%)"}>
+    <Ul ultransform={props.open ? "translateX(0)" : "translateX(100%)"}>
       <li>
-        <Link to='/contact'>CONTACT </Link>
+        <Link onClick={props.onClick} to='/contact'>
+          CONTACT
+        </Link>
       </li>
       <li>
-        <Link to='/book'>BOOK</Link>
+        <Link onClick={props.onClick} to='/book'>
+          BOOK
+        </Link>
       </li>
     </Ul>
   );

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Link, matchRoutes, useLocation, useParams } from "react-router-dom";
 import { bookingsDefaultValue, IBooking } from "../models/IBooking";
 import { customersDefaultValue, ICustomer } from "../models/ICustomer";
@@ -9,6 +10,9 @@ import {
 } from "../services/handleBookingsFetch.service";
 import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
 import { checkAvailableSittings, ISittings } from "../services/utils";
+import { UpdateBooking } from "./admin/UpdateBooking";
+import { BookingDeleteButton } from "./BookingDeleteButton";
+import { SingleBookingRender } from "./SingleBookingRender";
 import { Background } from "./StyledComponents/Background";
 import { Form } from "./StyledComponents/Form";
 import { colors } from "./StyledComponents/mixins";
@@ -19,15 +23,17 @@ import { FlexDiv } from "./StyledComponents/Wrappers";
 export const SingleBooking = () => {
   const [bookingById, setBookingById] =
     useState<IBooking>(bookingsDefaultValue);
+
   const [customerById, setCustomerById] = useState<ICustomer>(
     customersDefaultValue
   );
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [inEdit, setInEdit] = useState(false);
+
   const [editNOP, setEditNOP] = useState<number>(0);
   const [editDate, setEditDate] = useState<Date>(new Date("1999-01-01"));
   const [editSittingTime, setEditSittingTime] = useState<number>(0);
   const [isAvailable, setIsAvailable] = useState<ISittings>();
+  const [confirmEdit, setConfirmEdit] = useState<IBooking>(bookingById);
 
   let params = useParams();
   const location = useLocation();
@@ -38,11 +44,10 @@ export const SingleBooking = () => {
     fetchCustomerByID(customerById._id)
       .then(async (customerByIdResponse) => {
         setCustomerById(customerByIdResponse.data);
-        console.log(customerByIdResponse);
 
         if (
           /* customerByIdResponse.data._id === bookingById.clientId.toString() */
-          bookingById.clientId.toString() === customerByIdResponse.data._id
+          bookingById.clientId!.toString() === customerByIdResponse.data._id
         ) {
           console.log("stämmer");
         } else {
@@ -52,12 +57,18 @@ export const SingleBooking = () => {
         const bookingsByIdResponse = await fetchBookingByID(params.id!);
         setBookingById(bookingsByIdResponse.data);
         console.log(bookingsByIdResponse);
+
+        /*  const postUpdatedBooking = editBooking(params.id!);
+        setConfirmEdit(bookingById);
+        console.log(postUpdatedBooking); */
       })
+
       .catch((error) => {
         console.log(error);
       });
   }, [bookingById.clientId, customerById._id, params]);
 
+  /* 
   useEffect(() => {
     setEditDate(new Date(bookingById.date));
     setEditNOP(bookingById.numberOfPeople);
@@ -76,7 +87,12 @@ export const SingleBooking = () => {
   const curr = new Date();
   curr.setDate(curr.getDate());
   const inputDate = curr.toISOString().substring(0, 10);
+  
+  const updateBooking = (e: ChangeEvent<HTMLFormElement>) => {
+    editBooking(e.target.value)
+  };
 
+  
   const handleEditChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditDate(new Date(e.target.value));
     const isAvailableinDB = await checkAvailableSittings(editDate);
@@ -93,6 +109,8 @@ export const SingleBooking = () => {
     setEditSittingTime(parseInt(e.target.value));
   };
 
+ */
+
   return (
     <>
       <Background>
@@ -108,7 +126,7 @@ export const SingleBooking = () => {
             <>
               {inEdit ? (
                 <>
-                  <Form>
+                  {/* <Form>
                     <FlexDiv dir="column" gap="10px">
                       <StyledLabel>Edit date</StyledLabel>
                       <input
@@ -145,9 +163,18 @@ export const SingleBooking = () => {
                         min="1"
                         max="12"
                       />
-                      {/* <button onClick={() => setEditBooking()}>Save</button> */}
+                      <button onSubmit={() => editBooking(bookingById._id)}>
+                        Save
+                      </button>
                     </FlexDiv>
-                  </Form>
+                  </Form>  */}
+
+                  {/* UPDATE FORM */}
+
+                  <UpdateBooking></UpdateBooking>
+
+                  {/* !UPDATE FORM */}
+
                   <StyledButton
                     width="70px"
                     height="30px"
@@ -158,17 +185,6 @@ export const SingleBooking = () => {
                 </>
               ) : (
                 <>
-                  <StyledP fontsize="18px" padding="20px">
-                    Date of sitting:{" "}
-                    {new Date(bookingById.date).toLocaleDateString()}
-                  </StyledP>
-                  <StyledP fontsize="18px" padding="20px">
-                    Which sitting: {bookingById.sittingTime}
-                  </StyledP>
-                  <StyledP fontsize="18px" padding="20px">
-                    Number of guests: {bookingById.numberOfPeople}
-                  </StyledP>
-
                   <FlexDiv gap="10px">
                     <StyledButton
                       width="70px"
@@ -178,29 +194,15 @@ export const SingleBooking = () => {
                       Edit
                     </StyledButton>
 
-                    {confirmDelete ? (
-                      <>
-                        <StyledButton
-                          width="70px"
-                          height="30px"
-                          onClick={() => deleteBooking(bookingById._id)}
-                        >
-                          <Link to={"/admin"}>Confirm</Link>
-                        </StyledButton>
-                      </>
-                    ) : (
-                      <>
-                        <StyledButton
-                          width="70px"
-                          height="30px"
-                          onClick={() => {
-                            setConfirmDelete(true);
-                          }}
-                        >
-                          Delete
-                        </StyledButton>
-                      </>
-                    )}
+                    <SingleBookingRender
+                      bookingById={bookingById}
+                    ></SingleBookingRender>
+
+                    <BookingDeleteButton
+                      adminPath={adminPath}
+                      guestPath={guestPath}
+                      bookingById={bookingById}
+                    ></BookingDeleteButton>
                   </FlexDiv>
                 </>
               )}
@@ -209,33 +211,15 @@ export const SingleBooking = () => {
             <>
               {guestPath ? (
                 <>
-                  <p>
-                    DATE OF SITTING:
-                    {new Date(bookingById.date).toLocaleDateString()}
-                  </p>
-                  <p>WHICH SITTING: {bookingById.sittingTime}</p>
-                  <p>PEOPLE ON RESERVATION: {bookingById.numberOfPeople}</p>
-                  {confirmDelete ? (
-                    <>
-                      <StyledButton
-                        width="70px"
-                        height="30px"
-                        onClick={() => deleteBooking(bookingById._id)}
-                      >
-                        <Link to={"/"}>Confirm</Link>
-                      </StyledButton>
-                    </>
-                  ) : (
-                    <>
-                      <StyledButton
-                        width="70px"
-                        height="30px"
-                        onClick={() => deleteBooking(bookingById._id)}
-                      >
-                        Delete
-                      </StyledButton>
-                    </>
-                  )}
+                  <SingleBookingRender
+                    bookingById={bookingById}
+                  ></SingleBookingRender>
+
+                  <BookingDeleteButton
+                    adminPath={adminPath}
+                    guestPath={guestPath}
+                    bookingById={bookingById}
+                  ></BookingDeleteButton>
                 </>
               ) : (
                 <></>

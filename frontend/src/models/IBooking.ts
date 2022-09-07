@@ -1,11 +1,11 @@
 import { customersDefaultValue, ICustomer, INewCustomer } from "./ICustomer";
 
 export interface IBooking {
-  _id: string;
+  _id?: string;
   date: Date;
   sittingTime: number;
   numberOfPeople: number;
-  clientId: ICustomer;
+  clientId?: ICustomer;
 }
 export interface INewBooking {
   date: Date;
@@ -15,7 +15,6 @@ export interface INewBooking {
   email: string;
   phone: string;
 }
-
 export interface IBookingsResponse {
   data: IBooking[];
 }
@@ -30,4 +29,12 @@ export const bookingsDefaultValue: IBooking = {
   sittingTime: 0,
   clientId: customersDefaultValue,
   numberOfPeople: 0,
+};
+export const newBookingDefaultValue: INewBooking = {
+  date: new Date(),
+  sittingTime: 0,
+  numberOfPeople: 0,
+  name: "",
+  email: "",
+  phone: "",
 };

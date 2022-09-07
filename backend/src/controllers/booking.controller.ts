@@ -30,7 +30,6 @@ export const get_bookingsController = async (req: Request, res: Response) => {
 export const post_newBookingsController = async (
   req: Request,
   res: Response
-  // checkBookings:IBooking
 ) => {
   try {
     let { date, sittingTime, numberOfPeople, name, email, phone } = req.body;
@@ -40,7 +39,7 @@ export const post_newBookingsController = async (
       sittingTime,
     }).lean();
 
-    let maximumNumberOfBookings: number = 2;
+    let maximumNumberOfBookings: number = 15;
     let tables: number = checkBookings.length;
     for (let i = 0; i < checkBookings.length; i++) {
       if (checkBookings[i].numberOfPeople > 6) {
@@ -52,7 +51,7 @@ export const post_newBookingsController = async (
       tables >= maximumNumberOfBookings ||
       (numberOfPeople > 6 && tables >= maximumNumberOfBookings - 1)
     ) {
-      return res.status(404).json({
+      return res.status(500).json({
         status: statusFailed,
         message: "FULLY BOOKED",
       });
@@ -74,6 +73,7 @@ export const post_newBookingsController = async (
 
       const booking = await postNewBooking.save();
       sendConfirmationEmail(booking, returningCustomer);
+
       res.status(200).json({
         status: statusSuccess,
         message: "New booking added to DB",
@@ -97,7 +97,6 @@ export const post_newBookingsController = async (
 
       const booking = await postNewBooking.save();
       sendConfirmationEmail(booking, postCustomer);
-      console.log("hej");
 
       res.status(200).json({
         status: statusSuccess,
@@ -163,6 +162,7 @@ export const put_bookingByIdController = async (
     editBooking.sittingTime = sittingTime;
     editBooking.date = date;
     editBooking.numberOfPeople = numberOfPeople;
+    console.log(editBooking);
 
     await editBooking.save();
 
