@@ -66,7 +66,7 @@ export const Book = () => {
 
     postBooking(booking)
       .then((data) => {
-        booking.id = data.data._id;
+        booking.id = data.data._id!;
         navigate("/thankyou", { state: booking });
       })
       .catch((e) => {
@@ -106,8 +106,7 @@ export const Book = () => {
                     <Label>Number of people</Label>
                     <select
                       required
-                      id='date'
-                      name='date'
+                      name='numberOfPeople'
                       onChange={handleNOPChange}
                       defaultValue='0'
                     >
@@ -205,6 +204,7 @@ export const Book = () => {
                       name='phone'
                     />
                     <MyModal></MyModal>
+
                     <Input type='submit' value={"book"} />
                   </FlexDiv>
                 </Form>
