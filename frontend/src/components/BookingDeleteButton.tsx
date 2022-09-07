@@ -4,7 +4,7 @@ import { IBooking } from "../models/IBooking";
 import { deleteBooking } from "../services/handleBookingsFetch.service";
 import { StyledButton } from "./StyledComponents/StyledButton";
 interface IDeleteButtons {
-  bookingById: IBooking;
+  booking: IBooking;
   guestPath: boolean;
   adminPath: boolean;
 }
@@ -17,9 +17,9 @@ export const BookingDeleteButton = (props: IDeleteButtons) => {
       {confirmDelete ? (
         <>
           <StyledButton
-            width="70px"
-            height="30px"
-            onClick={() => deleteBooking(props.bookingById._id!)}
+            width='70px'
+            height='30px'
+            onClick={() => deleteBooking(props.booking._id!)}
           >
             {props.guestPath ? <Link to={"/"}>Confirm</Link> : <></>}
             {props.adminPath ? <Link to={"/admin"}>Confirm</Link> : <></>}
@@ -28,8 +28,8 @@ export const BookingDeleteButton = (props: IDeleteButtons) => {
       ) : (
         <>
           <StyledButton
-            width="70px"
-            height="30px"
+            width='70px'
+            height='30px'
             onClick={() => setConfirmDelete(true)}
           >
             Delete

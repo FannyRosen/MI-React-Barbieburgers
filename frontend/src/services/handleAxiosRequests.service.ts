@@ -8,7 +8,7 @@ export async function post<T, S>(url: string, data: S) {
   return await axios.post<T>(url, data);
 }
 export async function put<T, S>(url: string, data: S) {
-  return await axios.put<T>(url);
+  return await axios.put<T>(url, data);
 }
 
 export async function axiosDelete<T>(url: string) {

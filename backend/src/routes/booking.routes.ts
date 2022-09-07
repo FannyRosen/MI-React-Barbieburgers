@@ -4,8 +4,8 @@ import {
   post_newBookingsController,
   get_bookingByIdController,
   delete_bookingByIdController,
-  put_bookingByIdController,
 } from "../controllers/booking.controller";
+import { put_bookingByIdController } from "../controllers/putBooking.controller";
 
 const router: Router = express.Router();
 

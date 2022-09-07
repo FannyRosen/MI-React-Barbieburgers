@@ -11,16 +11,13 @@ interface IBookingDetail {
 
 export const AdminBookingDetail = (props: IBookingDetail) => {
   const [openBookings, setOpenBookings] = useState(false);
-
-  console.log("Show", openBookings);
-
   return (
     <>
-      <FlexDiv dir="column">
+      <FlexDiv dir='column'>
         <StyledButton
           onClick={() => setOpenBookings(!openBookings)}
-          height="35px"
-          width="80px"
+          height='35px'
+          width='80px'
         >
           {openBookings ? <>CLOSE</> : <>VIEW BOOKINGS</>}
         </StyledButton>
@@ -36,15 +33,15 @@ export const AdminBookingDetail = (props: IBookingDetail) => {
 
         {openBookings ? (
           <>
-            <FlexDiv dir="column">
+            <FlexDiv dir='column'>
               {props.bookings.map((booking) => {
                 let date = new Date(booking.date);
 
                 return (
                   <div key={booking._id}>
-                    <FlexDiv gap="10px" dir="column" tabletdir="row">
-                      <StyledLink color="black" to={"/admin/" + booking._id}>
-                        <StyledP weight="bolder" fontsize="16px">
+                    <FlexDiv gap='10px' dir='column' tabletdir='row'>
+                      <StyledLink color='black' to={"/admin/" + booking._id}>
+                        <StyledP weight='bolder' fontsize='16px'>
                           Date: {date.toLocaleDateString()}
                         </StyledP>
                       </StyledLink>

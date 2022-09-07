@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { bookingsDefaultValue, IBooking } from "../../models/IBooking";
 
@@ -11,8 +11,12 @@ import { Form, Input, Label } from "../StyledComponents/Form";
 import { StyledLabel, StyledSelect } from "../StyledComponents/TextElements";
 import { FlexDiv } from "../StyledComponents/Wrappers";
 
-export const UpdateBooking = () => {
-  const [bookingById, setBookingById] =
+interface IProps {
+  onClick(): void;
+}
+
+export const UpdateBooking = (props: IProps) => {
+  const [bookingById, setExistingBooking] =
     useState<IBooking>(bookingsDefaultValue);
   const [date, setDate] = useState(bookingById.date);
   const [numberOfPeople, setNOP] = useState<number>(bookingById.numberOfPeople);
@@ -26,7 +30,7 @@ export const UpdateBooking = () => {
   useEffect(() => {
     const getBooking = async () => {
       await fetchBookingByID(params.id!).then((booking) => {
-        setBookingById(booking.data); // ÖÄNDRA
+        setExistingBooking(booking.data); // ÖÄNDRA
         setIsLoading(false);
       });
     };
@@ -40,9 +44,9 @@ export const UpdateBooking = () => {
       numberOfPeople,
       sittingTime,
     };
-    console.log(updateBooking);
-
-    editBooking(params.id!, updateBooking);
+    editBooking(params.id!, updateBooking).then(() => {
+      props.onClick();
+    });
   };
 
   const handleDateChange = async (e: Date) => {
@@ -90,8 +94,7 @@ export const UpdateBooking = () => {
             </StyledSelect>
             <StyledSelect
               required
-              id='date'
-              name='date'
+              name='sittingTime'
               onChange={handleSittingTimeChange}
               defaultValue={bookingById.sittingTime}
             >

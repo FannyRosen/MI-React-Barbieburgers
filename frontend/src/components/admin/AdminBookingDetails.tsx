@@ -11,8 +11,6 @@ interface IBookingDetail {
 export const AdminBookingDetail = (props: IBookingDetail) => {
   const [openBookings, setOpenBookings] = useState(false);
 
-  console.log("Show", openBookings);
-
   return (
     <>
       <FlexDiv dir='column'>

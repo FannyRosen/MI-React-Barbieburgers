@@ -33,7 +33,6 @@ export const post_newBookingsController = async (
 ) => {
   try {
     let { date, sittingTime, numberOfPeople, name, email, phone } = req.body;
-
     let checkBookings = await BookingModel.find({
       date,
       sittingTime,
@@ -141,38 +140,6 @@ export const delete_bookingByIdController = async (
       status: statusSuccess,
       message: "Delete booking works",
       data: deleteOneBooking(req, res),
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      status: statusFailed,
-      message: error,
-    });
-  }
-};
-
-export const put_bookingByIdController = async (
-  req: Request,
-  res: Response
-) => {
-  /////////////
-  //////////// Här blir allt req undefined. Varför??
-  ////////////
-  try {
-    let { date, sittingTime, numberOfPeople } = await req.body;
-    console.log("====================================");
-    console.log(date);
-    console.log(sittingTime);
-    console.log(numberOfPeople);
-    console.log("====================================");
-    const doc = await BookingModel.findById(req.params.id);
-    doc.date = date;
-    doc.sittingTime = sittingTime;
-    doc.numberOfPeople = numberOfPeople;
-    await doc.save();
-    res.status(200).json({
-      status: statusSuccess,
-      message: "Edit booking works",
-      data: req.params.id,
     });
   } catch (error: any) {
     res.status(500).json({
