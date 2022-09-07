@@ -1,7 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import Modal from "react-modal";
-import { Link } from "react-router-dom";
 import { colors } from "../StyledComponents/mixins";
 import { StyledButton } from "../StyledComponents/StyledButton";
 import { StyledLink, StyledP } from "../StyledComponents/TextElements";
@@ -25,10 +23,6 @@ export const MyModal = () => {
 
   const [modalIsOpen, setIsOpen] = React.useState(true);
 
-  function openModal() {
-    setIsOpen(true);
-  }
-
   function closeModal() {
     setIsOpen(false);
   }
@@ -41,19 +35,19 @@ export const MyModal = () => {
         style={customStyles}
       >
         <StyledLink to={"/"}>
-          <StyledButton onClick={closeModal} width="50px" height="30px">
+          <StyledButton onClick={closeModal} width='50px' height='30px'>
             Close
           </StyledButton>
         </StyledLink>
         <FlexDiv
-          width="90%"
-          dir="column"
-          tabletdir="column"
-          margin="20px"
-          gap="30px"
+          width='90%'
+          dir='column'
+          tabletdir='column'
+          margin='20px'
+          gap='30px'
         >
           <h2>We value your privacy</h2>
-          <StyledP fontsize="18px">
+          <StyledP fontsize='18px'>
             We and our partners are using technologies like Cookies or Targeting
             and process personal data like IP-address or browser information in
             order to personalize the advertisement you see. These technologies
@@ -65,13 +59,13 @@ export const MyModal = () => {
             clicking on the settings button on the left lower corner of the
             page.
           </StyledP>
-          <FlexDiv gap="10px">
+          <FlexDiv gap='10px'>
             <StyledLink to={"/"}>
-              <StyledButton onClick={closeModal} width="150px" height="30px">
+              <StyledButton onClick={closeModal} width='150px' height='30px'>
                 DENY
               </StyledButton>
             </StyledLink>
-            <StyledButton onClick={closeModal} width="150px" height="30px">
+            <StyledButton onClick={closeModal} width='150px' height='30px'>
               ACCEPT AND CLOSE
             </StyledButton>
           </FlexDiv>

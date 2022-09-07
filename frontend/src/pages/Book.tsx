@@ -1,7 +1,7 @@
 import { colors } from "../components/StyledComponents/mixins";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 import { StyledButton } from "../components/StyledComponents/StyledButton";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { PageIndicator } from "../components/partials/PageIndicator";
 import { useNavigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
@@ -32,13 +32,15 @@ export const Book = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkDate = async () => {
-      const isAvailableinDB = await checkAvailableSittings(new Date(date));
-      setIsAvailable(isAvailableinDB);
-    };
-    checkDate().catch(console.error);
-  }, [date]);
+  const checkDate = async () => {
+    setIsLoading(true);
+    const isAvailableinDB = await checkAvailableSittings(
+      new Date(date),
+      numberOfPeople
+    );
+    setIsAvailable(isAvailableinDB);
+    setIsLoading(false);
+  };
 
   const handleDateChange = async (e: Date) => {
     setDate(e.toLocaleDateString());
@@ -57,7 +59,6 @@ export const Book = () => {
 
   const completeBooking = async (e: FormEvent) => {
     e.preventDefault();
-
     let booking = {
       date: new Date(date),
       sittingTime: sitting,
@@ -67,10 +68,11 @@ export const Book = () => {
       phone: customerInfo.phone,
       id: "",
     };
-
+    setIsLoading(true);
     postBooking(booking)
       .then((data) => {
         booking.id = data.data._id!;
+        setIsLoading(false);
         navigate("/thankyou", { state: booking });
       })
       .catch((e) => {
@@ -96,8 +98,9 @@ export const Book = () => {
                 <h2>Book a table</h2>
                 <Form
                   onSubmit={() => {
-                    if (numberOfPeople != 0) {
+                    if (numberOfPeople !== 0) {
                       setPhase(2);
+                      checkDate();
                     } else {
                       console.log("error");
                     }

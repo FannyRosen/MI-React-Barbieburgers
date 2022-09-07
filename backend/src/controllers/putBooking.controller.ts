@@ -10,6 +10,9 @@ export const put_bookingByIdController = async (
 ) => {
   try {
     let { date, sittingTime, numberOfPeople } = await req.body;
+    console.log(date);
+    console.log(sittingTime);
+    console.log(numberOfPeople);
 
     let newBooking = {
       date,

@@ -5,6 +5,7 @@ import {
   editBooking,
   fetchBookingByID,
 } from "../../services/handleBookingsFetch.service";
+import { checkAvailableSittings } from "../../services/utils";
 import { MyCalendar } from "../partials/Calendar";
 import { Form, Input, Label } from "../StyledComponents/Form";
 import { StyledLabel, StyledSelect } from "../StyledComponents/TextElements";
@@ -17,16 +18,18 @@ interface IProps {
 export const UpdateBooking = (props: IProps) => {
   const [existingBooking, setExistingBooking] =
     useState<IBooking>(bookingsDefaultValue);
-  const [date, setDate] = useState(existingBooking.date);
-  const [numberOfPeople, setNOP] = useState<number>(
-    existingBooking.numberOfPeople
-  );
-  const [sittingTime, setSittingTime] = useState<number>(
-    existingBooking.sittingTime
-  );
+  const [date, setDate] = useState(new Date());
+  const [numberOfPeople, setNOP] = useState<number>(1);
+  const [sittingTime, setSittingTime] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
+
+  useEffect(() => {
+    setDate(existingBooking.date);
+    setNOP(existingBooking.numberOfPeople);
+    setSittingTime(existingBooking.sittingTime);
+  }, [existingBooking]);
 
   useEffect(() => {
     const getBooking = async () => {
@@ -38,13 +41,17 @@ export const UpdateBooking = (props: IProps) => {
     getBooking();
   }, []);
 
-  const submitUpdatedBooking = (e: FormEvent) => {
+  const submitUpdatedBooking = async (e: FormEvent) => {
     e.preventDefault();
     let updateBooking = {
       date: new Date(date),
       numberOfPeople,
       sittingTime,
     };
+    await checkAvailableSittings(
+      updateBooking.date,
+      updateBooking.numberOfPeople
+    );
     editBooking(params.id!, updateBooking).then(() => {
       props.onClick();
     });
