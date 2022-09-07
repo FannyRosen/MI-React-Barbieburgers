@@ -6,7 +6,7 @@ import { Home } from "./pages/Home";
 import { Contact } from "./pages/Contact";
 import { ThankYou } from "./pages/ThankYou";
 import { Book } from "./pages/Book";
-import { SingleBooking } from "./components/SingleBooking";
+import { SingleBooking } from "./components/admin/SingleBooking";
 import { Customers } from "./components/Customers";
 import { Customer } from "./components/Customer";
 import { AdminBookings } from "./components/admin/AdminBooking";
