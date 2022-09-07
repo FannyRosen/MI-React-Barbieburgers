@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { IStylingProps } from "../StyledInterface";
 import { colors } from "../mixins";
-import { ReactNode, useState } from "react";
 
 const Ul = styled.ul`
   list-style: none;
@@ -51,12 +50,12 @@ const RightNav = (props: IProps) => {
   return (
     <Ul ultransform={props.open ? "translateX(0)" : "translateX(100%)"}>
       <li>
-        <Link onClick={props.onClick} to='/contact'>
+        <Link className='contactlink' onClick={props.onClick} to='/contact'>
           CONTACT
         </Link>
       </li>
       <li>
-        <Link onClick={props.onClick} to='/book'>
+        <Link className='booklink' onClick={props.onClick} to='/book'>
           BOOK
         </Link>
       </li>

@@ -5,6 +5,7 @@ import {
   editBooking,
   fetchBookingByID,
 } from "../../services/handleBookingsFetch.service";
+import { checkAvailableSittings } from "../../services/utils";
 import { MyCalendar } from "../partials/Calendar";
 import { Form, Input, Label } from "../StyledComponents/Form";
 import { StyledLabel, StyledSelect } from "../StyledComponents/TextElements";
@@ -38,13 +39,17 @@ export const UpdateBooking = (props: IProps) => {
     getBooking();
   }, []);
 
-  const submitUpdatedBooking = (e: FormEvent) => {
+  const submitUpdatedBooking = async (e: FormEvent) => {
     e.preventDefault();
     let updateBooking = {
       date: new Date(date),
       numberOfPeople,
       sittingTime,
     };
+    await checkAvailableSittings(
+      updateBooking.date,
+      updateBooking.numberOfPeople
+    );
     editBooking(params.id!, updateBooking).then(() => {
       props.onClick();
     });

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { IBooking } from "../models/IBooking";
-import { ICustomer } from "../models/ICustomer";
 import { StyledButton } from "./StyledComponents/StyledButton";
 import { StyledLink, StyledP } from "./StyledComponents/TextElements";
 import { FlexDiv } from "./StyledComponents/Wrappers";
