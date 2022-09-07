@@ -21,8 +21,8 @@ export const SingleBooking = () => {
 
   let params = useParams();
   const location = useLocation();
-  const adminPath = location.pathname === "/admin/" + booking._id;
-  const guestPath = location.pathname === "/reservation/" + booking._id;
+  const adminPath = location.pathname === "/admin/" + params.id;
+  const guestPath = location.pathname === "/reservation/" + params.id;
 
   useEffect(() => {
     const getBooking = async () => {
@@ -33,11 +33,13 @@ export const SingleBooking = () => {
   }, [inEdit]);
 
   useEffect(() => {
-    fetchCustomerByID(booking.clientId!.toString()).then(
-      async (customerByIdResponse) => {
-        setCustomer(customerByIdResponse.data);
-      }
-    );
+    if (booking._id !== "") {
+      fetchCustomerByID(booking.clientId!.toString()).then(
+        async (customerByIdResponse) => {
+          setCustomer(customerByIdResponse.data);
+        }
+      );
+    }
   }, [booking]);
 
   return (

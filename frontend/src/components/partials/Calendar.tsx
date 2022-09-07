@@ -18,8 +18,8 @@ export const MyCalendar = (props: IProps) => {
   }, [date]);
 
   return (
-    <FlexDiv dir={"column"} width='80%'>
-      <div className='react-calendar'>
+    <FlexDiv dir={"column"} width="50%" tabletwidth="90%">
+      <div className="react-calendar">
         <Calendar
           minDate={curr}
           maxDate={new Date("2023-12-31")}
