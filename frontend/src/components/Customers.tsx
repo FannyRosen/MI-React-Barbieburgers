@@ -10,7 +10,6 @@ export const Customers = () => {
     fetchCustomers()
       .then((response) => {
         setCustomers(response.data);
-        console.log(response);
       })
       .catch((error) => {
         console.log(error);

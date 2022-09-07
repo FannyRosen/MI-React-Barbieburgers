@@ -17,7 +17,7 @@ export const checkAvailableSittings = async (date: Date, nop: number) => {
     // får listan med totala bokingar
     let dbDate = new Date(response.data[i].date);
 
-    if (dbDate.getTime() === date.getTime()) {
+    if (dbDate === date) {
       // kollat vilka som matchar önskat datum
 
       // Kontroller Sittning 1:

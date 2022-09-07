@@ -5,10 +5,14 @@ import {
   editBooking,
   fetchBookingByID,
 } from "../../services/handleBookingsFetch.service";
-import { checkAvailableSittings } from "../../services/utils";
+import { checkAvailableSittings, ISittings } from "../../services/utils";
 import { MyCalendar } from "../partials/Calendar";
 import { Form, Input, Label } from "../StyledComponents/Form";
-import { StyledLabel, StyledSelect } from "../StyledComponents/TextElements";
+import {
+  StyledLabel,
+  StyledP,
+  StyledSelect,
+} from "../StyledComponents/TextElements";
 import { FlexDiv } from "../StyledComponents/Wrappers";
 
 interface IProps {
@@ -22,6 +26,7 @@ export const UpdateBooking = (props: IProps) => {
   const [numberOfPeople, setNOP] = useState<number>(1);
   const [sittingTime, setSittingTime] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAvailable, setIsAvailable] = useState<ISittings>();
 
   let params = useParams();
 
@@ -30,6 +35,17 @@ export const UpdateBooking = (props: IProps) => {
     setNOP(existingBooking.numberOfPeople);
     setSittingTime(existingBooking.sittingTime);
   }, [existingBooking]);
+
+  useEffect(() => {
+    const checkAvailable = async () => {
+      const isAvailableinDB = await checkAvailableSittings(
+        date,
+        numberOfPeople
+      );
+      setIsAvailable(isAvailableinDB);
+    };
+    checkAvailable();
+  }, [date, numberOfPeople]);
 
   useEffect(() => {
     const getBooking = async () => {
@@ -48,16 +64,16 @@ export const UpdateBooking = (props: IProps) => {
       numberOfPeople,
       sittingTime,
     };
-    await checkAvailableSittings(
-      updateBooking.date,
-      updateBooking.numberOfPeople
-    );
+    console.log(date);
+
     editBooking(params.id!, updateBooking).then(() => {
       props.onClick();
     });
   };
 
   const handleDateChange = async (e: Date) => {
+    console.log(e);
+
     setDate(e);
   };
 
@@ -103,6 +119,20 @@ export const UpdateBooking = (props: IProps) => {
               <option value='11'>11</option>
               <option value='12'>12</option>
             </StyledSelect>
+            {isAvailable!.firstSitting ? (
+              <></>
+            ) : (
+              <>
+                <StyledP>The time you have chosen is not available.</StyledP>
+              </>
+            )}
+            {isAvailable!.secondSitting ? (
+              <></>
+            ) : (
+              <>
+                <StyledP>The time you have chosen is not available.</StyledP>
+              </>
+            )}
             <StyledSelect
               required
               name='sittingTime'
