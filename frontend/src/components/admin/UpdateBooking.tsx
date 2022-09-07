@@ -109,8 +109,8 @@ export const UpdateBooking = (props: IProps) => {
               onChange={handleSittingTimeChange}
               defaultValue={existingBooking.sittingTime}
             >
-              <option value='1'>6.00 pm</option>
-              <option value='2'>9.00 pm</option>
+              <option value={1}>6.00 pm</option>
+              <option value={2}>9.00 pm</option>
             </StyledSelect>
             <Input type='submit' value={"update"} />
           </FlexDiv>
