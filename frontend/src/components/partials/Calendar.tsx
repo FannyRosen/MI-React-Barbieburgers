@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import { FlexDiv } from "../StyledComponents/Wrappers";
 
-export const MyCalendar = ({ handleDate }: any) => {
-  const [date, setDate] = useState(new Date());
-  const today = Date.now();
-  const curr = new Date(today);
+interface IProps {
+  handleDate(d: Date): void;
+  defaultDate?: Date;
+}
+const today = Date.now();
+const curr = new Date(today);
+
+export const MyCalendar = (props: IProps) => {
+  const theDate = new Date(props.defaultDate || curr);
+  const [date, setDate] = useState(theDate);
 
   useEffect(() => {
-    handleDate(date);
+    props.handleDate(date);
   }, [date]);
 
   return (
@@ -16,7 +22,6 @@ export const MyCalendar = ({ handleDate }: any) => {
       <div className="react-calendar">
         <Calendar
           minDate={curr}
-          defaultValue={curr}
           maxDate={new Date("2023-12-31")}
           onChange={setDate}
           value={date}

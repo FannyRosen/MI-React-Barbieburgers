@@ -7,6 +7,11 @@ export interface IBooking {
   numberOfPeople: number;
   clientId?: ICustomer;
 }
+export interface IPutBooking {
+  date: Date;
+  sittingTime: number;
+  numberOfPeople: number;
+}
 export interface INewBooking {
   date: Date;
   sittingTime: number;

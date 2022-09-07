@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { IBooking } from "../models/IBooking";
-import { ICustomer } from "../models/ICustomer";
-import { StyledButton } from "./StyledComponents/StyledButton";
-import { StyledLink, StyledP } from "./StyledComponents/TextElements";
-import { FlexDiv } from "./StyledComponents/Wrappers";
+import { IBooking } from "../../models/IBooking";
+import { StyledButton } from "../StyledComponents/StyledButton";
+import { StyledLink, StyledP } from "../StyledComponents/TextElements";
+import { FlexDiv } from "../StyledComponents/Wrappers";
 
 interface IBookingDetail {
   bookings: IBooking[];
@@ -11,6 +10,7 @@ interface IBookingDetail {
 
 export const AdminBookingDetail = (props: IBookingDetail) => {
   const [openBookings, setOpenBookings] = useState(false);
+
   return (
     <>
       <FlexDiv dir='column'>
