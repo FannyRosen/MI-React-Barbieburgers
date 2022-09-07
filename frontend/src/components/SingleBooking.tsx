@@ -159,7 +159,7 @@ export const SingleBooking = () => {
               ) : (
                 <>
                   <StyledP fontsize="18px" padding="20px">
-                    Date of sitting:
+                    Date of sitting:{" "}
                     {new Date(bookingById.date).toLocaleDateString()}
                   </StyledP>
                   <StyledP fontsize="18px" padding="20px">
