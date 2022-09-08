@@ -1,7 +1,8 @@
-import { IBooking } from "../models/IBooking";
-import { ICustomer } from "../models/ICustomer";
-import { StyledP } from "./StyledComponents/TextElements";
-import { FlexDiv } from "./StyledComponents/Wrappers";
+import { IBooking } from "../../models/IBooking";
+import { ICustomer } from "../../models/ICustomer";
+import { StyledButton } from "../StyledComponents/StyledButton";
+import { StyledLink, StyledP } from "../StyledComponents/TextElements";
+import { FlexDiv } from "../StyledComponents/Wrappers";
 
 interface IRender {
   booking: IBooking;
@@ -12,7 +13,10 @@ export const SingleBookingRender = (props: IRender) => {
   return (
     <>
       <FlexDiv dir='column'>
-        <FlexDiv dir='column'>
+        <FlexDiv dir='column' gap='10px'>
+          <StyledLink to='/admin'>
+            <StyledButton>Back to all bookings</StyledButton>
+          </StyledLink>
           <StyledP fontsize='18px'>Customer: {props.customer.name}</StyledP>
           <StyledP fontsize='18px'>Email: {props.customer.email}</StyledP>
           <StyledP fontsize='18px'>Phone: {props.customer.phone}</StyledP>

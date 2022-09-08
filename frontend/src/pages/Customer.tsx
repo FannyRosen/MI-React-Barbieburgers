@@ -4,24 +4,26 @@ import {
   deleteCustomer,
   fetchCustomerByID,
 } from "../services/handleCustomersFetch.service";
-import { customersDefaultValue, ICustomer } from "./../models/ICustomer";
-import { Loader } from "./partials/Loader";
-import { Background } from "./StyledComponents/Background";
-import { colors } from "./StyledComponents/mixins";
-import { StyledButton } from "./StyledComponents/StyledButton";
-import { StyledLink, StyledP } from "./StyledComponents/TextElements";
-import { FlexDiv } from "./StyledComponents/Wrappers";
+import { customersDefaultValue, ICustomer } from "../models/ICustomer";
+import { Loader } from "../components/partials/Loader";
+import { Background } from "../components/StyledComponents/Background";
+import { colors } from "../components/StyledComponents/mixins";
+import { StyledButton } from "../components/StyledComponents/StyledButton";
+import {
+  StyledLink,
+  StyledP,
+} from "../components/StyledComponents/TextElements";
+import { FlexDiv } from "../components/StyledComponents/Wrappers";
 
 export const Customer = () => {
   const [customerById, setCustomerById] = useState<ICustomer>(
     customersDefaultValue
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
 
   useEffect(() => {
-    setIsLoading(true);
     fetchCustomerByID(params.id!).then((response) => {
       setCustomerById(response.data);
       setIsLoading(false);

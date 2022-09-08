@@ -6,11 +6,11 @@ import { Home } from "./pages/Home";
 import { Contact } from "./pages/Contact";
 import { ThankYou } from "./pages/ThankYou";
 import { Book } from "./pages/Book";
-import { SingleBooking } from "./components/admin/SingleBooking";
-import { Customers } from "./components/Customers";
-import { Customer } from "./components/Customer";
-import { AdminBookings } from "./components/admin/AdminBooking";
-import ScrollToTop from "./components/partials/ScrollToTop";
+import { SingleBooking } from "./pages/SingleBooking";
+import { Customers } from "./pages/Customers";
+import { Customer } from "./pages/Customer";
+import { AdminBookings } from "./pages/AdminBookings";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (

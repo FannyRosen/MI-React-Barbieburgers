@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { bookingsDefaultValue, IBooking } from "../../models/IBooking";
-import { customersDefaultValue, ICustomer } from "../../models/ICustomer";
-import { fetchBookingByID } from "../../services/handleBookingsFetch.service";
-import { fetchCustomerByID } from "../../services/handleCustomersFetch.service";
-import { UpdateBooking } from "./UpdateBooking";
-import { BookingDeleteButton } from "../BookingDeleteButton";
-import { SingleBookingRender } from "../SingleBookingRender";
-import { Background } from "../StyledComponents/Background";
-import { colors } from "../StyledComponents/mixins";
-import { StyledButton } from "../StyledComponents/StyledButton";
-import { FlexDiv } from "../StyledComponents/Wrappers";
-import { Loader } from "../partials/Loader";
+import { bookingsDefaultValue, IBooking } from "../models/IBooking";
+import { customersDefaultValue, ICustomer } from "../models/ICustomer";
+import { fetchBookingByID } from "../services/handleBookingsFetch.service";
+import { fetchCustomerByID } from "../services/handleCustomersFetch.service";
+import { UpdateBooking } from "../components/admin/UpdateBooking";
+import { BookingDeleteButton } from "../components/admin/BookingDeleteButton";
+import { SingleBookingRender } from "../components/admin/SingleBookingRender";
+import { Background } from "../components/StyledComponents/Background";
+import { colors } from "../components/StyledComponents/mixins";
+import { StyledButton } from "../components/StyledComponents/StyledButton";
+import { FlexDiv } from "../components/StyledComponents/Wrappers";
+import { Loader } from "../components/partials/Loader";
 
 export const SingleBooking = () => {
   const [booking, setBooking] = useState<IBooking>(bookingsDefaultValue);
   const [customer, setCustomer] = useState<ICustomer>(customersDefaultValue);
   const [inEdit, setInEdit] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
   const location = useLocation();
@@ -25,7 +25,6 @@ export const SingleBooking = () => {
   const guestPath = location.pathname === "/reservation/" + params.id;
 
   useEffect(() => {
-    setIsLoading(true);
     const getBooking = async () => {
       const bookingResponse = await fetchBookingByID(params.id!);
       setBooking(bookingResponse.data);
@@ -35,7 +34,6 @@ export const SingleBooking = () => {
   }, [inEdit]);
 
   useEffect(() => {
-    setIsLoading(true);
     if (booking._id !== "") {
       fetchCustomerByID(booking.clientId!.toString()).then(
         async (customerByIdResponse) => {
