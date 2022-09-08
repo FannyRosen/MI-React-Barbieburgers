@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { IStylingProps } from "./StyledInterface";
 
 export const StyledP = styled.p`
+  display: ${(props: IStylingProps) => props.display || "block"};
   color: ${(props: IStylingProps) => props.color || "black"};
   margin: ${(props: IStylingProps) => props.margin || "0"};
   padding: ${(props: IStylingProps) => props.padding || "0"};

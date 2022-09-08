@@ -1,7 +1,7 @@
 import { colors } from "../components/StyledComponents/mixins";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 import { StyledButton } from "../components/StyledComponents/StyledButton";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { PageIndicator } from "../components/partials/PageIndicator";
 import { useNavigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
@@ -9,6 +9,7 @@ import { postBooking } from "../services/handleBookingsFetch.service";
 import { Loader } from "../components/partials/Loader";
 import {
   StyledLabel,
+  StyledP,
   StyledSelect,
 } from "../components/StyledComponents/TextElements";
 import { Form, Input, Label } from "../components/StyledComponents/Form";
@@ -16,11 +17,12 @@ import { Background } from "../components/StyledComponents/Background";
 import { MyModal } from "../components/partials/Modal";
 import { MyCalendar } from "../components/partials/Calendar";
 import { checkAvailableSittings, ISittings } from "../services/utils";
-
+/* import { useForm } from "react-hook-form";
+ */
 export const Book = () => {
   const [phase, setPhase] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const [numberOfPeople, setNOP] = useState<number>(0);
   const [customerInfo, setCustomerInfo] = useState<IFormCustomer>({
     name: "",
@@ -29,19 +31,33 @@ export const Book = () => {
   });
   const [isAvailable, setIsAvailable] = useState<ISittings>();
   const [sitting, setSitting] = useState(0);
+  const [error, setError] = useState("none");
 
   const navigate = useNavigate();
+  /*   const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm(); */
 
-  useEffect(() => {
-    const checkDate = async () => {
-      const isAvailableinDB = await checkAvailableSittings(new Date(date));
+  const checkDate = async () => {
+    if (numberOfPeople !== 0) {
+      setIsLoading(true);
+      const isAvailableinDB = await checkAvailableSittings(
+        new Date(date),
+        numberOfPeople
+      );
       setIsAvailable(isAvailableinDB);
-    };
-    checkDate().catch(console.error);
-  }, [date]);
+      setIsLoading(false);
+      setPhase(2);
+    } else {
+      setError("block");
+    }
+  };
 
   const handleDateChange = async (e: Date) => {
-    setDate(e.toLocaleDateString());
+    setDate(e);
   };
 
   const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -57,7 +73,6 @@ export const Book = () => {
 
   const completeBooking = async (e: FormEvent) => {
     e.preventDefault();
-
     let booking = {
       date: new Date(date),
       sittingTime: sitting,
@@ -67,10 +82,11 @@ export const Book = () => {
       phone: customerInfo.phone,
       id: "",
     };
-
+    setIsLoading(true);
     postBooking(booking)
       .then((data) => {
         booking.id = data.data._id!;
+        setIsLoading(false);
         navigate("/thankyou", { state: booking });
       })
       .catch((e) => {
@@ -96,12 +112,8 @@ export const Book = () => {
                 <h2>Book a table</h2>
                 <Form
                   onSubmit={(e: FormEvent) => {
+                    checkDate();
                     e.preventDefault();
-                    if (numberOfPeople != 0) {
-                      setPhase(2);
-                    } else {
-                      console.log("error");
-                    }
                   }}
                 >
                   <FlexDiv dir="column" gap="10px">
@@ -109,6 +121,7 @@ export const Book = () => {
                     <MyCalendar handleDate={handleDateChange} />
 
                     <Label>Number of people</Label>
+
                     <StyledSelect
                       required
                       name="numberOfPeople"
@@ -132,15 +145,18 @@ export const Book = () => {
                       <option value="11">11</option>
                       <option value="12">12</option>
                     </StyledSelect>
-                    <p>
-                      Maximum per table: 6 <br />
-                      If you are more than 6 people you will be divided between
-                      tables
-                    </p>
+
+                    <FlexDiv width="200px" tabletwidth="400px" margin="0 30px">
+                      <StyledP fontsize="15px">
+                        Maximum per table: 6 <br />
+                        If you are more than 6 people you will be divided
+                        between tables
+                      </StyledP>
+                    </FlexDiv>
                     <Input
-                      className="checkavailability"
                       type="submit"
                       value={"Check availability"}
+                      className="checkavailability"
                     />
                   </FlexDiv>
                 </Form>
@@ -149,6 +165,13 @@ export const Book = () => {
             {phase === 2 && (
               <>
                 <h2 className="h2">Available sittings</h2>
+                <FlexDiv dir="column" margin="0 0 20px 0">
+                  <StyledP fontsize="15px">
+                    Your booking: <br />
+                    {date.toLocaleDateString()} <br />
+                    {numberOfPeople} people
+                  </StyledP>
+                </FlexDiv>
                 <FlexDiv gap="10px" dir="column">
                   {isAvailable?.firstSitting ? (
                     <StyledButton
@@ -184,13 +207,15 @@ export const Book = () => {
             {phase === 3 && (
               <>
                 <h2>Your information</h2>
-                <p>
-                  Your booking: <br />
-                  {date} <br />
-                  {sitting === 1 ? "6.00 pm" : "9.00 pm"}
-                  <br />
-                  {numberOfPeople} people
-                </p>
+                <FlexDiv dir="column" margin="0 0 30px 0">
+                  <StyledP fontsize="15px">
+                    Your booking: <br />
+                    {date.toLocaleDateString()} <br />
+                    {sitting === 1 ? "6.00 pm" : "9.00 pm"}
+                    <br />
+                    {numberOfPeople} people
+                  </StyledP>
+                </FlexDiv>
 
                 <Form onSubmit={completeBooking}>
                   <FlexDiv dir="column">
@@ -223,7 +248,16 @@ export const Book = () => {
                 </Form>
               </>
             )}
-            <PageIndicator phase={phase} />
+            <FlexDiv dir="column" margin="40px 0 0 0 ">
+              <PageIndicator phase={phase} />
+              {phase == 1 ? (
+                <></>
+              ) : (
+                <StyledButton width="90px" onClick={() => setPhase(1)}>
+                  Start over
+                </StyledButton>
+              )}
+            </FlexDiv>
           </FlexDiv>
         </FlexDiv>
       )}

@@ -4,10 +4,7 @@ import { CustomerModel } from "../models/Customer.model";
 import { BookingModel } from "../models/Booking.model";
 import { statusFailed, statusSuccess } from "./statusMessages";
 import { sendConfirmationEmail } from "../utils/confirmationEmail";
-
-export async function deleteOneBooking(req: Request, res: Response) {
-  await BookingModel.findByIdAndDelete(req.params.id);
-}
+import { sendCancelBookingEmail } from "../utils/cancelBookingEmail";
 
 export const get_bookingsController = async (req: Request, res: Response) => {
   const bookings = await BookingModel.find();
@@ -33,6 +30,7 @@ export const post_newBookingsController = async (
 ) => {
   try {
     let { date, sittingTime, numberOfPeople, name, email, phone } = req.body;
+
     let checkBookings = await BookingModel.find({
       date,
       sittingTime,
@@ -135,11 +133,45 @@ export const delete_bookingByIdController = async (
   req: Request,
   res: Response
 ) => {
+  const deleteBooking = await BookingModel.findByIdAndDelete(req.params.id);
+
+  const findCustomer = await CustomerModel.findOne(req.body.email);
+
+  sendCancelBookingEmail(deleteBooking, findCustomer);
+
   try {
     res.status(200).json({
       status: statusSuccess,
       message: "Delete booking works",
-      data: deleteOneBooking(req, res),
+      data: deleteBooking,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: statusFailed,
+      message: error,
+    });
+  }
+};
+
+export const put_bookingByIdController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    let { date, sittingTime, numberOfPeople } = req.body;
+
+    const editBooking = await BookingModel.findByIdAndUpdate(req.params.id);
+
+    editBooking.sittingTime = sittingTime;
+    editBooking.date = date;
+    editBooking.numberOfPeople = numberOfPeople;
+
+    await editBooking.save();
+
+    res.status(200).json({
+      status: statusSuccess,
+      message: "Edit booking works",
+      data: editBooking,
     });
   } catch (error: any) {
     res.status(500).json({

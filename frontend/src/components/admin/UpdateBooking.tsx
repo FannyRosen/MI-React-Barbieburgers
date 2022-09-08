@@ -5,9 +5,14 @@ import {
   editBooking,
   fetchBookingByID,
 } from "../../services/handleBookingsFetch.service";
+import { checkAvailableSittings, ISittings } from "../../services/utils";
 import { MyCalendar } from "../partials/Calendar";
 import { Form, Input, Label } from "../StyledComponents/Form";
-import { StyledLabel, StyledSelect } from "../StyledComponents/TextElements";
+import {
+  StyledLabel,
+  StyledP,
+  StyledSelect,
+} from "../StyledComponents/TextElements";
 import { FlexDiv } from "../StyledComponents/Wrappers";
 
 interface IProps {
@@ -17,18 +22,22 @@ interface IProps {
 export const UpdateBooking = (props: IProps) => {
   const [existingBooking, setExistingBooking] =
     useState<IBooking>(bookingsDefaultValue);
-  const [date, setDate] = useState(existingBooking.date);
-  const [numberOfPeople, setNOP] = useState<number>(
-    existingBooking.numberOfPeople
-  );
-  const [sittingTime, setSittingTime] = useState<number>(
-    existingBooking.sittingTime
-  );
-  const [isLoading, setIsLoading] = useState(true);
+  const [date, setDate] = useState(new Date());
+  const [numberOfPeople, setNOP] = useState<number>(1);
+  const [sittingTime, setSittingTime] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAvailable, setIsAvailable] = useState<ISittings>();
 
   let params = useParams();
 
   useEffect(() => {
+    setDate(existingBooking.date);
+    setNOP(existingBooking.numberOfPeople);
+    setSittingTime(existingBooking.sittingTime);
+  }, [existingBooking]);
+
+  useEffect(() => {
+    setIsLoading(true);
     const getBooking = async () => {
       await fetchBookingByID(params.id!).then((booking) => {
         setExistingBooking(booking.data);
@@ -38,16 +47,34 @@ export const UpdateBooking = (props: IProps) => {
     getBooking();
   }, []);
 
-  const submitUpdatedBooking = (e: FormEvent) => {
+  const submitUpdatedBooking = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     let updateBooking = {
       date: new Date(date),
       numberOfPeople,
       sittingTime,
     };
-    editBooking(params.id!, updateBooking).then(() => {
-      props.onClick();
-    });
+    const checkAvailable = async () => {
+      const isAvailableinDB = await checkAvailableSittings(
+        date,
+        numberOfPeople
+      );
+      setIsAvailable(isAvailableinDB);
+    };
+    checkAvailable();
+
+    if (
+      (sittingTime === 1 && isAvailable!.firstSitting === true) ||
+      (sittingTime === 2 && isAvailable!.secondSitting === true)
+    ) {
+      setIsLoading(false);
+      editBooking(params.id!, updateBooking).then(() => {
+        props.onClick();
+      });
+    } else {
+      setIsLoading(false);
+    }
   };
 
   const handleDateChange = async (e: Date) => {
@@ -96,14 +123,28 @@ export const UpdateBooking = (props: IProps) => {
               <option value='11'>11</option>
               <option value='12'>12</option>
             </StyledSelect>
+            {isAvailable?.firstSitting ? (
+              <></>
+            ) : (
+              <>
+                <StyledP>The time you have chosen is not available.</StyledP>
+              </>
+            )}
+            {isAvailable?.secondSitting ? (
+              <></>
+            ) : (
+              <>
+                <StyledP>The time you have chosen is not available.</StyledP>
+              </>
+            )}
             <StyledSelect
               required
               name='sittingTime'
               onChange={handleSittingTimeChange}
               defaultValue={existingBooking.sittingTime}
             >
-              <option value='1'>6.00 pm</option>
-              <option value='2'>9.00 pm</option>
+              <option value={1}>6.00 pm</option>
+              <option value={2}>9.00 pm</option>
             </StyledSelect>
             <Input type='submit' value={"update"} />
           </FlexDiv>
