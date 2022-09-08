@@ -17,8 +17,8 @@ import { Background } from "../components/StyledComponents/Background";
 import { MyModal } from "../components/partials/Modal";
 import { MyCalendar } from "../components/partials/Calendar";
 import { checkAvailableSittings, ISittings } from "../services/utils";
-import { useForm } from "react-hook-form";
-
+/* import { useForm } from "react-hook-form";
+ */
 export const Book = () => {
   const [phase, setPhase] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
