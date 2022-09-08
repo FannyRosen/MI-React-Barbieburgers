@@ -4,7 +4,7 @@ import { StyledButton } from "../components/StyledComponents/StyledButton";
 import { FormEvent, useState } from "react";
 import { PageIndicator } from "../components/partials/PageIndicator";
 import { useNavigate } from "react-router-dom";
-import { IFormCustomer } from "../models/ICustomer";
+import { formCustomersDefaultValue, IFormCustomer } from "../models/ICustomer";
 import { postBooking } from "../services/handleBookingsFetch.service";
 import { Loader } from "../components/partials/Loader";
 import {
@@ -24,11 +24,9 @@ export const Book = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [numberOfPeople, setNOP] = useState<number>(0);
-  const [customerInfo, setCustomerInfo] = useState<IFormCustomer>({
-    name: "",
-    email: "",
-    phone: "",
-  });
+  const [customerInfo, setCustomerInfo] = useState<IFormCustomer>(
+    formCustomersDefaultValue
+  );
   const [isAvailable, setIsAvailable] = useState<ISittings>();
   const [sitting, setSitting] = useState(0);
   const [error, setError] = useState("none");
@@ -111,9 +109,8 @@ export const Book = () => {
               <>
                 <h2>Book a table</h2>
                 <Form
-                  onSubmit={(e: FormEvent) => {
+                  onSubmit={() => {
                     checkDate();
-                    e.preventDefault();
                   }}
                 >
                   <FlexDiv dir="column" gap="10px">
@@ -121,13 +118,12 @@ export const Book = () => {
                     <MyCalendar handleDate={handleDateChange} />
 
                     <Label>Number of people</Label>
-
+                    <StyledP display={error}>Error!</StyledP>
                     <StyledSelect
                       required
                       name="numberOfPeople"
                       onChange={handleNOPChange}
                       defaultValue="0"
-                      className="nop"
                     >
                       <option disabled value="0">
                         0
@@ -145,7 +141,6 @@ export const Book = () => {
                       <option value="11">11</option>
                       <option value="12">12</option>
                     </StyledSelect>
-
                     <FlexDiv width="200px" tabletwidth="400px" margin="0 30px">
                       <StyledP fontsize="15px">
                         Maximum per table: 6 <br />
@@ -153,18 +148,14 @@ export const Book = () => {
                         between tables
                       </StyledP>
                     </FlexDiv>
-                    <Input
-                      type="submit"
-                      value={"Check availability"}
-                      className="checkavailability"
-                    />
+                    <Input type="submit" value={"Check availability"} />
                   </FlexDiv>
                 </Form>
               </>
             )}
             {phase === 2 && (
               <>
-                <h2 className="h2">Available sittings</h2>
+                <h2>Available sittings</h2>
                 <FlexDiv dir="column" margin="0 0 20px 0">
                   <StyledP fontsize="15px">
                     Your booking: <br />
@@ -175,7 +166,6 @@ export const Book = () => {
                 <FlexDiv gap="10px" dir="column">
                   {isAvailable?.firstSitting ? (
                     <StyledButton
-                      className="sitting1"
                       color="white"
                       onClick={() => {
                         setSitting(1);
@@ -189,7 +179,6 @@ export const Book = () => {
                   )}
                   {isAvailable?.secondSitting ? (
                     <StyledButton
-                      className="sitting2"
                       color="white"
                       onClick={() => {
                         setSitting(2);
