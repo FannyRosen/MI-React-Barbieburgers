@@ -95,7 +95,8 @@ export const Book = () => {
               <>
                 <h2>Book a table</h2>
                 <Form
-                  onSubmit={() => {
+                  onSubmit={(e: FormEvent) => {
+                    e.preventDefault();
                     if (numberOfPeople != 0) {
                       setPhase(2);
                     } else {
@@ -105,7 +106,10 @@ export const Book = () => {
                 >
                   <FlexDiv dir="column" gap="10px">
                     <StyledLabel>Choose a date</StyledLabel>
-                    <MyCalendar handleDate={handleDateChange} />
+                    <MyCalendar
+                      handleDate={handleDateChange}
+                      className="calendar"
+                    />
 
                     <Label>Number of people</Label>
                     <StyledSelect
@@ -113,6 +117,7 @@ export const Book = () => {
                       name="numberOfPeople"
                       onChange={handleNOPChange}
                       defaultValue="0"
+                      className="nop"
                     >
                       <option disabled value="0">
                         0
@@ -135,17 +140,22 @@ export const Book = () => {
                       If you are more than 6 people you will be divided between
                       tables
                     </p>
-                    <Input type="submit" value={"Check availability"} />
+                    <Input
+                      className="checkavailability"
+                      type="submit"
+                      value={"Check availability"}
+                    />
                   </FlexDiv>
                 </Form>
               </>
             )}
             {phase === 2 && (
               <>
-                <h2>Available sittings</h2>
+                <h2 className="h2">Available sittings</h2>
                 <FlexDiv gap="10px" dir="column">
                   {isAvailable?.firstSitting ? (
                     <StyledButton
+                      className="sitting1"
                       color="white"
                       onClick={() => {
                         setSitting(1);
@@ -159,6 +169,7 @@ export const Book = () => {
                   )}
                   {isAvailable?.secondSitting ? (
                     <StyledButton
+                      className="sitting2"
                       color="white"
                       onClick={() => {
                         setSitting(2);
