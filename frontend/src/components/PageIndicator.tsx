@@ -1,5 +1,5 @@
-import { colors } from "../StyledComponents/mixins";
-import { FlexDiv } from "../StyledComponents/Wrappers";
+import { colors } from "./StyledComponents/mixins";
+import { FlexDiv } from "./StyledComponents/Wrappers";
 
 interface IPhase {
   phase: number;

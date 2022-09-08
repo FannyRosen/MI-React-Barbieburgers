@@ -2,18 +2,20 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ICustomer } from "../models/ICustomer";
 import { fetchCustomers } from "../services/handleCustomersFetch.service";
-import { Background } from "./StyledComponents/Background";
-import { colors } from "./StyledComponents/mixins";
-import { StyledButton } from "./StyledComponents/StyledButton";
-import { StyledLink, StyledP } from "./StyledComponents/TextElements";
-import { FlexDiv } from "./StyledComponents/Wrappers";
+import { Background } from "../components/StyledComponents/Background";
+import { colors } from "../components/StyledComponents/mixins";
+import { StyledButton } from "../components/StyledComponents/StyledButton";
+import {
+  StyledLink,
+  StyledP,
+} from "../components/StyledComponents/TextElements";
+import { FlexDiv } from "../components/StyledComponents/Wrappers";
 
 export const Customers = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchCustomers()
       .then((response) => {
         setCustomers(response.data);

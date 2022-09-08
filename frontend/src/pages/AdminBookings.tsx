@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
-import { IBooking } from "../../models/IBooking";
-import { ICustomer } from "../../models/ICustomer";
-import { fetchBookings } from "../../services/handleBookingsFetch.service";
-import { fetchCustomers } from "../../services/handleCustomersFetch.service";
-import { AdminBookingDetail } from "./AdminBookingDetails";
-import { Background } from "../StyledComponents/Background";
-import { Input } from "../StyledComponents/Form";
-import { colors } from "../StyledComponents/mixins";
-import { StyledHr, StyledLink } from "../StyledComponents/TextElements";
-import { FlexDiv } from "../StyledComponents/Wrappers";
-import { Loader } from "../partials/Loader";
+import { IBooking } from "../models/IBooking";
+import { ICustomer } from "../models/ICustomer";
+import { fetchBookings } from "../services/handleBookingsFetch.service";
+import { fetchCustomers } from "../services/handleCustomersFetch.service";
+import { AdminBookingDetail } from "../components/admin/AdminBookingDetails";
+import { Loader } from "../components/partials/Loader";
+import { Background } from "../components/StyledComponents/Background";
+import { Input } from "../components/StyledComponents/Form";
+import { colors } from "../components/StyledComponents/mixins";
+import {
+  StyledHr,
+  StyledLink,
+} from "../components/StyledComponents/TextElements";
+import { FlexDiv } from "../components/StyledComponents/Wrappers";
 
 export const AdminBookings = () => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [searchValue, setSearchValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchCustomers()
       .then(async (customerResponse) => {
         setCustomers(customerResponse.data);
