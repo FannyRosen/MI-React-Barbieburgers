@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { IBooking } from "../models/IBooking";
-import { deleteBooking } from "../services/handleBookingsFetch.service";
-import { StyledButton } from "./StyledComponents/StyledButton";
+import { IBooking } from "../../models/IBooking";
+import { deleteBooking } from "../../services/handleBookingsFetch.service";
+import { StyledButton } from "../StyledComponents/StyledButton";
 interface IDeleteButtons {
   booking: IBooking;
   guestPath: boolean;

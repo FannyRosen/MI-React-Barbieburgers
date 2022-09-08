@@ -1,9 +1,9 @@
 import React from "react";
 import Modal from "react-modal";
-import { colors } from "../StyledComponents/mixins";
-import { StyledButton } from "../StyledComponents/StyledButton";
-import { StyledLink, StyledP } from "../StyledComponents/TextElements";
-import { FlexDiv } from "../StyledComponents/Wrappers";
+import { colors } from "./StyledComponents/mixins";
+import { StyledButton } from "./StyledComponents/StyledButton";
+import { StyledLink, StyledP } from "./StyledComponents/TextElements";
+import { FlexDiv } from "./StyledComponents/Wrappers";
 
 const customStyles = {
   content: {
@@ -33,7 +33,7 @@ export const MyModal = () => {
   return (
     <>
       <div>
-        <input type="checkbox" />
+        <input type='checkbox' />
         <p>accept our terms and conditions to make your reservation</p>
         <p onClick={openModal}>here</p>
       </div>
@@ -44,19 +44,19 @@ export const MyModal = () => {
           style={customStyles}
         >
           <StyledLink to={"/"}>
-            <StyledButton onClick={closeModal} width="50px" height="30px">
+            <StyledButton onClick={closeModal} width='50px' height='30px'>
               Close
             </StyledButton>
           </StyledLink>
           <FlexDiv
-            width="90%"
-            dir="column"
-            tabletdir="column"
-            margin="20px"
-            gap="30px"
+            width='90%'
+            dir='column'
+            tabletdir='column'
+            margin='20px'
+            gap='30px'
           >
             <h2>We value your privacy</h2>
-            <StyledP fontsize="18px">
+            <StyledP fontsize='18px'>
               We and our partners are using technologies like Cookies or
               Targeting and process personal data like IP-address or browser
               information in order to personalize the advertisement you see.
@@ -68,13 +68,13 @@ export const MyModal = () => {
               change/withdraw your consent later by clicking on the settings
               button on the left lower corner of the page.
             </StyledP>
-            <FlexDiv gap="10px">
+            <FlexDiv gap='10px'>
               <StyledLink to={"/"}>
-                <StyledButton onClick={closeModal} width="150px" height="30px">
+                <StyledButton onClick={closeModal} width='150px' height='30px'>
                   DENY
                 </StyledButton>
               </StyledLink>
-              <StyledButton onClick={closeModal} width="150px" height="30px">
+              <StyledButton onClick={closeModal} width='150px' height='30px'>
                 ACCEPT AND CLOSE
               </StyledButton>
             </FlexDiv>
