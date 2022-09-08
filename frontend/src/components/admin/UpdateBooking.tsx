@@ -38,19 +38,6 @@ export const UpdateBooking = (props: IProps) => {
 
   useEffect(() => {
     setIsLoading(true);
-    const checkAvailable = async () => {
-      const isAvailableinDB = await checkAvailableSittings(
-        date,
-        numberOfPeople
-      );
-      setIsLoading(false);
-      setIsAvailable(isAvailableinDB);
-    };
-    checkAvailable();
-  }, [date, numberOfPeople]);
-
-  useEffect(() => {
-    setIsLoading(true);
     const getBooking = async () => {
       await fetchBookingByID(params.id!).then((booking) => {
         setExistingBooking(booking.data);
@@ -62,16 +49,32 @@ export const UpdateBooking = (props: IProps) => {
 
   const submitUpdatedBooking = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     let updateBooking = {
       date: new Date(date),
       numberOfPeople,
       sittingTime,
     };
-    console.log(date);
+    const checkAvailable = async () => {
+      const isAvailableinDB = await checkAvailableSittings(
+        date,
+        numberOfPeople
+      );
+      setIsAvailable(isAvailableinDB);
+    };
+    checkAvailable();
 
-    editBooking(params.id!, updateBooking).then(() => {
-      props.onClick();
-    });
+    if (
+      (sittingTime === 1 && isAvailable!.firstSitting === true) ||
+      (sittingTime === 2 && isAvailable!.secondSitting === true)
+    ) {
+      setIsLoading(false);
+      editBooking(params.id!, updateBooking).then(() => {
+        props.onClick();
+      });
+    } else {
+      setIsLoading(false);
+    }
   };
 
   const handleDateChange = async (e: Date) => {
@@ -122,14 +125,14 @@ export const UpdateBooking = (props: IProps) => {
               <option value="11">11</option>
               <option value="12">12</option>
             </StyledSelect>
-            {isAvailable!.firstSitting ? (
+            {isAvailable?.firstSitting ? (
               <></>
             ) : (
               <>
                 <StyledP>The time you have chosen is not available.</StyledP>
               </>
             )}
-            {isAvailable!.secondSitting ? (
+            {isAvailable?.secondSitting ? (
               <></>
             ) : (
               <>

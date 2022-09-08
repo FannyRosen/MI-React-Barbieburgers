@@ -25,8 +25,6 @@ export const put_bookingByIdController = async (
     const findCustomer = await CustomerModel.findOne(req.body.email);
     const findUpdatedBooking = await BookingModel.findOne(newBooking);
 
-    console.log(findUpdatedBooking);
-
     updatedBookingEmail(findUpdatedBooking, findCustomer);
 
     res.status(200).json({
