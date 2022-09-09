@@ -13,10 +13,9 @@ import { FlexDiv } from "../components/StyledComponents/Wrappers";
 
 export const Customers = () => {
   const [customers, setCustomers] = useState<ICustomer[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchCustomers()
       .then((response) => {
         setCustomers(response.data);
@@ -38,6 +37,9 @@ export const Customers = () => {
         padding="40px"
         gap="20px"
       >
+        <StyledLink to={"/admin"}>
+          <StyledButton>See all bookings</StyledButton>
+        </StyledLink>
         {customers.map((customers) => {
           return (
             <FlexDiv key={customers._id} gap="10px" dir="column">

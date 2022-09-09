@@ -52,7 +52,11 @@ export const AdminBookingDetail = (props: IBookingDetail) => {
                         color="black"
                         to={"/admin/" + booking._id}
                       >
-                        <StyledP weight="bolder" fontsize="16px">
+                        <StyledP
+                          weight="bolder"
+                          fontsize="16px"
+                          hover="pointer"
+                        >
                           Date: {date.toLocaleDateString()}
                         </StyledP>
                       </StyledLink>

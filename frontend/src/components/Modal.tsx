@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { colors } from "./StyledComponents/mixins";
 import { StyledButton } from "./StyledComponents/StyledButton";
@@ -18,38 +18,29 @@ const customStyles = {
   },
 };
 
-export const MyModal = () => {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+interface IOpen {
+  open: boolean;
+  setOpen(): void;
+}
+
+export const MyModal = (props: IOpen) => {
   Modal.setAppElement("#root");
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
 
   return (
     <>
-      <div>
-        <input type="checkbox" className="checkbox" />
-        <p>accept our terms and conditions to make your reservation</p>
-        <p onClick={openModal} className="openmodal">
-          here
-        </p>
-      </div>
       <FlexDiv background={colors.LightPink}>
         <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
+          isOpen={props.open}
+          onRequestClose={() => props.setOpen()}
           style={customStyles}
         >
-          <StyledLink to={"/"}>
-            <StyledButton onClick={closeModal} width="50px" height="30px">
-              Close
-            </StyledButton>
-          </StyledLink>
+          <StyledButton
+            onClick={() => props.setOpen()}
+            width="50px"
+            height="30px"
+          >
+            Close
+          </StyledButton>
           <FlexDiv
             width="90%"
             dir="column"
@@ -71,18 +62,12 @@ export const MyModal = () => {
               button on the left lower corner of the page.
             </StyledP>
             <FlexDiv gap="10px">
-              <StyledLink to={"/"}>
-                <StyledButton onClick={closeModal} width="150px" height="30px">
-                  DENY
-                </StyledButton>
-              </StyledLink>
               <StyledButton
-                className="accept"
-                onClick={closeModal}
+                onClick={() => props.setOpen()}
                 width="150px"
                 height="30px"
               >
-                ACCEPT AND CLOSE
+                OK
               </StyledButton>
             </FlexDiv>
           </FlexDiv>

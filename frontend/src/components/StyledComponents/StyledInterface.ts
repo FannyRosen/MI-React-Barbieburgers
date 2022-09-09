@@ -39,4 +39,6 @@ export interface IStylingProps {
   weight?: string;
   textDecoration?: string;
   display?: string;
+  decor?: string;
+  hover?: string;
 }

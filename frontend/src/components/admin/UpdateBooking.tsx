@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { bookingsDefaultValue, IBooking } from "../../models/IBooking";
 import {
@@ -6,7 +6,6 @@ import {
   fetchBookingByID,
 } from "../../services/handleBookingsFetch.service";
 import { checkAvailableSittings, ISittings } from "../../services/utils";
-import { MyCalendar } from "../Calendar";
 import { Form, Input, Label } from "../StyledComponents/Form";
 import {
   StyledLabel,
@@ -14,6 +13,8 @@ import {
   StyledSelect,
 } from "../StyledComponents/TextElements";
 import { FlexDiv } from "../StyledComponents/Wrappers";
+import { Controller, useForm } from "react-hook-form";
+import Calendar from "react-calendar";
 
 interface IProps {
   onClick(): void;
@@ -22,70 +23,84 @@ interface IProps {
 export const UpdateBooking = (props: IProps) => {
   const [existingBooking, setExistingBooking] =
     useState<IBooking>(bookingsDefaultValue);
-  const [date, setDate] = useState(new Date());
-  const [numberOfPeople, setNOP] = useState<number>(1);
-  const [sittingTime, setSittingTime] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAvailable, setIsAvailable] = useState<ISittings>();
+  const [isAvailable, setIsAvailable] = useState<ISittings>({
+    firstSitting: true,
+    secondSitting: true,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
 
-  useEffect(() => {
-    setDate(existingBooking.date);
-    setNOP(existingBooking.numberOfPeople);
-    setSittingTime(existingBooking.sittingTime);
-  }, [existingBooking]);
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
 
+  //Hämtar bokning
   useEffect(() => {
-    setIsLoading(true);
     const getBooking = async () => {
       await fetchBookingByID(params.id!).then((booking) => {
         setExistingBooking(booking.data);
-        setIsLoading(false);
       });
     };
     getBooking();
   }, []);
 
-  const submitUpdatedBooking = async (e: FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    let updateBooking = {
-      date: new Date(date),
-      numberOfPeople,
-      sittingTime,
-    };
-    const checkAvailable = async () => {
-      const isAvailableinDB = await checkAvailableSittings(
-        date,
-        numberOfPeople
-      );
-      setIsAvailable(isAvailableinDB);
-    };
-    checkAvailable();
-
+  // sätter defaultvärde i formuläret enligt existerande bokning
+  useEffect(() => {
     if (
-      (sittingTime === 1 && isAvailable!.firstSitting === true) ||
-      (sittingTime === 2 && isAvailable!.secondSitting === true)
+      existingBooking.numberOfPeople !== 0 &&
+      existingBooking.sittingTime !== 0
     ) {
-      setIsLoading(false);
-      editBooking(params.id!, updateBooking).then(() => {
-        props.onClick();
-      });
-    } else {
+      reset([
+        { date: new Date(existingBooking.date) },
+        { sittingTime: existingBooking.sittingTime },
+        { numberOfPeple: existingBooking.numberOfPeople },
+      ]);
       setIsLoading(false);
     }
-  };
+  }, [existingBooking]);
 
-  const handleDateChange = async (e: Date) => {
-    setDate(e);
-  };
+  // Sparar ny bokning med eventuella ändringar
+  const onSubmit = (data: any) => {
+    setIsLoading(true);
+    let isTheSame = false;
+    const checkAvailable = async () => {
+      if (existingBooking.date === data.date && existingBooking.sittingTime) {
+        isTheSame = true;
+        console.log("true");
+      }
 
-  const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNOP(parseInt(e.currentTarget.value));
-  };
-  const handleSittingTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSittingTime(parseInt(e.currentTarget.value));
+      const isAvailableinDB = await checkAvailableSittings(
+        isTheSame,
+        data.date as Date,
+        data.numberOfPeople as number
+      );
+      console.log(isAvailableinDB);
+
+      if (
+        (data.sittingTime === "1" && isAvailableinDB.firstSitting === true) ||
+        (data.sittingTime === "2" && isAvailableinDB.secondSitting === true)
+      ) {
+        console.log("här är vi");
+
+        let newBooking: IBooking = {
+          date: data.date,
+          sittingTime: data.sittingTime,
+          numberOfPeople: data.numberOfPeople,
+        };
+        editBooking(params.id!, newBooking).then(() => {
+          props.onClick();
+        });
+      } else {
+        setIsAvailable(isAvailableinDB);
+        setIsLoading(false);
+      }
+    };
+    checkAvailable();
   };
 
   return (
@@ -93,60 +108,83 @@ export const UpdateBooking = (props: IProps) => {
       {isLoading ? (
         <></>
       ) : (
-        <Form onSubmit={submitUpdatedBooking}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <FlexDiv dir="column" gap="10px">
             <StyledLabel>Choose a date</StyledLabel>
-            <MyCalendar
-              handleDate={handleDateChange}
-              defaultDate={existingBooking.date}
-            />
+            <FlexDiv width="300px" tabletwidth="500px">
+              <Controller
+                control={control}
+                name="date"
+                render={({ field: { onChange } }) => (
+                  <Calendar
+                    onChange={onChange}
+                    maxDate={new Date("2023-12-31")}
+                    defaultValue={new Date(existingBooking.date)}
+                  />
+                )}
+              />
+            </FlexDiv>
+
+            {errors.date && (
+              <StyledP fontsize="24px" color="red">
+                Pick a date &#11105;
+              </StyledP>
+            )}
+
             <Label>Number of people</Label>
             <StyledSelect
-              required
-              name="numberOfPeople"
-              onChange={handleNOPChange}
+              {...register("numberOfPeople", {
+                min: 1,
+                max: 12,
+              })}
               defaultValue={existingBooking.numberOfPeople}
             >
-              <option disabled value="0">
+              <option disabled value={0}>
                 0
               </option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+              <option value={6}>6</option>
+              <option value={7}>7</option>
+              <option value={8}>8</option>
+              <option value={9}>9</option>
+              <option value={10}>10</option>
+              <option value={11}>11</option>
+              <option value={12}>12</option>
             </StyledSelect>
-            {isAvailable?.firstSitting ? (
-              <></>
-            ) : (
-              <>
-                <StyledP>The time you have chosen is not available.</StyledP>
-              </>
+            {errors.numberOfPeople && (
+              <StyledP fontsize="24px" color="red">
+                Pick number of people &#11105;
+              </StyledP>
             )}
-            {isAvailable?.secondSitting ? (
-              <></>
-            ) : (
-              <>
-                <StyledP>The time you have chosen is not available.</StyledP>
-              </>
-            )}
+            <Label>Sitting time:</Label>
             <StyledSelect
-              required
-              name="sittingTime"
-              onChange={handleSittingTimeChange}
+              {...register("sittingTime")}
               defaultValue={existingBooking.sittingTime}
             >
               <option value={1}>6.00 pm</option>
               <option value={2}>9.00 pm</option>
             </StyledSelect>
-            <Input type="submit" value={"update"} />
+            {errors.sittingTime && (
+              <StyledP color="red" fontsize="24px">
+                Choose a sitting time &#11105;
+              </StyledP>
+            )}
+
+            <Input type="submit" value={"Update booking"} />
+            {isAvailable?.firstSitting ? (
+              <></>
+            ) : (
+              <StyledP>The time you have chosen is not available</StyledP>
+            )}
+            {isAvailable?.secondSitting ? (
+              <></>
+            ) : (
+              <StyledP>The time you have chosen is not available</StyledP>
+            )}
           </FlexDiv>
         </Form>
       )}

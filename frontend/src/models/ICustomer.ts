@@ -30,3 +30,9 @@ export interface IFormCustomer {
   email: string;
   phone: string;
 }
+
+export const formCustomersDefaultValue: IFormCustomer = {
+  name: "",
+  email: "",
+  phone: "",
+};

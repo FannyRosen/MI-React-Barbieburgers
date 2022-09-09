@@ -19,12 +19,11 @@ export const Customer = () => {
   const [customerById, setCustomerById] = useState<ICustomer>(
     customersDefaultValue
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
 
   useEffect(() => {
-    setIsLoading(true);
     fetchCustomerByID(params.id!).then((response) => {
       setCustomerById(response.data);
       setIsLoading(false);
@@ -46,6 +45,9 @@ export const Customer = () => {
             <Loader />
           ) : (
             <>
+              <StyledButton width="100px">
+                <StyledLink to={"/admin"}>GO BACK</StyledLink>
+              </StyledButton>
               <StyledP fontsize="18px" padding="20px">
                 {customerById.name}
               </StyledP>

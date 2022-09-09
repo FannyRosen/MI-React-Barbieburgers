@@ -13,15 +13,15 @@ import {
 } from "../components/StyledComponents/TextElements";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 import { Loader } from "../components/Loader";
+import { StyledButton } from "../components/StyledComponents/StyledButton";
 
 export const AdminBookings = () => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [searchValue, setSearchValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchCustomers()
       .then(async (customerResponse) => {
         setCustomers(customerResponse.data);
@@ -48,6 +48,9 @@ export const AdminBookings = () => {
           <Loader />
         ) : (
           <>
+            <StyledLink to={"/admin/customers"}>
+              <StyledButton>See all customers</StyledButton>
+            </StyledLink>
             <Input
               id="input"
               type="text"

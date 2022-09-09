@@ -17,7 +17,7 @@ export const SingleBooking = () => {
   const [booking, setBooking] = useState<IBooking>(bookingsDefaultValue);
   const [customer, setCustomer] = useState<ICustomer>(customersDefaultValue);
   const [inEdit, setInEdit] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
   const location = useLocation();
@@ -25,7 +25,6 @@ export const SingleBooking = () => {
   const guestPath = location.pathname === "/reservation/" + params.id;
 
   useEffect(() => {
-    setIsLoading(true);
     const getBooking = async () => {
       const bookingResponse = await fetchBookingByID(params.id!);
       setBooking(bookingResponse.data);
@@ -35,7 +34,6 @@ export const SingleBooking = () => {
   }, [inEdit]);
 
   useEffect(() => {
-    setIsLoading(true);
     if (booking._id !== "") {
       fetchCustomerByID(booking.clientId!.toString()).then(
         async (customerByIdResponse) => {

@@ -1,10 +1,9 @@
+import { useState } from "react";
 import { colors } from "../components/StyledComponents/mixins";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 import { StyledButton } from "../components/StyledComponents/StyledButton";
-import { FormEvent, useState } from "react";
 import { PageIndicator } from "../components/PageIndicator";
 import { useNavigate } from "react-router-dom";
-import { IFormCustomer } from "../models/ICustomer";
 import { postBooking } from "../services/handleBookingsFetch.service";
 import { Loader } from "../components/Loader";
 import {
@@ -15,77 +14,57 @@ import {
 import { Form, Input, Label } from "../components/StyledComponents/Form";
 import { Background } from "../components/StyledComponents/Background";
 import { MyModal } from "../components/Modal";
-import { MyCalendar } from "../components/Calendar";
 import { checkAvailableSittings, ISittings } from "../services/utils";
-/* import { useForm } from "react-hook-form";
- */
+import { Controller, useForm } from "react-hook-form";
+import Calendar from "react-calendar";
+
 export const Book = () => {
   const [phase, setPhase] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [numberOfPeople, setNOP] = useState<number>(0);
-  const [customerInfo, setCustomerInfo] = useState<IFormCustomer>({
-    name: "",
-    email: "",
-    phone: "",
-  });
   const [isAvailable, setIsAvailable] = useState<ISittings>();
   const [sitting, setSitting] = useState(0);
-  const [error, setError] = useState("none");
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
-  /*   const {
+  const {
     register,
     handleSubmit,
+    control,
     watch,
     formState: { errors },
-  } = useForm(); */
+  } = useForm();
 
-  const checkDate = async () => {
-    if (numberOfPeople !== 0) {
-      setIsLoading(true);
+  const [date, numberOfPeople] = watch(["date", "numberOfPeople"]);
+
+  const onFirstSubmit = (data: any) => {
+    setIsLoading(true);
+    const checkAvailable = async () => {
       const isAvailableinDB = await checkAvailableSittings(
-        new Date(date),
-        numberOfPeople
+        false,
+        data.date,
+        data.numberOfPeople
       );
       setIsAvailable(isAvailableinDB);
-      setIsLoading(false);
-      setPhase(2);
-    } else {
-      setError("block");
-    }
+    };
+    checkAvailable();
+    setPhase(2);
+    setIsLoading(false);
   };
 
-  const handleDateChange = async (e: Date) => {
-    setDate(e);
-  };
-
-  const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNOP(parseInt(e.currentTarget.value));
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInfo((customerInfo) => ({
-      ...customerInfo,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const completeBooking = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSecondSubmit = async (data: any) => {
     let booking = {
       date: new Date(date),
       sittingTime: sitting,
-      email: customerInfo.email,
+      email: data.email,
       numberOfPeople: numberOfPeople,
-      name: customerInfo.name,
-      phone: customerInfo.phone,
+      name: data.name,
+      phone: data.phone,
       id: "",
     };
     setIsLoading(true);
     postBooking(booking)
-      .then((data) => {
-        booking.id = data.data._id!;
+      .then((resData) => {
+        booking.id = resData.data._id!;
         setIsLoading(false);
         navigate("/thankyou", { state: booking });
       })
@@ -96,38 +75,54 @@ export const Book = () => {
 
   return (
     <Background>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <FlexDiv
-          borderRadius="10px"
-          background={colors.LightPink}
-          width="80%"
-          height="min-content"
-          dir="column"
-        >
+      <FlexDiv
+        borderRadius="10px"
+        background={colors.LightPink}
+        width="80%"
+        height="min-content"
+        dir="column"
+      >
+        {isLoading ? (
+          <FlexDiv height="300px">
+            <Loader />
+          </FlexDiv>
+        ) : (
           <FlexDiv dir="column" padding="40px">
             {phase === 1 && (
               <>
                 <h2>Book a table</h2>
-                <Form
-                  onSubmit={(e: FormEvent) => {
-                    checkDate();
-                    e.preventDefault();
-                  }}
-                >
+                <Form onSubmit={handleSubmit(onFirstSubmit)}>
                   <FlexDiv dir="column" gap="10px">
                     <StyledLabel>Choose a date</StyledLabel>
-                    <MyCalendar handleDate={handleDateChange} />
+                    <FlexDiv width="300px" tabletwidth="500px">
+                      <Controller
+                        control={control}
+                        name="date"
+                        rules={{ required: true }}
+                        render={({ field: { onChange } }) => (
+                          <Calendar
+                            onChange={onChange}
+                            minDate={new Date()}
+                            maxDate={new Date("2023-12-31")}
+                          />
+                        )}
+                      />
+                    </FlexDiv>
+
+                    {errors.date && (
+                      <StyledP fontsize="18px" color="red">
+                        Pick a date &#11105;
+                      </StyledP>
+                    )}
 
                     <Label>Number of people</Label>
-
                     <StyledSelect
-                      required
-                      name="numberOfPeople"
-                      onChange={handleNOPChange}
+                      {...register("numberOfPeople", {
+                        required: true,
+                        min: 1,
+                        max: 12,
+                      })}
                       defaultValue="0"
-                      className="nop"
                     >
                       <option disabled value="0">
                         0
@@ -145,7 +140,11 @@ export const Book = () => {
                       <option value="11">11</option>
                       <option value="12">12</option>
                     </StyledSelect>
-
+                    {errors.numberOfPeople && (
+                      <StyledP fontsize="18px" color="red">
+                        Pick number of people &#11105;
+                      </StyledP>
+                    )}
                     <FlexDiv width="200px" tabletwidth="400px" margin="0 30px">
                       <StyledP fontsize="15px">
                         Maximum per table: 6 <br />
@@ -153,18 +152,14 @@ export const Book = () => {
                         between tables
                       </StyledP>
                     </FlexDiv>
-                    <Input
-                      type="submit"
-                      value={"Check availability"}
-                      className="checkavailability"
-                    />
+                    <Input type="submit" value={"Check availability"} />
                   </FlexDiv>
                 </Form>
               </>
             )}
             {phase === 2 && (
               <>
-                <h2 className="h2">Available sittings</h2>
+                <h2>Available sittings</h2>
                 <FlexDiv dir="column" margin="0 0 20px 0">
                   <StyledP fontsize="15px">
                     Your booking: <br />
@@ -175,7 +170,6 @@ export const Book = () => {
                 <FlexDiv gap="10px" dir="column">
                   {isAvailable?.firstSitting ? (
                     <StyledButton
-                      className="sitting1"
                       color="white"
                       onClick={() => {
                         setSitting(1);
@@ -189,7 +183,6 @@ export const Book = () => {
                   )}
                   {isAvailable?.secondSitting ? (
                     <StyledButton
-                      className="sitting2"
                       color="white"
                       onClick={() => {
                         setSitting(2);
@@ -217,43 +210,87 @@ export const Book = () => {
                   </StyledP>
                 </FlexDiv>
 
-                <Form onSubmit={completeBooking}>
+                <Form onSubmit={handleSubmit(onSecondSubmit)}>
                   <FlexDiv dir="column">
                     <Label>Name:</Label>
                     <input
-                      required
-                      onChange={handleChange}
+                      {...register("name", {
+                        required: true,
+                        minLength: 1,
+                        maxLength: 40,
+                      })}
                       type="text"
-                      name="name"
-                      className="name"
-                    />
+                    />{" "}
+                    {errors.name && (
+                      <StyledP fontsize="18px" color="red">
+                        Submit your name &#11105;
+                      </StyledP>
+                    )}
                     <Label>Email:</Label>
                     <input
-                      required
-                      onChange={handleChange}
+                      {...register("email", {
+                        required: true,
+                      })}
                       type="email"
-                      name="email"
-                      className="email"
                     />
+                    {errors.email && (
+                      <StyledP fontsize="18px" color="red">
+                        Submit your email &#11105;
+                      </StyledP>
+                    )}
                     <Label>Phone number:</Label>
                     <input
-                      required
-                      onChange={handleChange}
                       type="number"
-                      name="phone"
-                      className="phone"
+                      {...register("phone", {
+                        required: true,
+                        minLength: 9,
+                        maxLength: 12,
+                      })}
                     />
-
-                    <MyModal></MyModal>
-
-                    <Input className="book" type="submit" value={"book"} />
+                    {errors.phone && (
+                      <StyledP fontsize="18px" color="red">
+                        Submit your phone number &#11105;
+                      </StyledP>
+                    )}
+                    <FlexDiv margin="10px">
+                      <Label>
+                        <StyledP fontsize="18px">Accept our&nbsp;</StyledP>
+                        <StyledP
+                          hover="pointer"
+                          decor="underline"
+                          fontsize="18px"
+                          onClick={() => setOpen(true)}
+                        >
+                          {" "}
+                          GDPR policy
+                        </StyledP>
+                        <input
+                          type="checkbox"
+                          {...register("checkbox", {
+                            required: true,
+                            minLength: 9,
+                            maxLength: 12,
+                          })}
+                        />
+                      </Label>
+                    </FlexDiv>
+                    {errors.checkbox && (
+                      <StyledP fontsize="18px" color="red">
+                        Accept the terms to continue &#11105;
+                      </StyledP>
+                    )}
+                    <MyModal
+                      open={open}
+                      setOpen={() => setOpen(false)}
+                    ></MyModal>
+                    <Input type="submit" value={"book"} />
                   </FlexDiv>
                 </Form>
               </>
             )}
             <FlexDiv dir="column" margin="40px 0 0 0 ">
               <PageIndicator phase={phase} />
-              {phase == 1 ? (
+              {phase === 1 ? (
                 <></>
               ) : (
                 <StyledButton width="90px" onClick={() => setPhase(1)}>
@@ -262,8 +299,8 @@ export const Book = () => {
               )}
             </FlexDiv>
           </FlexDiv>
-        </FlexDiv>
-      )}
+        )}
+      </FlexDiv>
     </Background>
   );
 };
