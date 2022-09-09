@@ -2,11 +2,11 @@ import { colors } from "../components/StyledComponents/mixins";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 import { StyledButton } from "../components/StyledComponents/StyledButton";
 import { FormEvent, useState } from "react";
-import { PageIndicator } from "../components/partials/PageIndicator";
+import { PageIndicator } from "../components/PageIndicator";
 import { useNavigate } from "react-router-dom";
 import { IFormCustomer } from "../models/ICustomer";
 import { postBooking } from "../services/handleBookingsFetch.service";
-import { Loader } from "../components/partials/Loader";
+import { Loader } from "../components/Loader";
 import {
   StyledLabel,
   StyledP,
@@ -14,8 +14,8 @@ import {
 } from "../components/StyledComponents/TextElements";
 import { Form, Input, Label } from "../components/StyledComponents/Form";
 import { Background } from "../components/StyledComponents/Background";
-import { MyModal } from "../components/partials/Modal";
-import { MyCalendar } from "../components/partials/Calendar";
+import { MyModal } from "../components/Modal";
+import { MyCalendar } from "../components/Calendar";
 import { checkAvailableSittings, ISittings } from "../services/utils";
 /* import { useForm } from "react-hook-form";
  */
@@ -225,6 +225,7 @@ export const Book = () => {
                       onChange={handleChange}
                       type="text"
                       name="name"
+                      className="name"
                     />
                     <Label>Email:</Label>
                     <input
@@ -232,6 +233,7 @@ export const Book = () => {
                       onChange={handleChange}
                       type="email"
                       name="email"
+                      className="email"
                     />
                     <Label>Phone number:</Label>
                     <input
@@ -239,11 +241,12 @@ export const Book = () => {
                       onChange={handleChange}
                       type="number"
                       name="phone"
+                      className="phone"
                     />
 
                     <MyModal></MyModal>
 
-                    <Input type="submit" value={"book"} />
+                    <Input className="book" type="submit" value={"book"} />
                   </FlexDiv>
                 </Form>
               </>
