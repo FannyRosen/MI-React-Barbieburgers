@@ -69,7 +69,11 @@ export const UpdateBooking = (props: IProps) => {
     setIsLoading(true);
     let isTheSame = false;
     const checkAvailable = async () => {
-      if (existingBooking.date === data.date && existingBooking.sittingTime) {
+      //kollar om bokningen har samma datum och sittning
+      if (
+        new Date(existingBooking.date).getTime() ==
+        new Date(data.date).getTime()
+      ) {
         isTheSame = true;
         console.log("true");
       }

@@ -8,7 +8,7 @@ interface IBookingDetail {
   bookings: IBooking[];
 }
 
-export const AdminBookingDetail = (props: IBookingDetail) => {
+export const AdminBookingDetails = (props: IBookingDetail) => {
   const [openBookings, setOpenBookings] = useState(false);
 
   return (

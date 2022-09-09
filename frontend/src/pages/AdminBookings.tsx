@@ -3,7 +3,7 @@ import { IBooking } from "../models/IBooking";
 import { ICustomer } from "../models/ICustomer";
 import { fetchBookings } from "../services/handleBookingsFetch.service";
 import { fetchCustomers } from "../services/handleCustomersFetch.service";
-import { AdminBookingDetail } from "../components/admin/AdminBookingDetails";
+import { AdminBookingDetails } from "../components/admin/AdminBookingDetails";
 import { Loader } from "../components/partials/Loader";
 import { Background } from "../components/StyledComponents/Background";
 import { Input } from "../components/StyledComponents/Form";
@@ -85,12 +85,12 @@ export const AdminBookings = () => {
                           <h4>{customer.name}</h4>
                         </StyledLink>
 
-                        <AdminBookingDetail
+                        <AdminBookingDetails
                           bookings={bookings.filter(
                             (booking) =>
                               booking.clientId!.toString() === customer._id
                           )}
-                        ></AdminBookingDetail>
+                        ></AdminBookingDetails>
                       </FlexDiv>
                     </FlexDiv>
                   </FlexDiv>

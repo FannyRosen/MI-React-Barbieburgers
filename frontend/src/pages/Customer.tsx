@@ -23,6 +23,7 @@ export const Customer = () => {
 
   let params = useParams();
 
+  //Hämtar customer
   useEffect(() => {
     fetchCustomerByID(params.id!).then((response) => {
       setCustomerById(response.data);

@@ -36,6 +36,7 @@ export const Book = () => {
 
   const [date, numberOfPeople] = watch(["date", "numberOfPeople"]);
 
+  // Kontrollerar valt datum och sittning i Databasen
   const onFirstSubmit = (data: any) => {
     setIsLoading(true);
     const checkAvailable = async () => {
@@ -51,6 +52,7 @@ export const Book = () => {
     setIsLoading(false);
   };
 
+  // Genomför bokning
   const onSecondSubmit = async (data: any) => {
     let booking = {
       date: new Date(date),
