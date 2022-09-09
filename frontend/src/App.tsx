@@ -4,36 +4,45 @@ import { Layout } from "./pages/Layout";
 import { NotFound } from "./pages/NotFound";
 import { Home } from "./pages/Home";
 import { Contact } from "./pages/Contact";
-import { FoodMenu } from "./pages/FoodMenu";
 import { ThankYou } from "./pages/ThankYou";
 import { Book } from "./pages/Book";
-import { SingleBooking } from "./components/SingleBooking";
-import { Customers } from "./components/Customers";
-import { Customer } from "./components/Customer";
-import { AdminBookings } from "./components/AdminBooking";
+import { SingleBooking } from "./pages/SingleBooking";
+import { Customers } from "./pages/Customers";
+import { Customer } from "./pages/Customer";
+import { AdminBookings } from "./pages/AdminBookings";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path='/menu' element={<FoodMenu />} />
-            <Route path='/contact' element={<Contact />} />
-            <Route path='/book' element={<Book />} />
-            <Route path='/thankyou' element={<ThankYou />} />
-            <Route path='/admin'>
-              <Route index element={<AdminBookings />} />
-              <Route path=':id' element={<SingleBooking />} />
+        <ScrollToTop>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />}></Route>
+              <Route path="/contact" element={<Contact />}></Route>
+              <Route path="/book" element={<Book />}></Route>
+              <Route path="/thankyou" element={<ThankYou />}></Route>
+
+              <Route path="/admin">
+                <Route index element={<AdminBookings />}></Route>
+                <Route path=":id" element={<SingleBooking />}></Route>
+              </Route>
+
+              <Route path="/admin/customers">
+                <Route index element={<Customers />}></Route>
+                <Route path=":id" element={<Customer />}></Route>
+              </Route>
+
+              <Route
+                path="/reservation/:id"
+                element={<SingleBooking />}
+              ></Route>
+
+              <Route path="*" element={<NotFound />}></Route>
             </Route>
-            <Route path='/admin/customers'>
-              <Route index element={<Customers />} />
-              <Route path=':id' element={<Customer />} />
-            </Route>
-            <Route path='*' element={<NotFound />} />
-          </Route>
-        </Routes>
+          </Routes>
+        </ScrollToTop>
       </BrowserRouter>
     </>
   );

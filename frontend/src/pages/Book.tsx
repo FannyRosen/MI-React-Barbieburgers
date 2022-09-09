@@ -1,201 +1,186 @@
+import { useState } from "react";
 import { colors } from "../components/StyledComponents/mixins";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
 import { StyledButton } from "../components/StyledComponents/StyledButton";
-import { useEffect, useState } from "react";
-import { PageIndicator } from "../components/partials/PageIndicator";
+import { PageIndicator } from "../components/PageIndicator";
 import { useNavigate } from "react-router-dom";
-import { IFormCustomer } from "../models/ICustomer";
+import { postBooking } from "../services/handleBookingsFetch.service";
+import { Loader } from "../components/Loader";
 import {
-  fetchBookings,
-  postBooking,
-} from "../services/handleBookingsFetch.service";
-import { Loader } from "../components/partials/Loader";
-import { StyledLabel } from "../components/StyledComponents/TextElements";
+  StyledLabel,
+  StyledP,
+  StyledSelect,
+} from "../components/StyledComponents/TextElements";
 import { Form, Input, Label } from "../components/StyledComponents/Form";
 import { Background } from "../components/StyledComponents/Background";
+import { MyModal } from "../components/Modal";
+import { checkAvailableSittings, ISittings } from "../services/utils";
+import { Controller, useForm } from "react-hook-form";
+import Calendar from "react-calendar";
 
 export const Book = () => {
   const [phase, setPhase] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [date, setDate] = useState<Date>(new Date());
-  const [numberOfPeople, setNOP] = useState<number>(0);
-  const [customerInfo, setCustomerInfo] = useState<IFormCustomer>({
-    name: "",
-    email: "",
-    phone: "",
-  });
-  const [arrayFirstSitting, setArrayFirstSitting] = useState<IArrayOfDates[]>(
-    []
-  );
-  const [firstIsAvailable, setFirstIsAvailable] = useState(false);
-  const [secondIsAvailable, setSecondIsAvailable] = useState(false);
-
-  const [arraySecondSitting, setArraySecondSitting] = useState<IArrayOfDates[]>(
-    []
-  );
+  const [isAvailable, setIsAvailable] = useState<ISittings>();
   const [sitting, setSitting] = useState(0);
+  const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
-  const curr = new Date();
-  curr.setDate(curr.getDate());
-  const inputDate = curr.toISOString().substring(0, 10);
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm();
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(new Date(e.target.value));
-  };
+  const [date, numberOfPeople] = watch(["date", "numberOfPeople"]);
 
-  const handleNOPChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNOP(parseInt(e.currentTarget.value));
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerInfo((customerInfo) => ({
-      ...customerInfo,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  interface IArrayOfDates {
-    date: Date;
-  }
-
-  const checkDate = () => {
+  // Kontrollerar valt datum och sittning i Databasen
+  const onFirstSubmit = (data: any) => {
     setIsLoading(true);
-    fetchBookings()
-      .then(async (response) => {
-        for (let i = 0; i < response.data.length; i++) {
-          let dbDate = new Date(response.data[i].date);
-          if (dbDate.getTime() == date.getTime()) {
-            //if same date is found - check sittings
-            if (response.data[i].sittingTime === 1) {
-              setArrayFirstSitting((arrayFirstSitting) => [
-                ...arrayFirstSitting,
-                { date: dbDate },
-              ]);
-            }
-            if (response.data[i].sittingTime === 2) {
-              setArraySecondSitting((arraySecondSitting) => [
-                ...arraySecondSitting,
-                { date: dbDate },
-              ]);
-            }
-          }
-        }
-
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    const checkAvailable = async () => {
+      const isAvailableinDB = await checkAvailableSittings(
+        false,
+        data.date,
+        data.numberOfPeople
+      );
+      setIsAvailable(isAvailableinDB);
+    };
+    checkAvailable();
     setPhase(2);
+    setIsLoading(false);
   };
 
-  useEffect(() => {
-    if (arrayFirstSitting.length >= 2) {
-      setFirstIsAvailable(false);
-    } else if (arrayFirstSitting.length <= 2) {
-      setFirstIsAvailable(true);
-    }
-    if (arraySecondSitting.length >= 2) {
-      setSecondIsAvailable(false);
-    } else if (arraySecondSitting.length <= 2) {
-      setSecondIsAvailable(true);
-    }
-  }, [arrayFirstSitting, arraySecondSitting, phase]);
-
-  const completeBooking = () => {
-    postBooking({
-      date,
+  // Genomför bokning
+  const onSecondSubmit = async (data: any) => {
+    let booking = {
+      date: new Date(date),
       sittingTime: sitting,
-      numberOfPeople,
-      name: customerInfo.name,
-      email: customerInfo.email,
-      phone: customerInfo.phone,
-    }).then((data) => {
-      console.log(data.data);
-    });
-    navigate("/thankyou");
+      email: data.email,
+      numberOfPeople: numberOfPeople,
+      name: data.name,
+      phone: data.phone,
+      id: "",
+    };
+    setIsLoading(true);
+    postBooking(booking)
+      .then((resData) => {
+        booking.id = resData.data._id!;
+        setIsLoading(false);
+        navigate("/thankyou", { state: booking });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (
     <Background>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <FlexDiv
-          borderRadius='10px'
-          background={colors.LightPink}
-          width='80%'
-          height='min-content'
-          dir='column'
-        >
-          <FlexDiv dir='column' padding='40px'>
+      <FlexDiv
+        borderRadius="10px"
+        background={colors.LightPink}
+        width="80%"
+        height="min-content"
+        dir="column"
+      >
+        {isLoading ? (
+          <FlexDiv height="300px">
+            <Loader />
+          </FlexDiv>
+        ) : (
+          <FlexDiv dir="column" padding="40px" className="bookingContainer">
             {phase === 1 && (
               <>
                 <h2>Book a table</h2>
                 <Form
-                  onSubmit={() => {
-                    if (numberOfPeople != 0) {
-                      checkDate();
-                    } else {
-                      console.log("error");
-                    }
-                  }}
+                  className="bookingform"
+                  onSubmit={handleSubmit(onFirstSubmit)}
                 >
-                  <FlexDiv dir='column' gap='10px'>
+                  <FlexDiv dir="column" gap="10px">
                     <StyledLabel>Choose a date</StyledLabel>
-                    <input
-                      required
-                      onChange={handleDateChange}
-                      id='date'
-                      type='date'
-                      name='date'
-                      defaultValue={""}
-                      min={inputDate}
-                      max={"2023-12-31"}
-                    />
+                    <FlexDiv width="300px" tabletwidth="500px">
+                      <Controller
+                        control={control}
+                        name="date"
+                        rules={{ required: true }}
+                        render={({ field: { onChange } }) => (
+                          <Calendar
+                            onChange={onChange}
+                            minDate={new Date()}
+                            maxDate={new Date("2023-12-31")}
+                          />
+                        )}
+                      />
+                    </FlexDiv>
+
+                    {errors.date && (
+                      <StyledP fontsize="18px" color="red">
+                        Pick a date &#11105;
+                      </StyledP>
+                    )}
 
                     <Label>Number of people</Label>
-                    <select
-                      required
-                      id='date'
-                      name='date'
-                      onChange={handleNOPChange}
-                      defaultValue='0'
+                    <StyledSelect
+                      className="nop"
+                      {...register("numberOfPeople", {
+                        required: true,
+                        min: 1,
+                        max: 12,
+                      })}
+                      defaultValue="0"
                     >
-                      <option disabled value='0'>
+                      <option disabled value="0">
                         0
                       </option>
-                      <option value='1'>1</option>
-                      <option value='2'>2</option>
-                      <option value='3'>3</option>
-                      <option value='4'>4</option>
-                      <option value='5'>5</option>
-                      <option value='6'>6</option>
-                      <option value='7'>7</option>
-                      <option value='8'>8</option>
-                      <option value='9'>9</option>
-                      <option value='10'>10</option>
-                      <option value='11'>11</option>
-                      <option value='12'>12</option>
-                    </select>
-                    <p>
-                      Maximum per table: 6 <br />
-                      If you are more than 6 people you will be divided between
-                      tables
-                    </p>
-                    <Input type='submit' value={"Check availability"} />
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                    </StyledSelect>
+                    {errors.numberOfPeople && (
+                      <StyledP fontsize="18px" color="red">
+                        Pick number of people &#11105;
+                      </StyledP>
+                    )}
+                    <FlexDiv width="200px" tabletwidth="400px" margin="0 30px">
+                      <StyledP fontsize="15px">
+                        Maximum per table: 6 <br />
+                        If you are more than 6 people you will be divided
+                        between tables
+                      </StyledP>
+                    </FlexDiv>
+                    <Input
+                      type="submit"
+                      value={"Check availability"}
+                      className="checkavailability"
+                    />
                   </FlexDiv>
                 </Form>
               </>
             )}
             {phase === 2 && (
               <>
-                <h2>Available sittings</h2>
-                <FlexDiv gap='10px' dir='column'>
-                  {firstIsAvailable ? (
+                <h2 className="h2">Available sittings</h2>
+                <FlexDiv dir="column" margin="0 0 20px 0">
+                  <StyledP fontsize="15px">
+                    Your booking: <br />
+                    {date.toLocaleDateString()} <br />
+                    {numberOfPeople} people
+                  </StyledP>
+                </FlexDiv>
+                <FlexDiv gap="10px" dir="column">
+                  {isAvailable?.firstSitting ? (
                     <StyledButton
-                      color='white'
+                      color="white"
                       onClick={() => {
                         setSitting(1);
                         setPhase(3);
@@ -206,9 +191,10 @@ export const Book = () => {
                   ) : (
                     <p>First sitting is not available</p>
                   )}
-                  {secondIsAvailable ? (
+                  {isAvailable?.secondSitting ? (
                     <StyledButton
-                      color='white'
+                      className="sitting1"
+                      color="white"
                       onClick={() => {
                         setSitting(2);
                         setPhase(3);
@@ -225,47 +211,124 @@ export const Book = () => {
             {phase === 3 && (
               <>
                 <h2>Your information</h2>
-                <p>
-                  Your booking: <br />
-                  {date.toLocaleDateString()} <br />
-                  {sitting === 1 ? "6.00 pm" : "9.00 pm"}
-                  <br />
-                  {numberOfPeople} people
-                </p>
+                <FlexDiv dir="column" margin="0 0 30px 0">
+                  <StyledP fontsize="15px">
+                    Your booking: <br />
+                    {date.toLocaleDateString()} <br />
+                    {sitting === 1 ? "6.00 pm" : "9.00 pm"}
+                    <br />
+                    {numberOfPeople} people
+                  </StyledP>
+                </FlexDiv>
 
-                <Form onSubmit={completeBooking}>
-                  <FlexDiv dir='column'>
+                <Form onSubmit={handleSubmit(onSecondSubmit)}>
+                  <FlexDiv dir="column">
                     <Label>Name:</Label>
                     <input
-                      required
-                      onChange={handleChange}
-                      type='text'
-                      name='name'
-                    />
+                      className="name"
+                      {...register("name", {
+                        required: true,
+                        minLength: 1,
+                        maxLength: 40,
+                      })}
+                      type="text"
+                    />{" "}
+                    {errors.name && (
+                      <StyledP fontsize="18px" color="red">
+                        Submit your name &#11105;
+                      </StyledP>
+                    )}
                     <Label>Email:</Label>
                     <input
-                      required
-                      onChange={handleChange}
-                      type='email'
-                      name='email'
+                      className="email"
+                      {...register("email", {
+                        required: true,
+                      })}
+                      type="email"
                     />
+                    {errors.email && (
+                      <StyledP
+                        className="emptyinput"
+                        fontsize="18px"
+                        color="red"
+                      >
+                        Submit your email &#11105;
+                      </StyledP>
+                    )}
                     <Label>Phone number:</Label>
                     <input
-                      required
-                      onChange={handleChange}
-                      type='number'
-                      name='phone'
+                      type="number"
+                      className="phone"
+                      {...register("phone", {
+                        required: true,
+                        minLength: 9,
+                        maxLength: 12,
+                      })}
                     />
-
-                    <Input type='submit' value={"book"} />
+                    {errors.phone && (
+                      <StyledP
+                        fontsize="18px"
+                        color="red"
+                        className="emptyinput"
+                      >
+                        Submit your phone number &#11105;
+                      </StyledP>
+                    )}
+                    <FlexDiv margin="10px">
+                      <Label>
+                        <StyledP fontsize="18px">Accept our&nbsp;</StyledP>
+                        <StyledP
+                          hover="pointer"
+                          decor="underline"
+                          fontsize="18px"
+                          onClick={() => setOpen(true)}
+                          className="openmodal"
+                        >
+                          {" "}
+                          GDPR policy
+                        </StyledP>
+                        <input
+                          className="checkbox"
+                          type="checkbox"
+                          {...register("checkbox", {
+                            required: true,
+                            minLength: 9,
+                            maxLength: 12,
+                          })}
+                        />
+                      </Label>
+                    </FlexDiv>
+                    {errors.checkbox && (
+                      <StyledP
+                        fontsize="18px"
+                        color="red"
+                        className="emptyinput"
+                      >
+                        Accept the terms to continue &#11105;
+                      </StyledP>
+                    )}
+                    <MyModal
+                      open={open}
+                      setOpen={() => setOpen(false)}
+                    ></MyModal>
+                    <Input type="submit" value={"book"} className="book" />
                   </FlexDiv>
                 </Form>
               </>
             )}
-            <PageIndicator phase={phase} />
+            <FlexDiv dir="column" margin="40px 0 0 0 ">
+              <PageIndicator phase={phase} />
+              {phase === 1 ? (
+                <></>
+              ) : (
+                <StyledButton width="90px" onClick={() => setPhase(1)}>
+                  Start over
+                </StyledButton>
+              )}
+            </FlexDiv>
           </FlexDiv>
-        </FlexDiv>
-      )}
+        )}
+      </FlexDiv>
     </Background>
   );
 };

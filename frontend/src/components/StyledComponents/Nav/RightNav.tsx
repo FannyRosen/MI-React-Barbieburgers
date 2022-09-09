@@ -41,22 +41,23 @@ const Ul = styled.ul`
   }
 `;
 
-interface IOpen {
+interface IProps {
   open: boolean;
+  onClick: React.MouseEventHandler<HTMLElement>;
 }
 
-const RightNav = (propsopen: IOpen) => {
+const RightNav = (props: IProps) => {
   return (
-    <Ul ultransform={propsopen.open ? "translateX(0)" : "translateX(100%)"}>
+    <Ul ultransform={props.open ? "translateX(0)" : "translateX(100%)"}>
       <li>
-        <Link to="/menu">MENU</Link>
+        <Link className='contactlink' onClick={props.onClick} to='/contact'>
+          CONTACT
+        </Link>
       </li>
       <li>
-        <Link to="/contact">CONTACT</Link>
-      </li>
-      <li>
-        <Link to="/book">BOOK</Link>
-        {""}
+        <Link className='booklink' onClick={props.onClick} to='/book'>
+          BOOK
+        </Link>
       </li>
     </Ul>
   );

@@ -1,13 +1,9 @@
 import { Request, Response } from "express";
 import { ICustomer } from "src/models/ICustomer";
 import { CustomerModel } from "../models/Customer.model";
-import { deleteOneBooking } from "./booking.controller";
+
 import { statusFailed, statusSuccess } from "./statusMessages";
 
-export async function deletecustomerAndBookings(req: Request, res: Response) {
-  await CustomerModel.findByIdAndDelete(req.params.id);
-  deleteOneBooking(req, res);
-}
 export function postNewCustomer(req: Request, res: Response) {
   let { name, email, phone } = req.body;
   const postNewCustomer = new CustomerModel({
@@ -80,13 +76,12 @@ export const delete_customerByIdController = async (
   res: Response
 ) => {
   try {
-    /* 
-    const id = req.params.id;
-    deletecustomerAndBookings(id, res); */
+    const deleteCustomer = await CustomerModel.findByIdAndDelete(req.params.id);
+
     res.status(200).json({
       status: statusSuccess,
       message: "Delete id works",
-      data: deletecustomerAndBookings(req, res),
+      data: deleteCustomer,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -111,6 +106,23 @@ export const put_customerByIdController = async (
       status: statusSuccess,
       message: "Edit id works",
       data: editById,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: statusFailed,
+      message: error,
+    });
+  }
+};
+
+export const get_bookingByEmail = async (req: Request, res: Response) => {
+  try {
+    const bookingById = await CustomerModel.findOne(req.params);
+
+    res.status(200).json({
+      status: statusSuccess,
+      message: "Get id works",
+      data: bookingById,
     });
   } catch (error: any) {
     res.status(500).json({

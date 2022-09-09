@@ -36,4 +36,9 @@ export interface IStylingProps {
   textAlign?: string;
   transition?: string;
   minheight?: string;
+  weight?: string;
+  textDecoration?: string;
+  display?: string;
+  decor?: string;
+  hover?: string;
 }

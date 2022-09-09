@@ -2,7 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import { IStylingProps } from "../StyledInterface";
 import RightNav from "./RightNav";
-import { colors } from "../mixins";
 
 const StyledBurger = styled.div`
   width: 2rem;
@@ -64,7 +63,7 @@ export const Burger = () => {
         <div></div>
         <div></div>
       </StyledBurger>
-      <RightNav open={open} />
+      <RightNav onClick={() => setOpen(!open)} open={open} />
     </>
   );
 };

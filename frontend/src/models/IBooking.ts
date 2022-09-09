@@ -1,12 +1,13 @@
-import { customersDefaultValue, ICustomer, INewCustomer } from "./ICustomer";
+import { customersDefaultValue, ICustomer } from "./ICustomer";
 
 export interface IBooking {
-  _id: string;
+  _id?: string;
   date: Date;
   sittingTime: number;
   numberOfPeople: number;
-  clientId: ICustomer;
+  clientId?: ICustomer;
 }
+
 export interface INewBooking {
   date: Date;
   sittingTime: number;
@@ -15,7 +16,6 @@ export interface INewBooking {
   email: string;
   phone: string;
 }
-
 export interface IBookingsResponse {
   data: IBooking[];
 }

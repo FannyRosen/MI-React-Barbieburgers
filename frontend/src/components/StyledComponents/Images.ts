@@ -17,3 +17,9 @@ export const LogoImage = styled.img`
       props.laptopheight || props.tabletheight};
   }
 `;
+
+export const Image = styled.img`
+  width: ${(props: IStylingProps) => props.width || "100%"};
+  height: ${(props: IStylingProps) => props.height || "100%"};
+  border-radius: ${(props: IStylingProps) => props.borderRadius || "none"};
+`;
