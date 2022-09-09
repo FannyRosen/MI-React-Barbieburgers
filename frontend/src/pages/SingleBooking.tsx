@@ -82,6 +82,7 @@ export const SingleBooking = () => {
                     ></SingleBookingRender>
                     <FlexDiv gap="10px">
                       <StyledButton
+                        className="editbutton"
                         width="70px"
                         height="30px"
                         onClick={() => setInEdit(true)}
