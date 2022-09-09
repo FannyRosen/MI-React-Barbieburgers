@@ -13,7 +13,7 @@ import {
   StyledSelect,
 } from "../StyledComponents/TextElements";
 import { FlexDiv } from "../StyledComponents/Wrappers";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import Calendar from "react-calendar";
 
 interface IProps {
@@ -55,23 +55,25 @@ export const UpdateBooking = (props: IProps) => {
       existingBooking.numberOfPeople !== 0 &&
       existingBooking.sittingTime !== 0
     ) {
-      reset([
-        { date: new Date(existingBooking.date) },
-        { sittingTime: existingBooking.sittingTime },
-        { numberOfPeple: existingBooking.numberOfPeople },
-      ]);
+      reset({
+        date: new Date(existingBooking.date),
+        sittingTime: existingBooking.sittingTime,
+        numberOfPeple: existingBooking.numberOfPeople,
+      });
       setIsLoading(false);
     }
   }, [existingBooking]);
 
   // Sparar ny bokning med eventuella ändringar
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FieldValues) => {
     setIsLoading(true);
-    let isTheSame = false;
+    let isTheSame: boolean = false;
     const checkAvailable = async () => {
-      if (existingBooking.date === data.date && existingBooking.sittingTime) {
+      if (
+        new Date(existingBooking.date).getTime() ==
+        new Date(data.date).getTime()
+      ) {
         isTheSame = true;
-        console.log("true");
       }
 
       const isAvailableinDB = await checkAvailableSittings(
@@ -79,22 +81,23 @@ export const UpdateBooking = (props: IProps) => {
         data.date as Date,
         data.numberOfPeople as number
       );
-      console.log(isAvailableinDB);
 
       if (
-        (data.sittingTime === "1" && isAvailableinDB.firstSitting === true) ||
-        (data.sittingTime === "2" && isAvailableinDB.secondSitting === true)
+        (data.sittingTime === 1 && isAvailableinDB.firstSitting === true) ||
+        (data.sittingTime === 2 && isAvailableinDB.secondSitting === true)
       ) {
-        console.log("här är vi");
-
         let newBooking: IBooking = {
           date: data.date,
           sittingTime: data.sittingTime,
           numberOfPeople: data.numberOfPeople,
         };
-        editBooking(params.id!, newBooking).then(() => {
-          props.onClick();
-        });
+        editBooking(params.id!, newBooking)
+          .then(() => {
+            props.onClick();
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       } else {
         setIsAvailable(isAvailableinDB);
         setIsLoading(false);
