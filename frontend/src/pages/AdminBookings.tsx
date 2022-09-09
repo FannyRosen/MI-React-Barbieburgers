@@ -3,7 +3,7 @@ import { IBooking } from "../models/IBooking";
 import { ICustomer } from "../models/ICustomer";
 import { fetchBookings } from "../services/handleBookingsFetch.service";
 import { fetchCustomers } from "../services/handleCustomersFetch.service";
-import { AdminBookingDetail } from "../components/admin/AdminBookingDetails";
+import { AdminBookingDetails } from "../components/admin/AdminBookingDetails";
 import { Background } from "../components/StyledComponents/Background";
 import { Input } from "../components/StyledComponents/Form";
 import { colors } from "../components/StyledComponents/mixins";
@@ -37,12 +37,12 @@ export const AdminBookings = () => {
   return (
     <Background>
       <FlexDiv
-        borderRadius="10px"
+        borderRadius='10px'
         background={colors.LightPink}
-        width="80%"
-        height="min-content"
-        dir="column"
-        padding="40px"
+        width='80%'
+        height='min-content'
+        dir='column'
+        padding='40px'
       >
         {isLoading ? (
           <Loader />
@@ -52,9 +52,9 @@ export const AdminBookings = () => {
               <StyledButton>See all customers</StyledButton>
             </StyledLink>
             <Input
-              id="input"
-              type="text"
-              placeholder="Search guest..."
+              id='input'
+              type='text'
+              placeholder='Search guest...'
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
@@ -70,28 +70,28 @@ export const AdminBookings = () => {
               .map((customer) => {
                 return (
                   <FlexDiv
-                    dir="column"
-                    tabletdir="row"
-                    justify="space between"
+                    dir='column'
+                    tabletdir='row'
+                    justify='space between'
                     key={customer._id}
                   >
-                    <FlexDiv gap="10px" dir="column">
-                      <FlexDiv dir="column">
+                    <FlexDiv gap='10px' dir='column'>
+                      <FlexDiv dir='column'>
                         <StyledLink
-                          color="black"
+                          color='black'
                           to={"/admin/customers/" + customer._id}
                         >
                           <StyledHr></StyledHr>
 
-                          <h4 id="h4">{customer.name}</h4>
+                          <h4 id='h4'>{customer.name}</h4>
                         </StyledLink>
 
-                        <AdminBookingDetail
+                        <AdminBookingDetails
                           bookings={bookings.filter(
                             (booking) =>
                               booking.clientId!.toString() === customer._id
                           )}
-                        ></AdminBookingDetail>
+                        ></AdminBookingDetails>
                       </FlexDiv>
                     </FlexDiv>
                   </FlexDiv>

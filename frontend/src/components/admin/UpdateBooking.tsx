@@ -69,6 +69,7 @@ export const UpdateBooking = (props: IProps) => {
     setIsLoading(true);
     let isTheSame: boolean = false;
     const checkAvailable = async () => {
+      //kollar om bokningen har samma datum och sittning
       if (
         new Date(existingBooking.date).getTime() ==
         new Date(data.date).getTime()
@@ -111,13 +112,13 @@ export const UpdateBooking = (props: IProps) => {
       {isLoading ? (
         <></>
       ) : (
-        <Form onSubmit={handleSubmit(onSubmit)} className="bookingform">
-          <FlexDiv dir="column" gap="10px">
+        <Form onSubmit={handleSubmit(onSubmit)} className='bookingform'>
+          <FlexDiv dir='column' gap='10px'>
             <StyledLabel>Choose a date</StyledLabel>
-            <FlexDiv width="300px" tabletwidth="500px">
+            <FlexDiv width='300px' tabletwidth='500px'>
               <Controller
                 control={control}
-                name="date"
+                name='date'
                 render={({ field: { onChange } }) => (
                   <Calendar
                     onChange={onChange}
@@ -129,14 +130,14 @@ export const UpdateBooking = (props: IProps) => {
             </FlexDiv>
 
             {errors.date && (
-              <StyledP fontsize="24px" color="red">
+              <StyledP fontsize='24px' color='red'>
                 Pick a date &#11105;
               </StyledP>
             )}
 
             <Label>Number of people</Label>
             <StyledSelect
-              className="nop"
+              className='nop'
               {...register("numberOfPeople", {
                 min: 1,
                 max: 12,
@@ -160,13 +161,13 @@ export const UpdateBooking = (props: IProps) => {
               <option value={12}>12</option>
             </StyledSelect>
             {errors.numberOfPeople && (
-              <StyledP fontsize="24px" color="red">
+              <StyledP fontsize='24px' color='red'>
                 Pick number of people &#11105;
               </StyledP>
             )}
             <Label>Sitting time:</Label>
             <StyledSelect
-              className="updateSitting"
+              className='updateSitting'
               {...register("sittingTime")}
               defaultValue={existingBooking.sittingTime}
             >
@@ -174,15 +175,15 @@ export const UpdateBooking = (props: IProps) => {
               <option value={2}>9.00 pm</option>
             </StyledSelect>
             {errors.sittingTime && (
-              <StyledP color="red" fontsize="24px">
+              <StyledP color='red' fontsize='24px'>
                 Choose a sitting time &#11105;
               </StyledP>
             )}
 
             <Input
-              type="submit"
+              type='submit'
               value={"Update booking"}
-              className="updateBooking"
+              className='updateBooking'
             />
             {isAvailable?.firstSitting ? (
               <></>
