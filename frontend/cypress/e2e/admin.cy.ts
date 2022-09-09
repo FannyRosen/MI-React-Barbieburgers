@@ -31,7 +31,7 @@ describe("Admin page", () => {
       cy.get(".updateBooking").click();
     });
 
-    it("should contain all bookings including customer", () => {
+    it("should contain updated booking including the same customer", () => {
       cy.visit("http://localhost:3000/admin");
 
       cy.get("#input").click().type("test");
@@ -49,10 +49,6 @@ describe("Admin page", () => {
       cy.get(".singlephone").should("contain.text", "Phone: 07290887744");
     });
 
-    //DELETE BOOKING
-    cy.get(".deletebutton").click();
-
-    cy.get(".confirmbutton").click();
     //RETURN TO CHECK THAT THERE ARE NO RESERVATIONS FOR THIS CUSTOMER
     cy.visit("http://localhost:3000/admin");
 
@@ -60,8 +56,21 @@ describe("Admin page", () => {
 
     cy.get("#h4").should("contain.html", "test guest name");
 
-    // cy.get("#viewbookings").click();
+    cy.get("#viewbookings").click();
 
-    cy.get(".nobookings").should("contain.text", "");
+    cy.get("#date-link").should("be.visible").click();
+
+    cy.get(".singlename").should("contain.text", "Customer: test guest name");
+
+    cy.get(".singleemail").should("contain.text", "Email: test@guest.se");
+
+    cy.get(".singlephone").should("contain.text", "Phone: 07290887744");
+
+    //DELETE BOOKING
+    cy.get(".deletebutton").click();
+
+    cy.get(".confirmbutton").click();
+
+    cy.get(".nobookings").should("contain.text", "Currently no reservations");
   });
 });
