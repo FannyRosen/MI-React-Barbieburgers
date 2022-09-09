@@ -75,25 +75,26 @@ export const SingleBooking = () => {
                     </StyledButton>
                   </>
                 ) : (
-                  <FlexDiv gap='10px'>
-                    <StyledButton
-                      width='70px'
-                      height='30px'
-                      onClick={() => setInEdit(true)}
-                    >
-                      Edit
-                    </StyledButton>
-
+                  <FlexDiv gap='10px' dir='column'>
                     <SingleBookingRender
                       booking={booking}
                       customer={customer}
                     ></SingleBookingRender>
+                    <FlexDiv gap='10px'>
+                      <StyledButton
+                        width='70px'
+                        height='30px'
+                        onClick={() => setInEdit(true)}
+                      >
+                        Edit
+                      </StyledButton>
 
-                    <BookingDeleteButton
-                      adminPath={adminPath}
-                      guestPath={guestPath}
-                      booking={booking}
-                    ></BookingDeleteButton>
+                      <BookingDeleteButton
+                        adminPath={adminPath}
+                        guestPath={guestPath}
+                        booking={booking}
+                      ></BookingDeleteButton>
+                    </FlexDiv>
                   </FlexDiv>
                 )}
               </>

@@ -26,7 +26,6 @@ export const put_bookingByIdController = async (
     const findUpdatedBooking = await BookingModel.findOne(newBooking);
 
     updatedBookingEmail(findUpdatedBooking, findCustomer);
-    console.log("körs");
 
     res.status(200).json({
       status: statusSuccess,
@@ -36,7 +35,7 @@ export const put_bookingByIdController = async (
   } catch (error: any) {
     res.status(500).json({
       status: statusFailed,
-      message: error + "det blev visst fel",
+      message: error + "det blev visst lite fel",
     });
   }
 };

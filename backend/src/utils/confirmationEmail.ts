@@ -17,8 +17,6 @@ export const sendConfirmationEmail = (
   contactEmail.verify((error: any) => {
     if (error) {
       console.log(error);
-    } else {
-      console.log("Confirmation sent");
     }
   });
 
