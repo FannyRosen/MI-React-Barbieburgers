@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { colors } from "./StyledComponents/mixins";
 import { StyledButton } from "./StyledComponents/StyledButton";
-import { StyledLink, StyledP } from "./StyledComponents/TextElements";
+import { StyledP } from "./StyledComponents/TextElements";
 import { FlexDiv } from "./StyledComponents/Wrappers";
 
 const customStyles = {
@@ -36,21 +35,21 @@ export const MyModal = (props: IOpen) => {
         >
           <StyledButton
             onClick={() => props.setOpen()}
-            width="50px"
-            height="30px"
-            className=".openmodal"
+            width='50px'
+            height='30px'
+            className='.openmodal'
           >
             Close
           </StyledButton>
           <FlexDiv
-            width="90%"
-            dir="column"
-            tabletdir="column"
-            margin="20px"
-            gap="30px"
+            width='90%'
+            dir='column'
+            tabletdir='column'
+            margin='20px'
+            gap='30px'
           >
             <h2>We value your privacy</h2>
-            <StyledP fontsize="18px">
+            <StyledP fontsize='18px'>
               We and our partners are using technologies like Cookies or
               Targeting and process personal data like IP-address or browser
               information in order to personalize the advertisement you see.
@@ -62,12 +61,12 @@ export const MyModal = (props: IOpen) => {
               change/withdraw your consent later by clicking on the settings
               button on the left lower corner of the page.
             </StyledP>
-            <FlexDiv gap="10px">
+            <FlexDiv gap='10px'>
               <StyledButton
                 onClick={() => props.setOpen()}
-                width="150px"
-                height="30px"
-                className="accept"
+                width='150px'
+                height='30px'
+                className='accept'
               >
                 OK
               </StyledButton>
