@@ -38,6 +38,7 @@ export const MyModal = (props: IOpen) => {
             onClick={() => props.setOpen()}
             width="50px"
             height="30px"
+            className=".openmodal"
           >
             Close
           </StyledButton>
@@ -66,6 +67,7 @@ export const MyModal = (props: IOpen) => {
                 onClick={() => props.setOpen()}
                 width="150px"
                 height="30px"
+                className="accept"
               >
                 OK
               </StyledButton>

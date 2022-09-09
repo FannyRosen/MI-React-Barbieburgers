@@ -29,7 +29,7 @@ export const AdminBookingDetail = (props: IBookingDetail) => {
           </>
         ) : (
           <>
-            <p>Currently no reservations</p>
+            <p className="nobookings">Currently no reservations</p>
           </>
         )}
 

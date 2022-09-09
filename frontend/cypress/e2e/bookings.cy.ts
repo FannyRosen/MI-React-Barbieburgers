@@ -5,15 +5,17 @@ describe("Booking test from checking availability to making reservation", () => 
   it("should check availability", () => {
     cy.visit("http://localhost:3000/book");
 
-    cy.get(".react-calendar__month-view__days > :nth-child(33)")
-      .should("have.text", "30")
-      .click();
+    cy.get(".bookingform").within(() => {
+      cy.get(".react-calendar__month-view__days > :nth-child(33)")
+        .should("have.text", "30")
+        .click();
 
-    cy.get(".nop").select("4");
+      cy.get(".nop").select("4");
 
-    cy.get(".checkavailability").should("be.visible");
+      cy.get(".checkavailability").should("be.visible");
 
-    cy.get(".checkavailability").click();
+      cy.get(".checkavailability").click();
+    });
 
     cy.get(".h2").should("have.text", "Available sittings");
 
@@ -23,6 +25,12 @@ describe("Booking test from checking availability to making reservation", () => 
   });
 
   it("should  save information and make a reservation", () => {
+    // VALIDATION
+
+    cy.get(".book").click();
+
+    cy.get(".emptyinput").should("contain.text", "");
+
     cy.get(".name").type("Test Guest Name");
 
     cy.get(".email").type("test@guest.se");
@@ -33,7 +41,7 @@ describe("Booking test from checking availability to making reservation", () => 
 
     cy.get(".accept").click();
 
-    cy.get(".checkbox").click();
+    cy.get(".checkbox"); /* .click(); */
 
     cy.get(".book").click();
 

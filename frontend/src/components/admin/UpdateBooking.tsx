@@ -108,7 +108,7 @@ export const UpdateBooking = (props: IProps) => {
       {isLoading ? (
         <></>
       ) : (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(onSubmit)} className="bookingform">
           <FlexDiv dir="column" gap="10px">
             <StyledLabel>Choose a date</StyledLabel>
             <FlexDiv width="300px" tabletwidth="500px">
@@ -133,6 +133,7 @@ export const UpdateBooking = (props: IProps) => {
 
             <Label>Number of people</Label>
             <StyledSelect
+              className="nop"
               {...register("numberOfPeople", {
                 min: 1,
                 max: 12,
@@ -162,6 +163,7 @@ export const UpdateBooking = (props: IProps) => {
             )}
             <Label>Sitting time:</Label>
             <StyledSelect
+              className="updateSitting"
               {...register("sittingTime")}
               defaultValue={existingBooking.sittingTime}
             >
@@ -174,7 +176,11 @@ export const UpdateBooking = (props: IProps) => {
               </StyledP>
             )}
 
-            <Input type="submit" value={"Update booking"} />
+            <Input
+              type="submit"
+              value={"Update booking"}
+              className="updateBooking"
+            />
             {isAvailable?.firstSitting ? (
               <></>
             ) : (

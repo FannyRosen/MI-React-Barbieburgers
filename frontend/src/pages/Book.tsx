@@ -87,11 +87,14 @@ export const Book = () => {
             <Loader />
           </FlexDiv>
         ) : (
-          <FlexDiv dir="column" padding="40px">
+          <FlexDiv dir="column" padding="40px" className="bookingContainer">
             {phase === 1 && (
               <>
                 <h2>Book a table</h2>
-                <Form onSubmit={handleSubmit(onFirstSubmit)}>
+                <Form
+                  className="bookingform"
+                  onSubmit={handleSubmit(onFirstSubmit)}
+                >
                   <FlexDiv dir="column" gap="10px">
                     <StyledLabel>Choose a date</StyledLabel>
                     <FlexDiv width="300px" tabletwidth="500px">
@@ -117,6 +120,7 @@ export const Book = () => {
 
                     <Label>Number of people</Label>
                     <StyledSelect
+                      className="nop"
                       {...register("numberOfPeople", {
                         required: true,
                         min: 1,
@@ -152,14 +156,18 @@ export const Book = () => {
                         between tables
                       </StyledP>
                     </FlexDiv>
-                    <Input type="submit" value={"Check availability"} />
+                    <Input
+                      type="submit"
+                      value={"Check availability"}
+                      className="checkavailability"
+                    />
                   </FlexDiv>
                 </Form>
               </>
             )}
             {phase === 2 && (
               <>
-                <h2>Available sittings</h2>
+                <h2 className="h2">Available sittings</h2>
                 <FlexDiv dir="column" margin="0 0 20px 0">
                   <StyledP fontsize="15px">
                     Your booking: <br />
@@ -183,6 +191,7 @@ export const Book = () => {
                   )}
                   {isAvailable?.secondSitting ? (
                     <StyledButton
+                      className="sitting1"
                       color="white"
                       onClick={() => {
                         setSitting(2);
@@ -214,6 +223,7 @@ export const Book = () => {
                   <FlexDiv dir="column">
                     <Label>Name:</Label>
                     <input
+                      className="name"
                       {...register("name", {
                         required: true,
                         minLength: 1,
@@ -228,19 +238,25 @@ export const Book = () => {
                     )}
                     <Label>Email:</Label>
                     <input
+                      className="email"
                       {...register("email", {
                         required: true,
                       })}
                       type="email"
                     />
                     {errors.email && (
-                      <StyledP fontsize="18px" color="red">
+                      <StyledP
+                        className="emptyinput"
+                        fontsize="18px"
+                        color="red"
+                      >
                         Submit your email &#11105;
                       </StyledP>
                     )}
                     <Label>Phone number:</Label>
                     <input
                       type="number"
+                      className="phone"
                       {...register("phone", {
                         required: true,
                         minLength: 9,
@@ -248,7 +264,11 @@ export const Book = () => {
                       })}
                     />
                     {errors.phone && (
-                      <StyledP fontsize="18px" color="red">
+                      <StyledP
+                        fontsize="18px"
+                        color="red"
+                        className="emptyinput"
+                      >
                         Submit your phone number &#11105;
                       </StyledP>
                     )}
@@ -260,11 +280,13 @@ export const Book = () => {
                           decor="underline"
                           fontsize="18px"
                           onClick={() => setOpen(true)}
+                          className="openmodal"
                         >
                           {" "}
                           GDPR policy
                         </StyledP>
                         <input
+                          className="checkbox"
                           type="checkbox"
                           {...register("checkbox", {
                             required: true,
@@ -275,7 +297,11 @@ export const Book = () => {
                       </Label>
                     </FlexDiv>
                     {errors.checkbox && (
-                      <StyledP fontsize="18px" color="red">
+                      <StyledP
+                        fontsize="18px"
+                        color="red"
+                        className="emptyinput"
+                      >
                         Accept the terms to continue &#11105;
                       </StyledP>
                     )}
@@ -283,7 +309,7 @@ export const Book = () => {
                       open={open}
                       setOpen={() => setOpen(false)}
                     ></MyModal>
-                    <Input type="submit" value={"book"} />
+                    <Input type="submit" value={"book"} className="book" />
                   </FlexDiv>
                 </Form>
               </>

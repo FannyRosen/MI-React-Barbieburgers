@@ -20,6 +20,7 @@ export const BookingDeleteButton = (props: IDeleteButtons) => {
             width="70px"
             height="30px"
             onClick={() => deleteBooking(props.booking._id!)}
+            className="confirmbutton"
           >
             {props.guestPath ? <Link to={"/"}>Confirm</Link> : <></>}
             {props.adminPath ? <Link to={"/admin"}>Confirm</Link> : <></>}
@@ -28,6 +29,7 @@ export const BookingDeleteButton = (props: IDeleteButtons) => {
       ) : (
         <>
           <StyledButton
+            className="deletebutton"
             width="70px"
             height="30px"
             onClick={() => setConfirmDelete(true)}
