@@ -13,6 +13,7 @@ import {
   StyledLink,
 } from "../components/StyledComponents/TextElements";
 import { FlexDiv } from "../components/StyledComponents/Wrappers";
+import { StyledButton } from "../components/StyledComponents/StyledButton";
 
 export const AdminBookings = () => {
   const [bookings, setBookings] = useState<IBooking[]>([]);
@@ -47,6 +48,9 @@ export const AdminBookings = () => {
           <Loader />
         ) : (
           <>
+            <StyledLink to={"/admin/customers"}>
+              <StyledButton>See all customers</StyledButton>
+            </StyledLink>
             <Input
               type='text'
               placeholder='Search guest...'

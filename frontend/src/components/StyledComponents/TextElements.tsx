@@ -9,7 +9,11 @@ export const StyledP = styled.p`
   padding: ${(props: IStylingProps) => props.padding || "0"};
   font-size: ${(props: IStylingProps) => props.fontsize || "12px"};
   text-align: ${(props: IStylingProps) => props.textAlign || "center"};
+  text-decoration: ${(props: IStylingProps) => props.decor || "none"};
   font-weight: ${(props: IStylingProps) => props.weight || "normal"};
+  :hover {
+    cursor: ${(props: IStylingProps) => props.hover || "auto"};
+  }
 `;
 
 export const StyledA = styled.a`

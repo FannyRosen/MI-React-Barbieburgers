@@ -28,7 +28,7 @@ export const SingleBookingRender = (props: IRender) => {
           </StyledP>
           <StyledP fontsize='18px' padding='20px'>
             Which sitting:{" "}
-            {props.booking.sittingTime == 1 ? "6.00pm" : "9.00pm"}
+            {props.booking.sittingTime === 1 ? "6.00pm" : "9.00pm"}
           </StyledP>
           <StyledP fontsize='18px' padding='20px'>
             Number of guests: {props.booking.numberOfPeople}

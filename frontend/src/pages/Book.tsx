@@ -23,6 +23,7 @@ export const Book = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAvailable, setIsAvailable] = useState<ISittings>();
   const [sitting, setSitting] = useState(0);
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
   const {
@@ -39,6 +40,7 @@ export const Book = () => {
     setIsLoading(true);
     const checkAvailable = async () => {
       const isAvailableinDB = await checkAvailableSittings(
+        false,
         data.date,
         data.numberOfPeople
       );
@@ -92,21 +94,23 @@ export const Book = () => {
                 <Form onSubmit={handleSubmit(onFirstSubmit)}>
                   <FlexDiv dir='column' gap='10px'>
                     <StyledLabel>Choose a date</StyledLabel>
-                    <Controller
-                      control={control}
-                      name='date'
-                      rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
-                        <Calendar
-                          onChange={onChange}
-                          minDate={new Date()}
-                          maxDate={new Date("2023-12-31")}
-                        />
-                      )}
-                    />
+                    <FlexDiv width='300px' tabletwidth='500px'>
+                      <Controller
+                        control={control}
+                        name='date'
+                        rules={{ required: true }}
+                        render={({ field: { onChange } }) => (
+                          <Calendar
+                            onChange={onChange}
+                            minDate={new Date()}
+                            maxDate={new Date("2023-12-31")}
+                          />
+                        )}
+                      />
+                    </FlexDiv>
 
                     {errors.date && (
-                      <StyledP fontsize='24px' color='red'>
+                      <StyledP fontsize='18px' color='red'>
                         Pick a date &#11105;
                       </StyledP>
                     )}
@@ -137,7 +141,7 @@ export const Book = () => {
                       <option value='12'>12</option>
                     </StyledSelect>
                     {errors.numberOfPeople && (
-                      <StyledP fontsize='24px' color='red'>
+                      <StyledP fontsize='18px' color='red'>
                         Pick number of people &#11105;
                       </StyledP>
                     )}
@@ -218,7 +222,7 @@ export const Book = () => {
                       type='text'
                     />{" "}
                     {errors.name && (
-                      <StyledP fontsize='24px' color='red'>
+                      <StyledP fontsize='18px' color='red'>
                         Submit your name &#11105;
                       </StyledP>
                     )}
@@ -230,7 +234,7 @@ export const Book = () => {
                       type='email'
                     />
                     {errors.email && (
-                      <StyledP fontsize='24px' color='red'>
+                      <StyledP fontsize='18px' color='red'>
                         Submit your email &#11105;
                       </StyledP>
                     )}
@@ -244,11 +248,41 @@ export const Book = () => {
                       })}
                     />
                     {errors.phone && (
-                      <StyledP fontsize='24px' color='red'>
+                      <StyledP fontsize='18px' color='red'>
                         Submit your phone number &#11105;
                       </StyledP>
                     )}
-                    <MyModal></MyModal>
+                    <FlexDiv margin='10px'>
+                      <Label>
+                        <StyledP fontsize='18px'>Accept our&nbsp;</StyledP>
+                        <StyledP
+                          hover='pointer'
+                          decor='underline'
+                          fontsize='18px'
+                          onClick={() => setOpen(true)}
+                        >
+                          {" "}
+                          GDPR policy
+                        </StyledP>
+                        <input
+                          type='checkbox'
+                          {...register("checkbox", {
+                            required: true,
+                            minLength: 9,
+                            maxLength: 12,
+                          })}
+                        />
+                      </Label>
+                    </FlexDiv>
+                    {errors.checkbox && (
+                      <StyledP fontsize='18px' color='red'>
+                        Accept the terms to continue &#11105;
+                      </StyledP>
+                    )}
+                    <MyModal
+                      open={open}
+                      setOpen={() => setOpen(false)}
+                    ></MyModal>
                     <Input type='submit' value={"book"} />
                   </FlexDiv>
                 </Form>
@@ -256,7 +290,7 @@ export const Book = () => {
             )}
             <FlexDiv dir='column' margin='40px 0 0 0 '>
               <PageIndicator phase={phase} />
-              {phase == 1 ? (
+              {phase === 1 ? (
                 <></>
               ) : (
                 <StyledButton width='90px' onClick={() => setPhase(1)}>

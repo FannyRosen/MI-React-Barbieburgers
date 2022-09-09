@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { colors } from "./mixins";
+import { IStylingProps } from "./StyledInterface";
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -10,6 +11,8 @@ export const Form = styled.form`
 
 export const Label = styled.label`
   margin: 5px 0;
+  display: flex;
+  flex-direction: ${(props: IStylingProps) => props.dir || "row"};
 `;
 export const Input = styled.input`
   border: none;

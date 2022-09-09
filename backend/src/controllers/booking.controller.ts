@@ -152,31 +152,3 @@ export const delete_bookingByIdController = async (
     });
   }
 };
-
-export const put_bookingByIdController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    let { date, sittingTime, numberOfPeople } = req.body;
-
-    const editBooking = await BookingModel.findByIdAndUpdate(req.params.id);
-
-    editBooking.sittingTime = sittingTime;
-    editBooking.date = date;
-    editBooking.numberOfPeople = numberOfPeople;
-
-    await editBooking.save();
-
-    res.status(200).json({
-      status: statusSuccess,
-      message: "Edit booking works",
-      data: editBooking,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      status: statusFailed,
-      message: error,
-    });
-  }
-};

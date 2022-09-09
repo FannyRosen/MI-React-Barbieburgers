@@ -23,9 +23,21 @@ interface IProps {
 export const UpdateBooking = (props: IProps) => {
   const [existingBooking, setExistingBooking] =
     useState<IBooking>(bookingsDefaultValue);
+  const [isAvailable, setIsAvailable] = useState<ISittings>({
+    firstSitting: true,
+    secondSitting: true,
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   let params = useParams();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   //Hämtar bokning
   useEffect(() => {
@@ -35,40 +47,57 @@ export const UpdateBooking = (props: IProps) => {
       });
     };
     getBooking();
-    setIsLoading(false);
   }, []);
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      date: existingBooking.date,
-      numberOfPeople: existingBooking.numberOfPeople,
-      sittingTime: existingBooking.sittingTime,
-    },
-  });
+  // sätter defaultvärde i formuläret enligt existerande bokning
+  useEffect(() => {
+    if (
+      existingBooking.numberOfPeople !== 0 &&
+      existingBooking.sittingTime !== 0
+    ) {
+      reset([
+        { date: new Date(existingBooking.date) },
+        { sittingTime: existingBooking.sittingTime },
+        { numberOfPeple: existingBooking.numberOfPeople },
+      ]);
+      setIsLoading(false);
+    }
+  }, [existingBooking]);
 
   // Sparar ny bokning med eventuella ändringar
   const onSubmit = (data: any) => {
     setIsLoading(true);
+    let isTheSame = false;
     const checkAvailable = async () => {
+      if (existingBooking.date === data.date && existingBooking.sittingTime) {
+        isTheSame = true;
+        console.log("true");
+      }
+
       const isAvailableinDB = await checkAvailableSittings(
-        data.date,
-        data.numberOfPeople
+        isTheSame,
+        data.date as Date,
+        data.numberOfPeople as number
       );
+      console.log(isAvailableinDB);
+
       if (
         (data.sittingTime === "1" && isAvailableinDB.firstSitting === true) ||
         (data.sittingTime === "2" && isAvailableinDB.secondSitting === true)
       ) {
-        editBooking(params.id!, data).then(() => {
+        console.log("här är vi");
+
+        let newBooking: IBooking = {
+          date: data.date,
+          sittingTime: data.sittingTime,
+          numberOfPeople: data.numberOfPeople,
+        };
+        editBooking(params.id!, newBooking).then(() => {
           props.onClick();
-          setIsLoading(false);
         });
       } else {
-        console.log("tiden va inte ledig");
+        setIsAvailable(isAvailableinDB);
+        setIsLoading(false);
       }
     };
     checkAvailable();
@@ -82,17 +111,19 @@ export const UpdateBooking = (props: IProps) => {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FlexDiv dir='column' gap='10px'>
             <StyledLabel>Choose a date</StyledLabel>
-            <Controller
-              control={control}
-              name='date'
-              render={({ field: { onChange, ref } }) => (
-                <Calendar
-                  onChange={onChange}
-                  maxDate={new Date("2023-12-31")}
-                  defaultValue={new Date(existingBooking.date)}
-                />
-              )}
-            />
+            <FlexDiv width='300px' tabletwidth='500px'>
+              <Controller
+                control={control}
+                name='date'
+                render={({ field: { onChange } }) => (
+                  <Calendar
+                    onChange={onChange}
+                    maxDate={new Date("2023-12-31")}
+                    defaultValue={new Date(existingBooking.date)}
+                  />
+                )}
+              />
+            </FlexDiv>
 
             {errors.date && (
               <StyledP fontsize='24px' color='red'>
@@ -102,12 +133,11 @@ export const UpdateBooking = (props: IProps) => {
 
             <Label>Number of people</Label>
             <StyledSelect
-              defaultValue={existingBooking.numberOfPeople}
               {...register("numberOfPeople", {
-                required: true,
                 min: 1,
                 max: 12,
               })}
+              defaultValue={existingBooking.numberOfPeople}
             >
               <option disabled value={0}>
                 0
@@ -132,7 +162,7 @@ export const UpdateBooking = (props: IProps) => {
             )}
             <Label>Sitting time:</Label>
             <StyledSelect
-              {...register("sittingTime", { required: true })}
+              {...register("sittingTime")}
               defaultValue={existingBooking.sittingTime}
             >
               <option value={1}>6.00 pm</option>
@@ -145,6 +175,16 @@ export const UpdateBooking = (props: IProps) => {
             )}
 
             <Input type='submit' value={"Update booking"} />
+            {isAvailable?.firstSitting ? (
+              <></>
+            ) : (
+              <StyledP>The time you have chosen is not available</StyledP>
+            )}
+            {isAvailable?.secondSitting ? (
+              <></>
+            ) : (
+              <StyledP>The time you have chosen is not available</StyledP>
+            )}
           </FlexDiv>
         </Form>
       )}

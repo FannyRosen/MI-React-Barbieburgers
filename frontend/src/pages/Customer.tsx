@@ -45,6 +45,9 @@ export const Customer = () => {
             <Loader />
           ) : (
             <>
+              <StyledButton width='100px'>
+                <StyledLink to={"/admin"}>GO BACK</StyledLink>
+              </StyledButton>
               <StyledP fontsize='18px' padding='20px'>
                 {customerById.name}
               </StyledP>

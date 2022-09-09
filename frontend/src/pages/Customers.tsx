@@ -37,6 +37,9 @@ export const Customers = () => {
         padding='40px'
         gap='20px'
       >
+        <StyledLink to={"/admin"}>
+          <StyledButton>See all bookings</StyledButton>
+        </StyledLink>
         {customers.map((customers) => {
           return (
             <FlexDiv key={customers._id} gap='10px' dir='column'>
